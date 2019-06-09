@@ -1,0 +1,22 @@
+begin
+    a = 5
+    b = 10
+    b = b + 3
+    a = a + b
+    b = b + a
+
+    c = a
+
+    if ""{
+        d = 3
+        print  "infinite"
+        if "a"{
+
+        }
+    }else{
+         print "quack"
+    }
+
+     print 3*(2+1)
+     print "nanananana lider\e\""
+end

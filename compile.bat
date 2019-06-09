@@ -1,0 +1,1 @@
+ antlr4 -Dlanguage=Python3 confprol.g4 -o ./generated_antlr4/  -visitor
