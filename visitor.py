@@ -2,12 +2,18 @@
 from generated_antlr4.confprolVisitor import confprolVisitor
 from function import Function
 from generated_antlr4.confprolParser import confprolParser
+from return_exception import ReturnException
+
+functions = {} #TODO move to context
 
 
-functions = {} #TODO move
 
 class MyVisitor(confprolVisitor):
 
+
+    def visitReturn_value(self, ctx: confprolParser.Return_valueContext):
+        value =  super().visit(ctx.expr())
+        raise ReturnException(value)
 
     def __init__(self, context):
         self.context = context
@@ -41,9 +47,11 @@ class MyVisitor(confprolVisitor):
             arguments = []
         else:
             arguments = self.visitArguments(arg_node)
-        print("args",arguments)
         function =  functions[function]
-        function.run(arguments)
+        return_value = function.run(arguments)
+
+        return return_value
+
 
     def visitFinalMethodCall(self, ctx: confprolParser.FinalMethodCallContext):
         return super().visitFinalMethodCall(ctx)
@@ -101,7 +109,8 @@ class MyVisitor(confprolVisitor):
             for s in statements:
                 super().visit(s)
         else:
-            return super().visitElsecondition(ctx.elsecondition())
+            if ctx.elsecondition() is not None:
+                return super().visitElsecondition(ctx.elsecondition())
 
     def visitProgram(self, ctx: confprolParser.ProgramContext):
         return super().visitProgram(ctx)

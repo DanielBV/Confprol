@@ -1,12 +1,23 @@
 begin
 
     funko a(arg, argo) {
+        funko pipo(arg){
+            print "NANANAAANANANANNA LIDER"
+            print arg
+            return 3
+        }
         print "esto es una funcion"
         a = 7
         print "el valor del primer argumento es"
         print arg
         print "el del segundo es"
         print argo
+        if ""{
+            return pipo("This is the argument")
+        }else{
+            print "El cocotero estocastico"
+            return "cocotero"
+            }
     }
     a = 5
     b = 10

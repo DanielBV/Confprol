@@ -3,13 +3,13 @@ program   : 'begin' statement+ 'end';
 
 
 
-statement : assign | print | condition | function_declaration | methodCall;
+statement : assign | print | condition | function_declaration | methodCall | return_value;
 
 assign    : ID '=' expr ;
 print     : 'print' expr ;
 condition : 'if' expr '{' statement* '}' elsecondition?;
 elsecondition: 'else' '{' statement* '}';
-
+return_value: 'return' expr;
 
 expr      : expr '+' term #exprSUM
             | expr '-' term #exprMINUS
@@ -28,6 +28,7 @@ arguments   : expr',' arguments | expr;
 
 
 function_declaration:  'funko' ID '(' parameters? ')''{' statement* '}';
+
 parameters   : ID',' parameters | ID;
 
 ID     : [a-z]+ ;

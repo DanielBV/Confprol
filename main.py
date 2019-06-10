@@ -19,7 +19,7 @@ def main():
     state = {}
     visitor = MyVisitor(state)
     result = visitor.visit(tree)
-
+    #TODO Add return exception try catch
 
     print(state)
 
