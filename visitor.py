@@ -3,8 +3,7 @@ from generated_antlr4.confprolVisitor import confprolVisitor
 from function import Function
 from generated_antlr4.confprolParser import confprolParser
 from return_exception import ReturnException
-
-functions = {} #TODO move to context
+from context import Context
 
 
 
@@ -16,7 +15,7 @@ class MyVisitor(confprolVisitor):
         raise ReturnException(value)
 
     def __init__(self, context):
-        self.context = context
+        self.context = Context()
 
 
     def visitArguments(self, ctx: confprolParser.ArgumentsContext):
@@ -47,7 +46,8 @@ class MyVisitor(confprolVisitor):
             arguments = []
         else:
             arguments = self.visitArguments(arg_node)
-        function =  functions[function]
+
+        function =  self.context.get_function(function)
         return_value = function.run(arguments)
 
         return return_value
@@ -59,7 +59,7 @@ class MyVisitor(confprolVisitor):
     def visitFunction_declaration(self, ctx: confprolParser.Function_declarationContext):
         name = ctx.ID().getText()
         args = self.visitParameters(ctx.parameters())
-        functions[name] = Function(args,ctx.statement(),self)
+        self.context.add_function(name,Function(args,ctx.statement(),self))
 
 
     def visitFinalSTRING(self, ctx: confprolParser.FinalSTRINGContext):
@@ -100,7 +100,7 @@ class MyVisitor(confprolVisitor):
         return int(ctx.NUMBER().getText())
 
     def visitFinalID(self, ctx: confprolParser.FinalIDContext):
-        return self.context[ctx.getText()]
+        return self.context.get_variable(ctx.getText())
 
     def visitCondition(self, ctx:confprolParser.ConditionContext):
         value = super().visit(ctx.expr())
@@ -121,7 +121,7 @@ class MyVisitor(confprolVisitor):
     def visitAssign(self, ctx: confprolParser.AssignContext):
 
         variable = ctx.ID().getText()
-        self.context[variable] =  super().visit(ctx.expr())
+        self.context.set_variable(variable,super().visit(ctx.expr()))
 
 
         return super().visitAssign(ctx)

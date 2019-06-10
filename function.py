@@ -16,7 +16,8 @@ class Function:
         args = dict(zip(self.__arguments, values))
 
         old_state = self.visitor.context
-        self.visitor.context = args #TODO Make context an object
+        self.visitor.context = self.visitor.context.create_subcontext()
+        self.visitor.context.set_variables(args)
 
 
         try:
