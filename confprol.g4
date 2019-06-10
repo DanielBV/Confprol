@@ -23,10 +23,12 @@ final     : '('expr')' #finalPAR
             | STRING #finalSTRING
             | methodCall #finalMethodCall;
 
-methodCall :  ID'('')';
+methodCall :  ID'(' arguments?')';
+arguments   : expr',' arguments | expr;
 
-function_declaration:  'funko' ID '{' statement* '}';
 
+function_declaration:  'funko' ID '(' parameters? ')''{' statement* '}';
+parameters   : ID',' parameters | ID;
 
 ID     : [a-z]+ ;
 NUMBER : [0-9]+ ;

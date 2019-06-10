@@ -1,8 +1,12 @@
 begin
 
-    funko a {
+    funko a(arg, argo) {
         print "esto es una funcion"
         a = 7
+        print "el valor del primer argumento es"
+        print arg
+        print "el del segundo es"
+        print argo
     }
     a = 5
     b = 10
@@ -24,5 +28,5 @@ begin
 
      print 3*(2+1)
      print "nanananana lider\e\""
-     a()
+     a(4,3)
 end
