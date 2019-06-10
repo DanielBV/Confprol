@@ -6,9 +6,24 @@ from generated_antlr4.confprolParser import confprolParser
 from generated_antlr4.confprolVisitor import confprolVisitor
 
 state = {}
-
+functions = {}
 
 class MyVisitor(confprolVisitor):
+
+
+    def visitMethodCall(self, ctx: confprolParser.MethodCallContext):
+        function = ctx.ID().getText()
+        print("PIPO")
+        statements =  functions[function].statement()
+        for s in statements:
+            self.visit(s)
+
+    def visitFinalMethodCall(self, ctx: confprolParser.FinalMethodCallContext):
+        return super().visitFinalMethodCall(ctx)
+
+    def visitFunction_declaration(self, ctx: confprolParser.Function_declarationContext):
+        name = ctx.ID().getText()
+        functions[name] = ctx
 
 
     def visitFinalSTRING(self, ctx: confprolParser.FinalSTRINGContext):

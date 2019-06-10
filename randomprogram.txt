@@ -1,4 +1,9 @@
 begin
+
+    funko a {
+        print "esto es una funcion"
+        a = 7
+    }
     a = 5
     b = 10
     b = b + 3
@@ -19,4 +24,5 @@ begin
 
      print 3*(2+1)
      print "nanananana lider\e\""
+     a()
 end

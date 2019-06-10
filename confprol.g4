@@ -1,7 +1,9 @@
 grammar confprol;
 program   : 'begin' statement+ 'end';
-          
-statement : assign | print | condition;
+
+
+
+statement : assign | print | condition | function_declaration | methodCall;
 
 assign    : ID '=' expr ;
 print     : 'print' expr ;
@@ -18,9 +20,12 @@ term      : term '*' final #termMULT
 final     : '('expr')' #finalPAR
             | NUMBER #finalNUMBER
             | ID #finalID
-            | STRING #finalSTRING;
+            | STRING #finalSTRING
+            | methodCall #finalMethodCall;
 
+methodCall :  ID'('')';
 
+function_declaration:  'funko' ID '{' statement* '}';
 
 
 ID     : [a-z]+ ;
