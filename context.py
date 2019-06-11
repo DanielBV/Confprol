@@ -15,8 +15,12 @@ class Context:
 
         return new_context
 
+
+    def has_variable(self,id_):
+        return self.get_variable(id_) is not None
+
+
     def get_variable(self, id_):
-        print("Buscando la variable ", id_)
         if id_ in self.variables:
             return self.variables[id_]
         if self.parent is not None:
@@ -31,6 +35,8 @@ class Context:
         for key in dicts_.keys():
             self.set_variable(key,dicts_[key])
 
+
+
     def add_function(self, name, function):
         if  name in self.functions:
             raise ValueError("Function ", name, " already defined")
@@ -41,6 +47,10 @@ class Context:
         if id_ in self.functions:
             return self.functions[id_]
         if self.parent is not None:
-            return self.parent.get_functions(id_)
+            return self.parent.get_function(id_)
 
         return None
+
+
+    def has_function(self,id_):
+        return self.get_function(id_) is not None

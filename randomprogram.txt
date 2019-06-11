@@ -1,47 +1,12 @@
 begin
 
-    funko a(arg, argo) {
-        c = c + 3
-        print c
-        print "NANI"
-        funko pipo(arg){
-            print "NANANAAANANANANNA LIDER"
-            print c
-            return 3
-        }
-        a = 7
-        pipo(3)
-        if ""{
-            return pipo("This is the argument")
-        }else{
-            print "El cocotero estocastico"
-            return "cocotero"
-            }
-    }
-    a = 5
-    b = 10
-    b = b + 3
-    a = a + b
-    b = b + a
+    a = 3
 
-    c = a
-
-    if ""{
-        d = 3
-        print  "infinite"
-        if "a"{
-
-        }
-    }else{
-         print "quack"
+    funko hola(argumento){
+        b = 10
     }
 
-     print 3*(2+1)
-     print "nanananana lider\e\""
 
-     print "A punto de hacer pipo 3"
-     c = 1
-      a(4,3)
-      print "NANANALIDEr"
-      print c
+    hola(a)
+
 end

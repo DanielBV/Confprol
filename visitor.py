@@ -2,7 +2,7 @@
 from generated_antlr4.confprolVisitor import confprolVisitor
 from function import Function
 from generated_antlr4.confprolParser import confprolParser
-from return_exception import ReturnException
+from exceptions import ReturnException, DuplicatedParameter,FunctionNotDefined, VariableNotDefined, ArgumentsMissing, TooManyArguments
 from context import Context
 
 
@@ -25,17 +25,17 @@ class MyVisitor(confprolVisitor):
             return [self.visit(ctx.expr())]
         else:
             other_args = self.visitArguments(args)
-            other_args.append(self.visit(ctx.expr()))
+            other_args.insert(0,self.visit(ctx.expr()))
             return other_args
 
     def visitParameters(self, ctx:confprolParser.ParametersContext):
-       args = ctx.parameters()
+       args = ctx.parameters() #TODO handle no parameters
 
        if args is None:
            return [ctx.ID().getText()]
        else:
            other_args = self.visitParameters(args)
-           other_args.append(ctx.ID().getText())
+           other_args.insert(0,ctx.ID().getText())
            return other_args
 
     def visitMethodCall(self, ctx: confprolParser.MethodCallContext):
@@ -47,7 +47,21 @@ class MyVisitor(confprolVisitor):
         else:
             arguments = self.visitArguments(arg_node)
 
-        function =  self.context.get_function(function)
+        if self.context.has_function(function): #TODO Refactor
+
+            function =  self.context.get_function(function)
+            parameters = function.get_parameters()
+            if len(arguments) < len(parameters):
+                missing_arguments = parameters[len(arguments):]
+                raise ArgumentsMissing("Argument number mismatch", ctx.start.line, function.get_name(), missing_arguments)
+            if len(arguments) > len(parameters):
+                extra_arguments = ctx.arguments().getText().split(',')[len(parameters):]   #TODO Refactor expr to objects
+
+                raise TooManyArguments("Too many arguments", ctx.start.line, function.get_name(),extra_arguments)
+
+        else:
+            raise FunctionNotDefined(function,ctx.start.line)
+
         return_value = function.run(arguments)
 
         return return_value
@@ -59,8 +73,12 @@ class MyVisitor(confprolVisitor):
     def visitFunction_declaration(self, ctx: confprolParser.Function_declarationContext):
         name = ctx.ID().getText()
         args = self.visitParameters(ctx.parameters())
-        self.context.add_function(name,Function(args,ctx.statement(),self))
+        duplicated_args = set([x for x in args if args.count(x) > 1])
 
+        if len(duplicated_args) == 0:
+            self.context.add_function(name,Function(args,ctx.statement(),name,self))
+        else:
+             raise DuplicatedParameter(name,duplicated_args,ctx.start.line)
 
     def visitFinalSTRING(self, ctx: confprolParser.FinalSTRINGContext):
         text = ctx.STRING().getText()
@@ -100,7 +118,11 @@ class MyVisitor(confprolVisitor):
         return int(ctx.NUMBER().getText())
 
     def visitFinalID(self, ctx: confprolParser.FinalIDContext):
-        return self.context.get_variable(ctx.getText())
+        name = ctx.getText()
+        if self.context.has_variable(name):
+            return self.context.get_variable(ctx.getText())
+        else:
+            raise VariableNotDefined(name, ctx.start.line)
 
     def visitCondition(self, ctx:confprolParser.ConditionContext):
         value = super().visit(ctx.expr())
