@@ -4,6 +4,7 @@ from function import Function
 from generated_antlr4.confprolParser import confprolParser
 from exceptions import ReturnException, DuplicatedParameter,FunctionNotDefined, VariableNotDefined, ArgumentsMissing, TooManyArguments
 from context import Context
+from expression import  FinalExpression
 
 
 
@@ -62,7 +63,8 @@ class MyVisitor(confprolVisitor):
         else:
             raise FunctionNotDefined(function,ctx.start.line)
 
-        return_value = function.run(arguments)
+        args = list(map(lambda arg: arg.value,arguments))
+        return_value = function.run(args)
 
         return return_value
 
@@ -83,23 +85,23 @@ class MyVisitor(confprolVisitor):
     def visitFinalSTRING(self, ctx: confprolParser.FinalSTRINGContext):
         text = ctx.STRING().getText()
         text = text[1:len(text)-1]
-        return text
+        return FinalExpression(text,text) #TODO Create polymorphism
 
     def visitExprMINUS(self, ctx: confprolParser.ExprMINUSContext):
         value = super().visit(ctx.expr())
-        return value - super().visit(ctx.term())
+        return value.minus(super().visit(ctx.term()))
 
 
     def visitExprSUM(self, ctx: confprolParser.ExprSUMContext):
         value = super().visit(ctx.expr())
-        return value + super().visit(ctx.term())
+        return value.plus(super().visit(ctx.term()))
 
     def visitExprTERM(self, ctx: confprolParser.ExprTERMContext):
         return self.visit(ctx.term())
 
     def visitTermDIV(self, ctx: confprolParser.TermDIVContext):
         value = super().visit(ctx.term())
-        return value / super().visit(ctx.final())
+        return value.div(super().visit(ctx.final()))
 
     def visitTermFINAL(self, ctx: confprolParser.TermFINALContext):
         value = super().visit(ctx.final())
@@ -107,7 +109,7 @@ class MyVisitor(confprolVisitor):
 
     def visitTermMULT(self, ctx: confprolParser.TermMULTContext):
         value = super().visit(ctx.term())
-        return value * super().visit(ctx.final())
+        return value.mult(super().visit(ctx.final()))
 
     def visitFinalPAR(self, ctx: confprolParser.FinalPARContext):
         value = super().visit(ctx.expr())
@@ -115,17 +117,20 @@ class MyVisitor(confprolVisitor):
         return value
 
     def visitFinalNUMBER(self, ctx: confprolParser.FinalNUMBERContext):
-        return int(ctx.NUMBER().getText())
+        value =  int(ctx.NUMBER().getText())
+        name = str(value)
+        return FinalExpression(value,name)
+
 
     def visitFinalID(self, ctx: confprolParser.FinalIDContext):
         name = ctx.getText()
         if self.context.has_variable(name):
-            return self.context.get_variable(ctx.getText())
+            return FinalExpression(self.context.get_variable(ctx.getText()), name)
         else:
             raise VariableNotDefined(name, ctx.start.line)
 
     def visitCondition(self, ctx:confprolParser.ConditionContext):
-        value = super().visit(ctx.expr())
+        value = super().visit(ctx.expr()).value
         if value:
             statements = ctx.statement()
             for s in statements:
@@ -143,11 +148,14 @@ class MyVisitor(confprolVisitor):
     def visitAssign(self, ctx: confprolParser.AssignContext):
 
         variable = ctx.ID().getText()
-        self.context.set_variable(variable,super().visit(ctx.expr()))
 
+        value = super().visit(ctx.expr()).value
+        self.context.set_variable(variable,value)
 
         return super().visitAssign(ctx)
 
     def visitPrint(self, ctx: confprolParser.PrintContext):
-        value = self.visit(ctx.expr())
+        value = self.visit(ctx.expr()).value
+
         print(value)
+

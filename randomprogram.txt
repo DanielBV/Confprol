@@ -6,7 +6,11 @@ begin
         b = 10
     }
 
-
+    if (1){
+        print "WOW"
+    }
     hola(a)
-
+    a = 3/2
+    a =  3 * (2+1)
+    print "El numero es: " + 4
 end
