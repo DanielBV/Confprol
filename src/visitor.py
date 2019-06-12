@@ -1,10 +1,10 @@
 
 from generated_antlr4.confprolVisitor import confprolVisitor
-from function import Function
+from src.function import Function
 from generated_antlr4.confprolParser import confprolParser
 from exceptions import ReturnException, DuplicatedParameter,FunctionNotDefined, VariableNotDefined, ArgumentsMissing, TooManyArguments
-from context import Context
-from expression import  FinalExpression
+from src.context import Context
+from src.expression import  FinalExpression
 
 
 
@@ -12,7 +12,7 @@ class MyVisitor(confprolVisitor):
 
 
     def visitReturn_value(self, ctx: confprolParser.Return_valueContext):
-        value =  super().visit(ctx.expr())
+        value =  super().visit(ctx.expr()).value
         raise ReturnException(value)
 
     def __init__(self, context):
@@ -74,13 +74,18 @@ class MyVisitor(confprolVisitor):
 
     def visitFunction_declaration(self, ctx: confprolParser.Function_declarationContext):
         name = ctx.ID().getText()
-        args = self.visitParameters(ctx.parameters())
-        duplicated_args = set([x for x in args if args.count(x) > 1])
+        params_ctx = ctx.parameters()
+        if params_ctx is not None:
+            params = self.visitParameters(ctx.parameters())
+            duplicated_params = set([x for x in params if params.count(x) > 1])
 
-        if len(duplicated_args) == 0:
-            self.context.add_function(name,Function(args,ctx.statement(),name,self))
+            if len(duplicated_params) != 0:
+                raise DuplicatedParameter(name, duplicated_params, ctx.start.line)
         else:
-             raise DuplicatedParameter(name,duplicated_args,ctx.start.line)
+            params = []
+
+        self.context.add_function(name,Function(params,ctx.statement(),name,self))
+
 
     def visitFinalSTRING(self, ctx: confprolParser.FinalSTRINGContext):
         text = ctx.STRING().getText()
@@ -119,6 +124,7 @@ class MyVisitor(confprolVisitor):
     def visitFinalNUMBER(self, ctx: confprolParser.FinalNUMBERContext):
         value =  int(ctx.NUMBER().getText())
         name = str(value)
+
         return FinalExpression(value,name)
 
 
@@ -148,8 +154,7 @@ class MyVisitor(confprolVisitor):
     def visitAssign(self, ctx: confprolParser.AssignContext):
 
         variable = ctx.ID().getText()
-
-        value = super().visit(ctx.expr()).value
+        value =  super().visit(ctx.expr()).value
         self.context.set_variable(variable,value)
 
         return super().visitAssign(ctx)

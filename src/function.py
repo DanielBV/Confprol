@@ -1,6 +1,7 @@
 from typing import  List
 
-from exceptions import ArgumentsMissing, ReturnException
+from exceptions import ReturnException
+from .expression import FinalExpression
 
 class Function:
 
@@ -32,7 +33,7 @@ class Function:
                 self.visitor.visitStatement(statement)
         except ReturnException as e:
             self.visitor.context = old_state
-            return e.return_value
+            return FinalExpression(e.return_value,f"{self.name}({values})")
 
         self.visitor.context = old_state
 

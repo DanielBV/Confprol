@@ -1,5 +1,5 @@
 grammar confprol;
-program   : 'begin' statement+ 'end';
+program   : 'begin' statement* 'end';
 
 
 
@@ -11,7 +11,8 @@ condition : 'if' expr '{' statement* '}' elsecondition?;
 elsecondition: 'else' '{' statement* '}';
 return_value: 'return' expr;
 
-expr      : expr '+' term #exprSUM
+expr      : expr '==' expr #exprEqual
+            |expr '+' term #exprSUM
             | expr '-' term #exprMINUS
             | term #exprTERM ;
 term      : term '*' final #termMULT
@@ -31,7 +32,7 @@ function_declaration:  'funko' ID '(' parameters? ')''{' statement* '}';
 
 parameters   : ID',' parameters | ID;
 
-ID     : [a-z]+ ;
+ID     : [a-zA-Z]+ ;
 NUMBER : [0-9]+ ;
 WS     : [ \t\r\n] -> skip;
 

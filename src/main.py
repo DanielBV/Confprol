@@ -1,16 +1,11 @@
-import sys
-from generated_antlr4 import *
 from antlr4 import *
 from generated_antlr4.confprolLexer import confprolLexer
 from generated_antlr4.confprolParser import confprolParser
-from visitor import MyVisitor
+from src.visitor import MyVisitor
 from exceptions import *
 
 
-
-
-def main():
-    input_stream = FileStream("randomprogram.txt")
+def execute(input_stream):
     lexer = confprolLexer(input_stream)
     stream = CommonTokenStream(lexer)
     parser = confprolParser(stream)
@@ -18,12 +13,24 @@ def main():
 
     state = {}
     visitor = MyVisitor(state)
+
     try:
-        result = visitor.visit(tree)
+        visitor.visit(tree)
+    except ReturnException as e:
+        return e.return_value
+
+def execute_file(file_path:str):
+    input_stream = FileStream(file_path)
+    return execute(input_stream)
+
+
+
+def main():
+
+    try:
+       return execute_file("../randomprogram.txt")
     except ArgumentsMissing as e:
         print(f"Line {e.line}: Missing arguments  {e.missing_arguments} in function {e.function}")
-    except ReturnException as e:
-        exit(e.return_value)
     except DuplicatedParameter as e:
         print(f"Line {e.line}: Method declaration '{e.function_name}' hycas duplicated parameters {e.duplicated_parameters}")
     except FunctionNotDefined as e:
