@@ -3,7 +3,7 @@ program   :  statement*;
 
 
 
-statement : (assign | print | condition | function_declaration | methodCall | return_value)';';
+statement : (assign | print  | expr | return_value)';' | ( condition | function_declaration) ;
 
 assign    : ID '=' expr ;
 print     : 'print' expr ;

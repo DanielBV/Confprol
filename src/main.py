@@ -1,14 +1,20 @@
 from antlr4 import *
+from antlr4.error.ErrorListener import ConsoleErrorListener
+
 from generated_antlr4.confprolLexer import confprolLexer
 from generated_antlr4.confprolParser import confprolParser
 from src.visitor import MyVisitor
 from src.exceptions import *
+from src.error_listener import  MyErrorListener
+
 
 
 def execute(input_stream):
     lexer = confprolLexer(input_stream)
     stream = CommonTokenStream(lexer)
     parser = confprolParser(stream)
+    parser.removeErrorListener(ConsoleErrorListener.INSTANCE)
+    parser.addErrorListener(MyErrorListener())
     tree = parser.program()
 
     state = {}
@@ -39,7 +45,8 @@ def main():
         print(f"Line {e.line}: Variable'{e.variable_name}' isn't defined.")
     except TooManyArguments as e:
         print(f"Line {e.line}: Too many arguments  {e.extra_arguments} in function {e.function}")
-
+    except ConfProlSyntaxError as e:
+        print(e)
 
 
 
