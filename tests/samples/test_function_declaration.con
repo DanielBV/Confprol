@@ -1,4 +1,3 @@
-begin
 
     funko noParameters(){
         return 9
@@ -18,4 +17,4 @@ begin
 
     return parameters(value,otherValue)
 
-end
+

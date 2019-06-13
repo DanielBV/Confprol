@@ -1,7 +1,7 @@
 from typing import  List
 
-from exceptions import ReturnException
-from .expression import FinalExpression
+from src.exceptions import ReturnException
+from src.expressions.expression import FinalExpression
 
 class Function:
 

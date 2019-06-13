@@ -1,9 +1,9 @@
 grammar confprol;
-program   : 'begin' statement* 'end';
+program   :  statement*;
 
 
 
-statement : assign | print | condition | function_declaration | methodCall | return_value;
+statement : (assign | print | condition | function_declaration | methodCall | return_value)';';
 
 assign    : ID '=' expr ;
 print     : 'print' expr ;
@@ -11,10 +11,13 @@ condition : 'if' expr '{' statement* '}' elsecondition?;
 elsecondition: 'else' '{' statement* '}';
 return_value: 'return' expr;
 
-expr      : expr '==' expr #exprEqual
-            |expr '+' term #exprSUM
-            | expr '-' term #exprMINUS
-            | term #exprTERM ;
+expr      : expr2 '==' expr2 #exprEqual | expr2 #exprNE;
+
+
+expr2: expr2 '+' term #exprSUM
+        | expr2 '-' term #exprMINUS
+        | term #exprTERM ;
+
 term      : term '*' final #termMULT
             |term '/' final  #termDIV
             | final #termFINAL;

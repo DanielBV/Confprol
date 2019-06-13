@@ -2,9 +2,9 @@
 from generated_antlr4.confprolVisitor import confprolVisitor
 from src.function import Function
 from generated_antlr4.confprolParser import confprolParser
-from exceptions import ReturnException, DuplicatedParameter,FunctionNotDefined, VariableNotDefined, ArgumentsMissing, TooManyArguments
+from src.exceptions import ReturnException, DuplicatedParameter,FunctionNotDefined, VariableNotDefined, ArgumentsMissing, TooManyArguments
 from src.context import Context
-from src.expression import  FinalExpression
+from src.expressions import FinalExpression,StringExpression
 
 
 
@@ -14,6 +14,12 @@ class MyVisitor(confprolVisitor):
     def visitReturn_value(self, ctx: confprolParser.Return_valueContext):
         value =  super().visit(ctx.expr()).value
         raise ReturnException(value)
+
+    def visitExprEqual(self, ctx: confprolParser.ExprEqualContext):
+        value1 = self.visit(ctx.expr2(0))
+        value2 = self.visit(ctx.expr2(1))
+
+        return value1.equals(value2)
 
     def __init__(self, context):
         self.context = Context()
@@ -56,7 +62,7 @@ class MyVisitor(confprolVisitor):
                 missing_arguments = parameters[len(arguments):]
                 raise ArgumentsMissing("Argument number mismatch", ctx.start.line, function.get_name(), missing_arguments)
             if len(arguments) > len(parameters):
-                extra_arguments = ctx.arguments().getText().split(',')[len(parameters):]   #TODO Refactor expr to objects
+                extra_arguments = list(map(lambda arg: arg.name,arguments))
 
                 raise TooManyArguments("Too many arguments", ctx.start.line, function.get_name(),extra_arguments)
 
@@ -90,15 +96,15 @@ class MyVisitor(confprolVisitor):
     def visitFinalSTRING(self, ctx: confprolParser.FinalSTRINGContext):
         text = ctx.STRING().getText()
         text = text[1:len(text)-1]
-        return FinalExpression(text,text) #TODO Create polymorphism
+        return StringExpression(text,text)
 
     def visitExprMINUS(self, ctx: confprolParser.ExprMINUSContext):
-        value = super().visit(ctx.expr())
+        value = super().visit(ctx.expr2())
         return value.minus(super().visit(ctx.term()))
 
 
     def visitExprSUM(self, ctx: confprolParser.ExprSUMContext):
-        value = super().visit(ctx.expr())
+        value = super().visit(ctx.expr2())
         return value.plus(super().visit(ctx.term()))
 
     def visitExprTERM(self, ctx: confprolParser.ExprTERMContext):

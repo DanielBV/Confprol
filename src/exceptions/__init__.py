@@ -4,3 +4,4 @@ from .duplicated_parameter import DuplicatedParameter
 from .function_not_defined import FunctionNotDefined
 from .variable_not_defined import VariableNotDefined
 from .too_many_arguments import TooManyArguments
+from .operation_not_supported import OperationNotSupported

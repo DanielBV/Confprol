@@ -1,10 +1,3 @@
-begin
 
-   funko factorial(a){
-        print a
 
-   }
-    a = 3
-    print a
-   factorial(3)
-end
+print 5 + "hola"

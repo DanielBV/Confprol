@@ -2,7 +2,7 @@ from antlr4 import *
 from generated_antlr4.confprolLexer import confprolLexer
 from generated_antlr4.confprolParser import confprolParser
 from src.visitor import MyVisitor
-from exceptions import *
+from src.exceptions import *
 
 
 def execute(input_stream):
