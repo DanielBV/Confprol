@@ -31,6 +31,8 @@ methodCall :  ID'(' arguments?')';
 arguments   : expr',' arguments | expr;
 
 
+INLINE_COMMENT  : '//' ~[\r\n]*  -> skip;
+COMMENT: '/*' .* '*/'  -> skip;
 function_declaration:  'funko' ID '(' parameters? ')''{' statement* '}';
 
 parameters   : ID',' parameters | ID;

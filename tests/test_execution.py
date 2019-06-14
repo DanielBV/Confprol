@@ -53,5 +53,28 @@ class TestExecution(unittest.TestCase):
         program = """3+2+10;"""
         self.assertEqual(None, execute(InputStream(program)))
 
+    def test_inline_comment(self):
+        program = """if 3  // THIS IS A COMMENT
+                    { // A comment
+                        // return 1;
+                        return 6;  //Other comment
+                    } // Is this a comment?"""
+        self.assertEqual(6, execute(InputStream(program)))
+
+    def test_comments(self):
+        program = """if 3 /* IS THIS A REFERENCE? */
+                      { 
+                          /*Random string
+                          
+                          
+                                return 1;
+                          Another random string*/
+                          return 6;  
+                      } 
+                      /* NO, THIS ISN'T A REFERENCE */
+                      
+                      """
+        self.assertEqual(6, execute(InputStream(program)))
+
 if __name__ == '__main__':
     unittest.main()
