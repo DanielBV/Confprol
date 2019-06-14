@@ -4,22 +4,22 @@ from src.function import Function
 from generated_antlr4.confprolParser import confprolParser
 from src.exceptions import ReturnException, DuplicatedParameter,FunctionNotDefined, VariableNotDefined, ArgumentsMissing, TooManyArguments
 from src.context import Context
-from src.expressions import FinalExpression,StringExpression
-
+from src.expressions import Expression
+from src.type import ValueType
+from .expressions.operations import TypeOperations
 
 
 class MyVisitor(confprolVisitor):
 
 
     def visitReturn_value(self, ctx: confprolParser.Return_valueContext):
-        value =  super().visit(ctx.expr()).value
+        value =  super().visit(ctx.expr())
         raise ReturnException(value)
 
     def visitExprEqual(self, ctx: confprolParser.ExprEqualContext):
         value1 = self.visit(ctx.expr2(0))
         value2 = self.visit(ctx.expr2(1))
-
-        return value1.equals(value2)
+        return  TypeOperations.equals(value1,value2)
 
     def __init__(self, context):
         self.context = Context()
@@ -69,8 +69,7 @@ class MyVisitor(confprolVisitor):
         else:
             raise FunctionNotDefined(function,ctx.start.line)
 
-        args = list(map(lambda arg: arg.value,arguments))
-        return_value = function.run(args)
+        return_value = function.run(arguments)
 
         return return_value
 
@@ -96,23 +95,23 @@ class MyVisitor(confprolVisitor):
     def visitFinalSTRING(self, ctx: confprolParser.FinalSTRINGContext):
         text = ctx.STRING().getText()
         text = text[1:len(text)-1]
-        return StringExpression(text,text)
+        return Expression(text,text,ValueType.STRING)
 
     def visitExprMINUS(self, ctx: confprolParser.ExprMINUSContext):
         value = super().visit(ctx.expr2())
-        return value.minus(super().visit(ctx.term()))
+        return  TypeOperations.minus(value,super().visit(ctx.term()))
 
 
     def visitExprSUM(self, ctx: confprolParser.ExprSUMContext):
         value = super().visit(ctx.expr2())
-        return value.plus(super().visit(ctx.term()))
+        return TypeOperations.plus(value,super().visit(ctx.term()))
 
     def visitExprTERM(self, ctx: confprolParser.ExprTERMContext):
         return self.visit(ctx.term())
 
     def visitTermDIV(self, ctx: confprolParser.TermDIVContext):
         value = super().visit(ctx.term())
-        return value.div(super().visit(ctx.final()))
+        return  TypeOperations.div(value,super().visit(ctx.final()))
 
     def visitTermFINAL(self, ctx: confprolParser.TermFINALContext):
         value = super().visit(ctx.final())
@@ -120,7 +119,7 @@ class MyVisitor(confprolVisitor):
 
     def visitTermMULT(self, ctx: confprolParser.TermMULTContext):
         value = super().visit(ctx.term())
-        return value.mult(super().visit(ctx.final()))
+        return  TypeOperations.mult(value,super().visit(ctx.final()))
 
     def visitFinalPAR(self, ctx: confprolParser.FinalPARContext):
         value = super().visit(ctx.expr())
@@ -131,13 +130,13 @@ class MyVisitor(confprolVisitor):
         value =  int(ctx.NUMBER().getText())
         name = str(value)
 
-        return FinalExpression(value,name)
+        return Expression(value,name,ValueType.NUMBER)
 
 
     def visitFinalID(self, ctx: confprolParser.FinalIDContext):
         name = ctx.getText()
         if self.context.has_variable(name):
-            return FinalExpression(self.context.get_variable(ctx.getText()), name)
+            return self.context.get_variable(ctx.getText())
         else:
             raise VariableNotDefined(name, ctx.start.line)
 
@@ -160,7 +159,7 @@ class MyVisitor(confprolVisitor):
     def visitAssign(self, ctx: confprolParser.AssignContext):
 
         variable = ctx.ID().getText()
-        value =  super().visit(ctx.expr()).value
+        value =  super().visit(ctx.expr())
         self.context.set_variable(variable,value)
 
         return super().visitAssign(ctx)

@@ -23,7 +23,7 @@ def execute(input_stream):
     try:
         visitor.visit(tree)
     except ReturnException as e:
-        return e.return_value
+        return e.return_value.value
 
 def execute_file(file_path:str):
     input_stream = FileStream(file_path)

@@ -1,7 +1,7 @@
 import unittest
 from src.main import execute_file,execute
 from antlr4 import InputStream
-from src.exceptions import ConfProlSyntaxError
+from src.exceptions import ConfProlSyntaxError, OperationNotSupported
 
 class TestExecution(unittest.TestCase):
 
@@ -33,6 +33,15 @@ class TestExecution(unittest.TestCase):
         self.assertEqual("string5", execute(InputStream(program)))
         program2 = """ return 5+ "string";"""
         self.assertEqual("5string", execute(InputStream(program2)))
+
+    def test_strig_mult_number(self):
+        program = """ return "string" * 5;"""
+        with self.assertRaises(OperationNotSupported):
+            execute(InputStream(program))
+
+        program2 = """ return 5* "string";"""
+        with self.assertRaises(OperationNotSupported):
+            execute(InputStream(program2))
 
 
     def test_missing_semicolon(self):

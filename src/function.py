@@ -1,7 +1,7 @@
 from typing import  List
 
 from src.exceptions import ReturnException
-from src.expressions.expression import FinalExpression
+from src.expressions.expression import Expression
 
 class Function:
 
@@ -27,14 +27,13 @@ class Function:
         self.visitor.context = self.visitor.context.create_subcontext()
         self.visitor.context.set_variables(args)
 
-
         try:
             for statement in self.__function_content:
                 self.visitor.visitStatement(statement)
         except ReturnException as e:
             self.visitor.context = old_state
-            return FinalExpression(e.return_value,f"{self.name}({values})")
-
+            return e.return_value
+            #TODO change expression name
         self.visitor.context = old_state
 
 
