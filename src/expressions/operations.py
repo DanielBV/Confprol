@@ -47,7 +47,7 @@ class TypeOperations:
 
         name = f"{expr1.name} == {expr2.name}"
         value = expr1.value == expr2.value
-        return  Expression(value, name,ValueType.NUMBER)
+        return  Expression(value, name,ValueType.BOOLEAN)
 
     @staticmethod
     def concatenation(expr1:Expression, expr2:Expression):

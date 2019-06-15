@@ -25,14 +25,17 @@ final     : '('expr')' #finalPAR
             | NUMBER #finalNUMBER
             | ID #finalID
             | STRING #finalSTRING
-            | methodCall #finalMethodCall;
+            | methodCall #finalMethodCall
+            | BOOLEAN #finalBoolean;
+
+
 
 methodCall :  ID'(' arguments?')';
 arguments   : expr',' arguments | expr;
 
-
+BOOLEAN : 'True' | 'False';
 INLINE_COMMENT  : '//' ~[\r\n]*  -> skip;
-COMMENT: '/*' .* '*/'  -> skip;
+COMMENT: '/*' .*? '*/'  -> skip;
 function_declaration:  'funko' ID '(' parameters? ')''{' statement* '}';
 
 parameters   : ID',' parameters | ID;

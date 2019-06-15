@@ -5,18 +5,13 @@
     }
 
     funko parameters(a,b){
-        c = 3 * (a+b);
-        print c;
-        d = 5 + c / 2 -2;
-        return d;
+        funko noParameters(){
+            return 7;
+        }
+
+        return noParameters();
+
     }
 
-
-
-    value = noParameters();
-
-    otherValue = 7;
-
-    print parameters(value,otherValue);
-
+   print parameters(3,4);
 

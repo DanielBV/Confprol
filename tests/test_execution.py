@@ -63,9 +63,10 @@ class TestExecution(unittest.TestCase):
 
     def test_comments(self):
         program = """if 3 /* IS THIS A REFERENCE? */
-                      { 
+                      { //
+                        /**/
                           /*Random string
-                          
+                           // * /
                           
                                 return 1;
                           Another random string*/
@@ -75,6 +76,27 @@ class TestExecution(unittest.TestCase):
                       
                       """
         self.assertEqual(6, execute(InputStream(program)))
+
+    def test_boolean_true(self):
+        program = """if True { 
+                            return 6;
+                     }else{
+                            return 10;
+                    }
+
+                              """
+        self.assertEqual(6, execute(InputStream(program)))
+
+    def test_boolean_false(self):
+        program = """if False { 
+                               return 6;
+                        }{
+                               return 10;
+                       }
+
+                                 """
+        self.assertEqual(6, execute(InputStream(program)))
+
 
 if __name__ == '__main__':
     unittest.main()

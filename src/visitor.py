@@ -12,6 +12,11 @@ from .expressions.operations import TypeOperations
 class MyVisitor(confprolVisitor):
 
 
+    def visitFinalBoolean(self, ctx: confprolParser.FinalBooleanContext):
+        value = 'True' == ctx.getText()
+        return Expression(value,value,ValueType.BOOLEAN)
+
+
     def visitReturn_value(self, ctx: confprolParser.Return_valueContext):
         value =  super().visit(ctx.expr())
         raise ReturnException(value)
