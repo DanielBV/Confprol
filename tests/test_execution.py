@@ -90,12 +90,12 @@ class TestExecution(unittest.TestCase):
     def test_boolean_false(self):
         program = """if False { 
                                return 6;
-                        }{
+                        }else{
                                return 10;
                        }
 
                                  """
-        self.assertEqual(6, execute(InputStream(program)))
+        self.assertEqual(10, execute(InputStream(program)))
 
 
 if __name__ == '__main__':
