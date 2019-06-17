@@ -2,6 +2,7 @@ from antlr4.error.ErrorListener import ErrorListener
 from .exceptions import  ConfProlSyntaxError
 class MyErrorListener( ErrorListener ):
 
+
     def __init__(self):
         super(MyErrorListener, self).__init__()
 

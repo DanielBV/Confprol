@@ -1,5 +1,5 @@
 grammar confprol;
-program   :  statement*;
+program   :  statement* EOF;
 
 
 
@@ -25,12 +25,12 @@ final     : '('expr')' #finalPAR
             | NUMBER #finalNUMBER
             | ID #finalID
             | STRING #finalSTRING
-            | methodCall #finalMethodCall
+            | functionCall #finalMethodCall
             | BOOLEAN #finalBoolean;
 
 
 
-methodCall :  ID'(' arguments?')';
+functionCall :  ID'(' arguments?')';
 arguments   : expr',' arguments | expr;
 
 BOOLEAN : 'True' | 'False';

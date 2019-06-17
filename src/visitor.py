@@ -50,7 +50,7 @@ class MyVisitor(confprolVisitor):
            other_args.insert(0,ctx.ID().getText())
            return other_args
 
-    def visitMethodCall(self, ctx: confprolParser.MethodCallContext):
+    def visitFunctionCall(self, ctx: confprolParser.FunctionCallContext):
         function = ctx.ID().getText()
 
         arg_node = ctx.arguments()

@@ -17,15 +17,30 @@ class MultiMethod(object):
         if types in self.cache:
             return self.cache[types](*args)
 
-        print(self.typemap)
+
 
         for key in self.typemap.keys():
             matches = True
+
             if len(key)!=len(types):
                 continue
             for i,element in enumerate(key):
                 if element is DISPATCH_ANY:
                     continue
+
+                if type(element)==tuple: #TODO Refactor
+                    found = False
+                    for type_ in element:
+                        if types[i] == type_:
+                            found = True
+                            break
+
+                    if found:
+                        continue
+                    else:
+                        matches = False
+                        break
+
                 if element != types[i]:
                     matches = False
                     break
