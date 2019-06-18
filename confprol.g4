@@ -26,7 +26,8 @@ final     : '('expr')' #finalPAR
             | ID #finalID
             | STRING #finalSTRING
             | functionCall #finalMethodCall
-            | BOOLEAN #finalBoolean;
+            | BOOLEAN #finalBoolean
+            | FLOAT #finalFloat;
 
 
 
@@ -40,8 +41,11 @@ function_declaration:  'funko' ID '(' parameters? ')''{' statement* '}';
 
 parameters   : ID',' parameters | ID;
 
+
+FLOAT  : NUMBER+'.'NUMBER*;
 ID     : [a-zA-Z]+ ;
 NUMBER : [0-9]+ ;
 WS     : [ \t\r\n] -> skip;
+
 
 STRING: '"' (~["\\\r\n] | [\\][\\]* .)* '"';

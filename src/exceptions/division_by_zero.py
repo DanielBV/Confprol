@@ -1,0 +1,5 @@
+
+
+
+class DivisionByZero(Exception):
+    pass

@@ -6,6 +6,8 @@ from generated_antlr4.confprolParser import confprolParser
 from src.visitor import MyVisitor
 from src.exceptions import *
 from src.error_listener import  MyErrorListener
+import sys
+import os
 
 
 
@@ -33,8 +35,12 @@ def execute_file(file_path:str):
 
 def main():
 
+    if len(sys.argv)!=2:
+        script_name = os.path.basename(__file__)
+        print(f"Usage: python {script_name} <file_path>")
+        exit(-1)
     try:
-       return execute_file("../randomprogram.txt")
+       return execute_file(sys.argv[1])
     except ArgumentsMissing as e:
         print(f"Line {e.line}: Missing arguments  {e.missing_arguments} in function {e.function}")
     except DuplicatedParameter as e:

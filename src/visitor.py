@@ -12,6 +12,10 @@ from .expressions.operations import TypeOperations
 class MyVisitor(confprolVisitor):
 
 
+    def visitFinalFloat(self, ctx: confprolParser.FinalFloatContext):
+        value = float(ctx.FLOAT().getText())
+        return Expression(value, value, ValueType.BOOLEAN)
+
     def visitFinalBoolean(self, ctx: confprolParser.FinalBooleanContext):
         value = 'True' == ctx.getText()
         return Expression(value,value,ValueType.BOOLEAN)
@@ -41,7 +45,7 @@ class MyVisitor(confprolVisitor):
             return other_args
 
     def visitParameters(self, ctx:confprolParser.ParametersContext):
-       args = ctx.parameters() #TODO handle no parameters
+       args = ctx.parameters()
 
        if args is None:
            return [ctx.ID().getText()]

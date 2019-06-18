@@ -6,3 +6,4 @@ from .variable_not_defined import VariableNotDefined
 from .too_many_arguments import TooManyArguments
 from .operation_not_supported import OperationNotSupported
 from .syntax_error import ConfProlSyntaxError
+from .division_by_zero import DivisionByZero

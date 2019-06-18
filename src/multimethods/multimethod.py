@@ -12,26 +12,28 @@ class MultiMethod(object):
 
     def __call__(self, *args):
 
-        types = self.get_types(args)
+        args_types = self.get_types(args)
 
-        if types in self.cache:
-            return self.cache[types](*args)
+        if args_types in self.cache:
+            return self.cache[args_types](*args)
 
 
 
         for key in self.typemap.keys():
             matches = True
 
-            if len(key)!=len(types):
+            if len(key)!=len(args_types):
                 continue
+
             for i,element in enumerate(key):
                 if element is DISPATCH_ANY:
                     continue
 
-                if type(element)==tuple: #TODO Refactor
+                if type(element) == tuple: #TODO Refactor
                     found = False
                     for type_ in element:
-                        if types[i] == type_:
+
+                        if  self.compare(type_,args_types[i]):
                             found = True
                             break
 
@@ -41,11 +43,12 @@ class MultiMethod(object):
                         matches = False
                         break
 
-                if element != types[i]:
+                if not  self.compare(element,args_types[i]):
                     matches = False
                     break
+
             if matches:
-                self.cache[types] = self.typemap.get(key)
+                self.cache[args_types] = self.typemap.get(key)
                 return self.typemap.get(key)(*args)
 
         raise TypeError("No match")
@@ -58,12 +61,16 @@ class MultiMethod(object):
     def get_types(self,types):
         return tuple(arg.__class__ for arg in types)
 
+    def compare(self, expected_type, found_type):
+        return issubclass(found_type,expected_type)
 
 class TypeMultiMethod(MultiMethod):
 
     def get_types(self,types):
         return tuple(arg.type for arg in types)
 
+    def compare(self,expected_type,found_type):
+        return found_type == expected_type
 
 def register(function,types,name_factory):
     function = getattr(function, "__lastreg__", function)
