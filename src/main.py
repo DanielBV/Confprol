@@ -28,7 +28,7 @@ def execute(input_stream):
         return e.return_value.value
 
 def execute_file(file_path:str):
-    input_stream = FileStream(file_path)
+    input_stream = FileStream(file_path,"utf-8")
     return execute(input_stream)
 
 

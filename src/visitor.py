@@ -1,16 +1,70 @@
 
+
 from generated_antlr4.confprolVisitor import confprolVisitor
-from src.function import Function
+from src.callable import Callable
 from generated_antlr4.confprolParser import confprolParser
-from src.exceptions import ReturnException, DuplicatedParameter,FunctionNotDefined, VariableNotDefined, ArgumentsMissing, TooManyArguments
+from src.exceptions import ReturnException, NotCallable,DuplicatedParameter,FunctionNotDefined, VariableNotDefined, ArgumentsMissing, TooManyArguments
 from src.context import Context
-from src.expressions import Expression
+from src.expressions import Expression,Function
 from src.type import ValueType
 from .expressions.operations import TypeOperations
 
 
 class MyVisitor(confprolVisitor):
 
+
+    def visitFinalIDS(self, ctx: confprolParser.FinalIDSContext):
+        self.temp_context = self.context
+        super().visitFinalIDS(ctx)
+        return self.temp_context
+
+    def visitAttribute(self, ctx:confprolParser.AttributeContext):
+        name = ctx.ID().getText()
+        if self.temp_context.has_attribute(name):
+            self.temp_context = self.temp_context.get_attribute(name)
+        else:
+            raise VariableNotDefined(name, ctx.start.line)
+
+        return super(MyVisitor, self).visitAttribute(ctx)
+
+    def visitIntermediateIDs(self, ctx:confprolParser.IntermediateIDsContext):
+        name = ctx.ID().getText()
+        if self.temp_context.has_attribute(name):
+            self.temp_context = self.temp_context.get_attribute(name)
+        else:
+            raise VariableNotDefined(name, ctx.start.line)
+        #TODO refactor
+        return super().visitIntermediateIDs(ctx)
+
+    def visitCall(self, ctx:confprolParser.CallContext):
+        name = ctx.ID().getText()
+        if self.temp_context.has_attribute(name):
+            self.temp_context = self.temp_context.get_attribute(name)
+        else:
+            raise VariableNotDefined(name, ctx.start.line)
+
+        try:
+            function =  self.temp_context.get_attribute("CALL")
+        except ValueError:
+            raise NotCallable()
+
+        arg_node = ctx.arguments()
+        if arg_node is None:
+            arguments = []
+        else:
+            arguments = self.visitArguments(arg_node)
+
+        parameters = function.get_parameters()
+        if len(arguments) < len(parameters):
+            missing_arguments = parameters[len(arguments):]
+            raise ArgumentsMissing("Argument number mismatch", ctx.start.line, function.get_name(), missing_arguments)
+        if len(arguments) > len(parameters):
+            extra_arguments = list(map(lambda arg: arg.name, arguments))
+
+            raise TooManyArguments("Too many arguments", ctx.start.line, function.get_name(), extra_arguments)
+
+        self.temp_context = function.run(arguments)
+        return 3
 
     def visitFinalFloat(self, ctx: confprolParser.FinalFloatContext):
         value = float(ctx.FLOAT().getText())
@@ -32,6 +86,7 @@ class MyVisitor(confprolVisitor):
 
     def __init__(self, context):
         self.context = Context()
+        self.temp_context = None
 
 
     def visitArguments(self, ctx: confprolParser.ArgumentsContext):
@@ -54,37 +109,10 @@ class MyVisitor(confprolVisitor):
            other_args.insert(0,ctx.ID().getText())
            return other_args
 
-    def visitFunctionCall(self, ctx: confprolParser.FunctionCallContext):
-        function = ctx.ID().getText()
-
-        arg_node = ctx.arguments()
-        if arg_node is None:
-            arguments = []
-        else:
-            arguments = self.visitArguments(arg_node)
-
-        if self.context.has_function(function): #TODO Refactor
-
-            function =  self.context.get_function(function)
-            parameters = function.get_parameters()
-            if len(arguments) < len(parameters):
-                missing_arguments = parameters[len(arguments):]
-                raise ArgumentsMissing("Argument number mismatch", ctx.start.line, function.get_name(), missing_arguments)
-            if len(arguments) > len(parameters):
-                extra_arguments = list(map(lambda arg: arg.name,arguments))
-
-                raise TooManyArguments("Too many arguments", ctx.start.line, function.get_name(),extra_arguments)
-
-        else:
-            raise FunctionNotDefined(function,ctx.start.line)
-
-        return_value = function.run(arguments)
-
-        return return_value
 
 
-    def visitFinalMethodCall(self, ctx: confprolParser.FinalMethodCallContext):
-        return super().visitFinalMethodCall(ctx)
+    def visitFinalFunctionCall(self, ctx: confprolParser.FinalFunctionCallContext):
+        return super().visitFinalFunctionCall(ctx)
 
     def visitFunction_declaration(self, ctx: confprolParser.Function_declarationContext):
         name = ctx.ID().getText()
@@ -98,7 +126,8 @@ class MyVisitor(confprolVisitor):
         else:
             params = []
 
-        self.context.add_function(name,Function(params,ctx.statement(),name,self))
+        expression = Function(Callable(params,ctx.statement(),name,self))
+        self.context.set_variable(name,expression)
 
 
     def visitFinalSTRING(self, ctx: confprolParser.FinalSTRINGContext):
@@ -140,14 +169,6 @@ class MyVisitor(confprolVisitor):
         name = str(value)
 
         return Expression(value,name,ValueType.NUMBER)
-
-
-    def visitFinalID(self, ctx: confprolParser.FinalIDContext):
-        name = ctx.getText()
-        if self.context.has_variable(name):
-            return self.context.get_variable(ctx.getText())
-        else:
-            raise VariableNotDefined(name, ctx.start.line)
 
     def visitCondition(self, ctx:confprolParser.ConditionContext):
         value = super().visit(ctx.expr()).value

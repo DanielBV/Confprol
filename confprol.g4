@@ -23,11 +23,15 @@ term      : term '*' final #termMULT
             | final #termFINAL;
 final     : '('expr')' #finalPAR
             | NUMBER #finalNUMBER
-            | ID #finalID
+            | ids #finalIDS
             | STRING #finalSTRING
-            | functionCall #finalMethodCall
+            | functionCall #finalFunctionCall
             | BOOLEAN #finalBoolean
             | FLOAT #finalFloat;
+
+ids             : ID #attribute
+                | ids'.'ids #intermediateIDs
+                | ID'('arguments?')' #call;
 
 
 

@@ -1,9 +1,9 @@
 from typing import  List
 
 from src.exceptions import ReturnException
-from src.expressions.expression import Expression
 
-class Function:
+
+class Callable:
 
     def __init__(self, arguments:List[str], function_tree,name, visitor: 'MyVisitor'):
         self.__arguments = arguments # argument name
