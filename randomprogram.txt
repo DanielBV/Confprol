@@ -1,8 +1,9 @@
 
-funko pop(){
+    funko noParameters(){
+        return 9;
 
-}
-a = "Hola";
-print "A".length();
-print a.length();
-pop(a.length());
+    }
+
+a = 3;
+b = a;
+noParameters(a);

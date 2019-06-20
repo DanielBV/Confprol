@@ -3,29 +3,26 @@
 from generated_antlr4.confprolVisitor import confprolVisitor
 from src.expressions.callable.callable import Callable
 from generated_antlr4.confprolParser import confprolParser
-from src.exceptions import ReturnException, NotCallable,DuplicatedParameter,FunctionNotDefined, VariableNotDefined, ArgumentsMissing, TooManyArguments
-from src.context import Context
-from src.expressions import Expression,StringExpression,CallableFunction
-from src.type import ValueType
-from .expressions.operations import TypeOperations
+from src.exceptions import ReturnException, NotCallable,DuplicatedParameter,MethodNotDefined,FunctionNotDefined, VariableNotDefined
 
-#TODO Load strings as strings instead of expressions
+from src.expressions import CallableFunction
+from .expressions.operations import TypeOperations
+from .confprol_handler import ConfprolHandler
+
+
 class MyVisitor(confprolVisitor):
 
 
 
     def visitFinalID(self, ctx: confprolParser.FinalIDContext):
         name = ctx.getText()
-        if self.context.has_attribute(name):
-            return self.context.get_attribute(ctx.getText())
-        else:
-            raise VariableNotDefined(name, ctx.start.line)
+        return self.handler.get_attribute(name,ctx.start.line)
 
     def visitAttributeBeginning(self, ctx: confprolParser.AttributeBeginningContext):
         if ctx.STRING() is not None:
-            expr = self.handler.loadString(ctx.STRING().getText())
+            expr = self.handler.load_string(ctx.STRING().getText())
         else:
-            expr = self.context.get_attribute(ctx.ID().getText())
+            expr = self.handler.get_attribute(ctx.ID().getText(),ctx.start.line)
 
 
         ctx.subattributes().before = expr
@@ -57,7 +54,7 @@ class MyVisitor(confprolVisitor):
         if ctx.before.has_attribute(name):
             expression = ctx.before.get_attribute(name)
         else:
-            raise FunctionNotDefined(name, ctx.start.line) #TODO differenciate between method not defined and function not defined
+            raise MethodNotDefined(ctx.before.name,name, ctx.start.line) #TODO differenciate between method not defined and function not defined
 
         if not isinstance(expression,Callable):
             raise NotCallable()
@@ -76,11 +73,11 @@ class MyVisitor(confprolVisitor):
     def visitFinalFloat(self, ctx: confprolParser.FinalFloatContext):
         print(ctx)
         value = float(ctx.FLOAT().getText())
-        return Expression(value, value, ValueType.BOOLEAN)
+        return self.handler.load_float(value)
 
     def visitFinalBoolean(self, ctx: confprolParser.FinalBooleanContext):
         value = 'True' == ctx.getText()
-        return Expression(value,value,ValueType.BOOLEAN)
+        return self.handler.load_boolean(value)
 
 
     def visitReturn_value(self, ctx: confprolParser.Return_valueContext):
@@ -92,8 +89,7 @@ class MyVisitor(confprolVisitor):
         value2 = self.visit(ctx.expr2(1))
         return  TypeOperations.equals(value1,value2)
 
-    def __init__(self,handler):
-        self.context = Context()
+    def __init__(self,handler:ConfprolHandler):
         self.handler = handler
 
     def visitArguments(self, ctx: confprolParser.ArgumentsContext):
@@ -116,7 +112,7 @@ class MyVisitor(confprolVisitor):
            other_args.insert(0,ctx.ID().getText())
            return other_args
 
-    #TODO Refactor to avoid duplication with methods
+
     def visitFunctionCall(self, ctx: confprolParser.FunctionCallContext):
         function = ctx.ID().getText()
 
@@ -126,14 +122,11 @@ class MyVisitor(confprolVisitor):
         else:
             arguments = self.visitArguments(arg_node)
 
-        if self.context.has_attribute(function):
-
-            function = self.context.get_attribute(function)
-            self.handler.runFunction(function,arguments,ctx.start.line)
-        #TODO Function doesnt exist
-        return_value = function.run(arguments)
-
-        return return_value
+        if self.handler.has_attribute(function): #TODO refactor
+            function = self.handler.get_attribute(function,ctx.start.line)
+            return self.handler.runFunction(function,arguments,ctx.start.line)
+        else:
+            raise FunctionNotDefined(function,ctx.start.line)
 
 
     def visitFunction_declaration(self, ctx: confprolParser.Function_declarationContext):
@@ -149,11 +142,11 @@ class MyVisitor(confprolVisitor):
             params = []
 
         expression = CallableFunction(params,ctx.statement(),name,self)
-        self.context.set_variable(name,expression)
+        self.handler.assign_variable(name,expression)
 
 
     def visitFinalSTRING(self, ctx: confprolParser.FinalSTRINGContext):
-        return self.handler.loadString(ctx.getText())
+        return self.handler.load_string(ctx.getText())
 
 
     def visitExprMINUS(self, ctx: confprolParser.ExprMINUSContext):
@@ -187,9 +180,8 @@ class MyVisitor(confprolVisitor):
 
     def visitFinalNUMBER(self, ctx: confprolParser.FinalNUMBERContext):
         value =  int(ctx.NUMBER().getText())
-        name = str(value)
 
-        return Expression(value,name,ValueType.NUMBER)
+        return self.handler.load_number(value)
 
     def visitCondition(self, ctx:confprolParser.ConditionContext):
         value = super().visit(ctx.expr()).value
@@ -211,8 +203,8 @@ class MyVisitor(confprolVisitor):
 
         variable = ctx.ID().getText()
         value =  super().visit(ctx.expr())
-        value.name = variable
-        self.context.set_variable(variable,value)
+
+        self.handler.assign_variable(variable,value)
 
         return super().visitAssign(ctx)
 
@@ -221,3 +213,8 @@ class MyVisitor(confprolVisitor):
 
         print(value)
 
+    def get_context(self):
+        return self.handler.context
+
+    def set_context(self,context):
+        self.handler.set_context(context)

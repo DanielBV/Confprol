@@ -53,6 +53,8 @@ def main():
         print(f"Line {e.line}: Too many arguments  {e.extra_arguments} in function {e.function}")
     except ConfProlSyntaxError as e:
         print(e)
+    except MethodNotDefined as e:
+        print(f"Line {e.line}: Object {e.object_name} has no method '{e.method_name}'")
 
 
 

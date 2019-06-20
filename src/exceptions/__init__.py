@@ -8,3 +8,4 @@ from .operation_not_supported import OperationNotSupported
 from .syntax_error import ConfProlSyntaxError
 from .division_by_zero import DivisionByZero
 from .not_callable import NotCallable
+from .method_not_defined import MethodNotDefined

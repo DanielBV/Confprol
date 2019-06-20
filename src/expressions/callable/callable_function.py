@@ -27,9 +27,11 @@ class CallableFunction(Callable):
             raise ValueError(f"Argument number mismatch in {self.name}. Missing {missing_arguments} ")
 
         args = dict(zip(self.__arguments, values))
-        old_state = self.visitor.context
-        self.visitor.context = self.visitor.context.create_subcontext()
-        self.visitor.context.set_variables(args)
+        old_state = self.visitor.get_context()
+        new_state = old_state.create_subcontext()
+        new_state.set_variables(args)
+
+        self.visitor.set_context(new_state)
 
         try:
             for statement in self.__function_content:
@@ -41,6 +43,7 @@ class CallableFunction(Callable):
             #TODO The name doesn't match methods
             return e.return_value
 
-        self.visitor.context = old_state
+
+        self.visitor.set_context(old_state)
 
 
