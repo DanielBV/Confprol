@@ -1,22 +1,31 @@
 
 
 from generated_antlr4.confprolVisitor import confprolVisitor
-from src.callable import Callable
+from src.expressions.callable import Callable
 from generated_antlr4.confprolParser import confprolParser
 from src.exceptions import ReturnException, NotCallable,DuplicatedParameter,FunctionNotDefined, VariableNotDefined, ArgumentsMissing, TooManyArguments
 from src.context import Context
-from src.expressions import Expression,Function
+from src.expressions import Expression,Function,StringExpression
 from src.type import ValueType
 from .expressions.operations import TypeOperations
-
-
+#TODO Load strings as strings instead of expressions
 class MyVisitor(confprolVisitor):
 
+    def loadString(self, text:str):
+        #TODO Refactor with an abstract factory
+        text = text[1:len(text)-1]
+        return StringExpression(text)
+
+    def visitAttributeBeginning(self, ctx: confprolParser.AttributeBeginningContext):
+        if ctx.STRING() is not None:
+            expr = self.loadString(ctx.STRING().getText())
+        else:
+            expr = self.context.get_attribute(ctx.ID().getText())
 
 
-    def visitFinalIDS(self, ctx: confprolParser.FinalIDSContext):
-        ctx.ids().before = self.context
-        return super().visitFinalIDS(ctx)
+        ctx.otherthings().before = expr
+        return super().visitAttributeBeginning(ctx)
+
 
     def visitAttribute(self, ctx:confprolParser.AttributeContext):
         name = ctx.ID().getText()
@@ -45,17 +54,19 @@ class MyVisitor(confprolVisitor):
         else:
             raise FunctionNotDefined(name, ctx.start.line) #TODO differenciate between method not defined and function not defined
 
-        try:
-            function =  expression.get_attribute("CALL")
-            # TODO assert CALL is callable
-        except ValueError:
+        function = expression # TODO Refactor and change to method
+
+        if not isinstance(function,Callable):
             raise NotCallable()
+
+
 
         arg_node = ctx.arguments()
         if arg_node is None:
-            arguments = []
+            arguments = [ctx.before]
         else:
             arguments = self.visitArguments(arg_node)
+            arguments.insert(0,ctx.before)
 
         parameters = function.get_parameters()
         if len(arguments) < len(parameters):

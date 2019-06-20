@@ -3,8 +3,8 @@ from typing import  List
 from src.exceptions import ReturnException
 
 
-class Callable:
-
+class CallableFunction:
+    #TODO make subtype of expression
     def __init__(self, arguments:List[str], function_tree,name, visitor: 'MyVisitor'):
         self.__arguments = arguments # argument name
         self.__function_content = function_tree
@@ -34,6 +34,7 @@ class Callable:
             self.visitor.context = old_state
             value_names = list(map(lambda a:a.name,values))
             e.return_value.name = f"{self.name}(" + ",".join(value_names)+")"
+            #TODO The name doesn't match methods
             return e.return_value
 
         self.visitor.context = old_state

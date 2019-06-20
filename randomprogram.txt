@@ -1,13 +1,7 @@
 
 
 
-funko thisIsATest(uno){
 
-    funko pop(){
-        print "COCO";
-    }
-    return pop;
-}
 a = 5;
-print "ESPACIO";
+print "ESPACIO".length();
 print a.be();

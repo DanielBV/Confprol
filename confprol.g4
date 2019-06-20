@@ -29,8 +29,9 @@ final     : '('expr')' #finalPAR
             | BOOLEAN #finalBoolean
             | FLOAT #finalFloat;
 
-ids locals [before]  : ID #attribute
-                | ids'.'ids#intermediateIDs
+ids locals [before]: (ID | STRING)'.' otherthings #attributeBeginning;
+otherthings  locals[before]:    ID #attribute
+                | otherthings'.'otherthings#intermediateIDs
                 | ID'('arguments?')' #call;
 
 
