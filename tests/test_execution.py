@@ -97,6 +97,15 @@ class TestExecution(unittest.TestCase):
                                  """
         self.assertEqual(10, execute(InputStream(program)))
 
+    def test_string_length_inside_variable(self):
+        program = """a = "Hey listen";
+                    return a.length();"""
+        self.assertEqual(10, execute(InputStream(program)))
+
+    def test_string_length(self):
+        program = """return "Heylisten".length();"""
+        self.assertEqual(9, execute(InputStream(program)))
+
 
 if __name__ == '__main__':
     unittest.main()

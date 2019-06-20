@@ -1,13 +1,15 @@
 from typing import  List
-
+from src.expressions.expression import Expression
 from src.exceptions import ReturnException
+from src.type import ValueType
 
-
-class Callable:
+class Callable(Expression):
 
     def __init__(self, arguments:List[str],name):
         self.__arguments = arguments # argument name
         self.name = name
+        
+        super(Callable, self).__init__(None,name,ValueType.FUNCTION)
 
     def get_parameters(self):
         return self.__arguments

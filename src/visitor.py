@@ -1,20 +1,18 @@
 
 
 from generated_antlr4.confprolVisitor import confprolVisitor
-from src.expressions.callable import Callable
+from src.expressions.callable.callable import Callable
 from generated_antlr4.confprolParser import confprolParser
 from src.exceptions import ReturnException, NotCallable,DuplicatedParameter,FunctionNotDefined, VariableNotDefined, ArgumentsMissing, TooManyArguments
 from src.context import Context
 from src.expressions import Expression,StringExpression,CallableFunction
 from src.type import ValueType
 from .expressions.operations import TypeOperations
+
 #TODO Load strings as strings instead of expressions
 class MyVisitor(confprolVisitor):
 
-    def loadString(self, text:str):
-        #TODO Refactor with an abstract factory
-        text = text[1:len(text)-1]
-        return StringExpression(text)
+
 
     def visitFinalID(self, ctx: confprolParser.FinalIDContext):
         name = ctx.getText()
@@ -25,7 +23,7 @@ class MyVisitor(confprolVisitor):
 
     def visitAttributeBeginning(self, ctx: confprolParser.AttributeBeginningContext):
         if ctx.STRING() is not None:
-            expr = self.loadString(ctx.STRING().getText())
+            expr = self.handler.loadString(ctx.STRING().getText())
         else:
             expr = self.context.get_attribute(ctx.ID().getText())
 
@@ -61,12 +59,8 @@ class MyVisitor(confprolVisitor):
         else:
             raise FunctionNotDefined(name, ctx.start.line) #TODO differenciate between method not defined and function not defined
 
-        function = expression # TODO Refactor and change to method
-
-        if not isinstance(function,Callable):
+        if not isinstance(expression,Callable):
             raise NotCallable()
-
-
 
         arg_node = ctx.arguments()
         if arg_node is None:
@@ -75,19 +69,12 @@ class MyVisitor(confprolVisitor):
             arguments = self.visitArguments(arg_node)
             arguments.insert(0,ctx.before)
 
-        parameters = function.get_parameters()
-        if len(arguments) < len(parameters):
-            missing_arguments = parameters[len(arguments):]
-            raise ArgumentsMissing("Argument number mismatch", ctx.start.line, function.get_name(), missing_arguments)
-        if len(arguments) > len(parameters):
-            extra_arguments = list(map(lambda arg: arg.name, arguments))
 
-            raise TooManyArguments("Too many arguments", ctx.start.line, function.get_name(), extra_arguments)
-
-        return  function.run(arguments)
+        return  self.handler.runFunction(expression,arguments,ctx.start.line)
 
 
     def visitFinalFloat(self, ctx: confprolParser.FinalFloatContext):
+        print(ctx)
         value = float(ctx.FLOAT().getText())
         return Expression(value, value, ValueType.BOOLEAN)
 
@@ -105,9 +92,9 @@ class MyVisitor(confprolVisitor):
         value2 = self.visit(ctx.expr2(1))
         return  TypeOperations.equals(value1,value2)
 
-    def __init__(self):
+    def __init__(self,handler):
         self.context = Context()
-
+        self.handler = handler
 
     def visitArguments(self, ctx: confprolParser.ArgumentsContext):
         args = ctx.arguments()
@@ -142,17 +129,8 @@ class MyVisitor(confprolVisitor):
         if self.context.has_attribute(function):
 
             function = self.context.get_attribute(function)
-            parameters = function.get_parameters()#TODO Check is collable
-            if len(arguments) < len(parameters):
-                missing_arguments = parameters[len(arguments):]
-                raise ArgumentsMissing("Argument number mismatch", ctx.start.line, function.get_name(),
-                                       missing_arguments)
-            if len(arguments) > len(parameters):
-                extra_arguments = list(map(lambda arg: arg.name, arguments))
-
-                raise TooManyArguments("Too many arguments", ctx.start.line, function.get_name(), extra_arguments)
-
-
+            self.handler.runFunction(function,arguments,ctx.start.line)
+        #TODO Function doesnt exist
         return_value = function.run(arguments)
 
         return return_value
@@ -175,9 +153,8 @@ class MyVisitor(confprolVisitor):
 
 
     def visitFinalSTRING(self, ctx: confprolParser.FinalSTRINGContext):
-        text = ctx.STRING().getText()
-        text = text[1:len(text)-1]
-        return Expression(text,text,ValueType.STRING)
+        return self.handler.loadString(ctx.getText())
+
 
     def visitExprMINUS(self, ctx: confprolParser.ExprMINUSContext):
         value = super().visit(ctx.expr2())

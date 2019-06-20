@@ -1,20 +1,18 @@
 
 from .expression import Expression
 from src.type import ValueType
-from .python_callable import  PythonCallabe
+from src.expressions.callable.python_callable import  PythonCallabe
 from typing import List
-#TODO make relative import
+
 
 def length_function(expr:List[Expression]):
     expr = expr[0]
     value = len(expr.value)
-    return Expression(value,value,ValueType.NUMBER)
+    return Expression(value,f"length({expr.name})",ValueType.NUMBER)
 
 class StringExpression(Expression):
 
-    def __init__(self,string):
-        super(StringExpression, self).__init__(string,string,ValueType.STRING)
-
-        length = Expression(None,None,ValueType.FUNCTION)#TODO Refactor to make this cleaner
+    def __init__(self,value,name):
+        super(StringExpression, self).__init__(value,name,ValueType.STRING)
 
         self.attributes["length"] = PythonCallabe(["this"],"length",length_function)

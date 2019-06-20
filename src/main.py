@@ -8,7 +8,7 @@ from src.exceptions import *
 from src.error_listener import  MyErrorListener
 import sys
 import os
-
+from src.confprol_handler import ConfprolHandler
 
 
 def execute(input_stream):
@@ -20,7 +20,7 @@ def execute(input_stream):
     tree = parser.program()
 
 
-    visitor = MyVisitor()
+    visitor = MyVisitor(ConfprolHandler())
 
     try:
         visitor.visit(tree)

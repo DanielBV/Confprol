@@ -1,5 +1,5 @@
 from ..type import ValueType
-from . import Expression
+from . import Expression,StringExpression
 from src.exceptions import OperationNotSupported, DivisionByZero
 from src.multimethods.multimethod import  typemultimethod,DISPATCH_ANY
 
@@ -18,7 +18,7 @@ class TypeOperations:
     def plus(expr1: Expression, expr2: Expression):
         name = f"{expr1.name} + {expr2.name}"
         value = str(expr1.value) + str(expr2.value)
-        return  Expression(value,name,ValueType.STRING)
+        return  StringExpression(value,name)
 
     @staticmethod
     @typemultimethod(DISPATCH_ANY, DISPATCH_ANY)
@@ -58,9 +58,6 @@ class TypeOperations:
     @staticmethod
     @typemultimethod((ValueType.NUMBER, ValueType.BOOLEAN), (ValueType.NUMBER, ValueType.BOOLEAN))
     def minus(expr1:Expression, expr2:Expression):
-        if expr1.type == ValueType.STRING or expr2.type == ValueType.STRING:
-            raise OperationNotSupported("-", expr1, expr2)
-
         name = f"{expr1.name} - {expr2.name}"
         value = expr1.value - expr2.value
         return  Expression(value, name,ValueType.NUMBER)
