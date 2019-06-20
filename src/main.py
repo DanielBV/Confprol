@@ -19,8 +19,8 @@ def execute(input_stream):
     parser.addErrorListener(MyErrorListener())
     tree = parser.program()
 
-    state = {}
-    visitor = MyVisitor(state)
+
+    visitor = MyVisitor()
 
     try:
         visitor.visit(tree)

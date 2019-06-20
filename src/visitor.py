@@ -13,38 +13,41 @@ from .expressions.operations import TypeOperations
 class MyVisitor(confprolVisitor):
 
 
+
     def visitFinalIDS(self, ctx: confprolParser.FinalIDSContext):
-        self.temp_context = self.context
-        super().visitFinalIDS(ctx)
-        return self.temp_context
+        ctx.ids().before = self.context
+        return super().visitFinalIDS(ctx)
 
     def visitAttribute(self, ctx:confprolParser.AttributeContext):
         name = ctx.ID().getText()
-        if self.temp_context.has_attribute(name):
-            self.temp_context = self.temp_context.get_attribute(name)
-        else:
-            raise VariableNotDefined(name, ctx.start.line)
 
-        return super(MyVisitor, self).visitAttribute(ctx)
+        if ctx.before.has_attribute(name):
+            return ctx.before.get_attribute(name)
+        else:
+            raise VariableNotDefined(name, ctx.start.line) #TODO differenciate between attribute not defined and variable not defined
+
+
 
     def visitIntermediateIDs(self, ctx:confprolParser.IntermediateIDsContext):
-        name = ctx.ID().getText()
-        if self.temp_context.has_attribute(name):
-            self.temp_context = self.temp_context.get_attribute(name)
-        else:
-            raise VariableNotDefined(name, ctx.start.line)
-        #TODO refactor
-        return super().visitIntermediateIDs(ctx)
+        ctx.ids(0).before = ctx.before
+        before = super(MyVisitor, self).visit(ctx.ids(0))
+        ctx.ids(1).before = before
+        return super(MyVisitor, self).visit(ctx.ids(1))
+
+
+
+
 
     def visitCall(self, ctx:confprolParser.CallContext):
         name = ctx.ID().getText()
-        if self.temp_context.has_attribute(name):
-            self.temp_context = self.temp_context.get_attribute(name)
+        if ctx.before.has_attribute(name):
+            expression = ctx.before.get_attribute(name)
         else:
-            raise VariableNotDefined(name, ctx.start.line)
+            raise FunctionNotDefined(name, ctx.start.line) #TODO differenciate between method not defined and function not defined
 
         try:
-            function =  self.temp_context.get_attribute("CALL")
+            function =  expression.get_attribute("CALL")
+            # TODO assert CALL is callable
         except ValueError:
             raise NotCallable()
 
@@ -63,8 +66,8 @@ class MyVisitor(confprolVisitor):
 
             raise TooManyArguments("Too many arguments", ctx.start.line, function.get_name(), extra_arguments)
 
-        self.temp_context = function.run(arguments)
-        return 3
+        return  function.run(arguments)
+
 
     def visitFinalFloat(self, ctx: confprolParser.FinalFloatContext):
         value = float(ctx.FLOAT().getText())
@@ -84,9 +87,8 @@ class MyVisitor(confprolVisitor):
         value2 = self.visit(ctx.expr2(1))
         return  TypeOperations.equals(value1,value2)
 
-    def __init__(self, context):
+    def __init__(self):
         self.context = Context()
-        self.temp_context = None
 
 
     def visitArguments(self, ctx: confprolParser.ArgumentsContext):
@@ -190,6 +192,7 @@ class MyVisitor(confprolVisitor):
 
         variable = ctx.ID().getText()
         value =  super().visit(ctx.expr())
+        value.name = variable
         self.context.set_variable(variable,value)
 
         return super().visitAssign(ctx)

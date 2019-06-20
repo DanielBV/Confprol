@@ -9,5 +9,3 @@ class Function(Expression):
 
         super(Function, self).__init__(callable,callable,ValueType.FUNCTION)
         self.attributes["CALL"] = callable
-
-        #TODO Restrict overriding the 'CALL' attribute with a variable
