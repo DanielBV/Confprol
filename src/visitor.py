@@ -5,7 +5,7 @@ from src.expressions.callable import Callable
 from generated_antlr4.confprolParser import confprolParser
 from src.exceptions import ReturnException, NotCallable,DuplicatedParameter,FunctionNotDefined, VariableNotDefined, ArgumentsMissing, TooManyArguments
 from src.context import Context
-from src.expressions import Expression,Function,StringExpression
+from src.expressions import Expression,StringExpression,CallableFunction
 from src.type import ValueType
 from .expressions.operations import TypeOperations
 #TODO Load strings as strings instead of expressions
@@ -16,6 +16,13 @@ class MyVisitor(confprolVisitor):
         text = text[1:len(text)-1]
         return StringExpression(text)
 
+    def visitFinalID(self, ctx: confprolParser.FinalIDContext):
+        name = ctx.getText()
+        if self.context.has_attribute(name):
+            return self.context.get_attribute(ctx.getText())
+        else:
+            raise VariableNotDefined(name, ctx.start.line)
+
     def visitAttributeBeginning(self, ctx: confprolParser.AttributeBeginningContext):
         if ctx.STRING() is not None:
             expr = self.loadString(ctx.STRING().getText())
@@ -23,7 +30,7 @@ class MyVisitor(confprolVisitor):
             expr = self.context.get_attribute(ctx.ID().getText())
 
 
-        ctx.otherthings().before = expr
+        ctx.subattributes().before = expr
         return super().visitAttributeBeginning(ctx)
 
 
@@ -122,10 +129,34 @@ class MyVisitor(confprolVisitor):
            other_args.insert(0,ctx.ID().getText())
            return other_args
 
+    #TODO Refactor to avoid duplication with methods
+    def visitFunctionCall(self, ctx: confprolParser.FunctionCallContext):
+        function = ctx.ID().getText()
+
+        arg_node = ctx.arguments()
+        if arg_node is None:
+            arguments = []
+        else:
+            arguments = self.visitArguments(arg_node)
+
+        if self.context.has_attribute(function):
+
+            function = self.context.get_attribute(function)
+            parameters = function.get_parameters()#TODO Check is collable
+            if len(arguments) < len(parameters):
+                missing_arguments = parameters[len(arguments):]
+                raise ArgumentsMissing("Argument number mismatch", ctx.start.line, function.get_name(),
+                                       missing_arguments)
+            if len(arguments) > len(parameters):
+                extra_arguments = list(map(lambda arg: arg.name, arguments))
+
+                raise TooManyArguments("Too many arguments", ctx.start.line, function.get_name(), extra_arguments)
 
 
-    def visitFinalFunctionCall(self, ctx: confprolParser.FinalFunctionCallContext):
-        return super().visitFinalFunctionCall(ctx)
+        return_value = function.run(arguments)
+
+        return return_value
+
 
     def visitFunction_declaration(self, ctx: confprolParser.Function_declarationContext):
         name = ctx.ID().getText()
@@ -139,7 +170,7 @@ class MyVisitor(confprolVisitor):
         else:
             params = []
 
-        expression = Function(Callable(params,ctx.statement(),name,self))
+        expression = CallableFunction(params,ctx.statement(),name,self)
         self.context.set_variable(name,expression)
 
 

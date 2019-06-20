@@ -1,15 +1,19 @@
 from typing import  List
 
 from src.exceptions import ReturnException
+from src.expressions import Expression
+from src.type import ValueType
 
 
-class CallableFunction:
+class CallableFunction(Expression):
     #TODO make subtype of expression
     def __init__(self, arguments:List[str], function_tree,name, visitor: 'MyVisitor'):
-        self.__arguments = arguments # argument name
+        self.__arguments = arguments
         self.__function_content = function_tree
         self.visitor = visitor
-        self.name = name
+
+
+        super(CallableFunction, self).__init__(None,name,ValueType.FUNCTION)
 
     def get_parameters(self):
         return self.__arguments

@@ -23,15 +23,16 @@ term      : term '*' final #termMULT
             | final #termFINAL;
 final     : '('expr')' #finalPAR
             | NUMBER #finalNUMBER
-            | ids #finalIDS
+            | ID #finalID
+            | attributes #finalIDS
             | STRING #finalSTRING
             | functionCall #finalFunctionCall
             | BOOLEAN #finalBoolean
             | FLOAT #finalFloat;
 
-ids locals [before]: (ID | STRING)'.' otherthings #attributeBeginning;
-otherthings  locals[before]:    ID #attribute
-                | otherthings'.'otherthings#intermediateIDs
+attributes locals [before]: (ID | STRING)'.' subattributes #attributeBeginning;
+subattributes  locals[before]:    ID #attribute
+                | subattributes'.'subattributes#intermediateIDs
                 | ID'('arguments?')' #call;
 
 

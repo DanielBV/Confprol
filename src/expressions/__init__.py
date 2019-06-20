@@ -1,4 +1,4 @@
 
 from .expression import Expression
-from .function import Function
 from .string import StringExpression
+from .function_callable import CallableFunction
