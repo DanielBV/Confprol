@@ -28,7 +28,9 @@ final     : '('expr')' #finalPAR
             | STRING #finalSTRING
             | functionCall #finalFunctionCall
             | BOOLEAN #finalBoolean
-            | FLOAT #finalFloat;
+            | FLOAT #finalFloat
+            | list_creation #finalListCreation;
+
 
 attributes locals [before]: (ID | STRING)'.' subattributes #attributeBeginning;
 subattributes  locals[before]:    ID #attribute
@@ -37,6 +39,7 @@ subattributes  locals[before]:    ID #attribute
 
 
 
+list_creation   : '[' arguments? ']';
 
 functionCall :  ID'(' arguments?')';
 arguments   : expr',' arguments | expr;

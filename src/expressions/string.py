@@ -16,3 +16,6 @@ class StringExpression(Expression):
         super(StringExpression, self).__init__(value,name,ValueType.STRING)
 
         self.attributes["length"] = PythonCallabe(["this"],"length",length_function)
+
+    def __str__(self):
+        return self.value

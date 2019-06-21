@@ -4,7 +4,7 @@
 
 from src.expressions.callable.callable import Callable
 from src.exceptions import  NotCallable,ArgumentsMissing, TooManyArguments, VariableNotDefined
-from src.expressions import Expression,StringExpression
+from src.expressions import Expression,StringExpression, ListExpression
 from src.type import ValueType
 from src.context import Context
 
@@ -60,3 +60,11 @@ class ConfprolHandler:
 
     def set_context(self, context):
         self.context = context
+
+    def load_list(self, values):
+        expression_names = list(map(lambda expr: expr.name,values))
+        name = "[" + ",".join(expression_names) + "]"
+        return ListExpression(values,name)
+
+    def print_expression(self, value):
+        print(value)

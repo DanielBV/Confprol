@@ -132,5 +132,23 @@ class TestExecution(unittest.TestCase):
                 """
         self.assertEqual(0.0000003, execute(InputStream(program)),0.0000000000000001)
 
+    def test_list(self):
+        program = """
+        
+            e = [[6,[5,9],2],2,3,4];
+            return  e.get(0).get(1).get(1);
+        """
+        self.assertEqual(9, execute(InputStream(program)))
+
+    def test_lists_evaluate_expressions(self):
+        program = """
+                funko returnsFour(){
+                    return 5; // The four was a lie, the cake too.   
+                }
+                  e = [6*5+4+ returnsFour()];
+                  return  e.get(0);
+              """
+        self.assertEqual(39, execute(InputStream(program)))
+
 if __name__ == '__main__':
     unittest.main()

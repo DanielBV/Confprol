@@ -1,6 +1,5 @@
 from typing import  List
 from src.expressions.expression import Expression
-from src.exceptions import ReturnException
 from src.type import ValueType
 
 class Callable(Expression):
@@ -27,3 +26,5 @@ class Callable(Expression):
     def _run(self, values):
         raise NotImplementedError("Callable 'run' not implemented")
 
+    def __str__(self):
+        return f"{self.name}"

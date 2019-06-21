@@ -14,6 +14,18 @@ class MyVisitor(confprolVisitor):
 
 
 
+
+
+    def visitList_creation(self, ctx: confprolParser.List_creationContext):
+        arg_node = ctx.arguments()
+        if arg_node is None:
+            values = []
+        else:
+            values = self.visitArguments(arg_node)
+
+        return self.handler.load_list(values)
+
+
     def visitFinalID(self, ctx: confprolParser.FinalIDContext):
         name = ctx.getText()
         return self.handler.get_attribute(name,ctx.start.line)
@@ -40,10 +52,10 @@ class MyVisitor(confprolVisitor):
 
 
     def visitIntermediateIDs(self, ctx:confprolParser.IntermediateIDsContext):
-        ctx.ids(0).before = ctx.before
-        before = super(MyVisitor, self).visit(ctx.ids(0))
-        ctx.ids(1).before = before
-        return super(MyVisitor, self).visit(ctx.ids(1))
+        ctx.subattributes(0).before = ctx.before
+        before = super(MyVisitor, self).visit(ctx.subattributes(0))
+        ctx.subattributes(1).before = before
+        return super(MyVisitor, self).visit(ctx.subattributes(1))
 
 
 
@@ -208,9 +220,9 @@ class MyVisitor(confprolVisitor):
         return super().visitAssign(ctx)
 
     def visitPrint(self, ctx: confprolParser.PrintContext):
-        value = self.visit(ctx.expr()).value
+        value = self.visit(ctx.expr()) #TODO Move to hangler
 
-        print(value)
+        self.handler.print_expression(value)
 
     def get_context(self):
         return self.handler.context

@@ -1,7 +1,6 @@
 
 from src.type import ValueType
 
-
 class Expression:
 
 
@@ -11,6 +10,7 @@ class Expression:
         self.name  = name
         self.attributes = {}
         self.__type = type_
+
 
 
 
@@ -29,3 +29,6 @@ class Expression:
 
     def has_attribute(self,attribute):
         return attribute in self.attributes
+
+    def __str__(self):
+        return str(self.value)
