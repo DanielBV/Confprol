@@ -106,6 +106,31 @@ class TestExecution(unittest.TestCase):
         program = """return "Heylisten".length();"""
         self.assertEqual(9, execute(InputStream(program)))
 
+    def test_store_function_as_variable(self):
+        program = """
+            funko function(){
+                funko gearsOfFunko(a,b){
+                    return a+b;
+                }
+                
+                return gearsOfFunko;
+            
+            }
+            
+            a = function();
+            return a(2,3);
+            
+        
+        """
+        self.assertEqual(5, execute(InputStream(program)))
+
+    def test_float(self):
+        program = """
+                  a = 0.0000003;
+                  return a;
+
+                """
+        self.assertEqual(0.0000003, execute(InputStream(program)),0.0000000000000001)
 
 if __name__ == '__main__':
     unittest.main()

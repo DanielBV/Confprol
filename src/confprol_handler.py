@@ -42,7 +42,7 @@ class ConfprolHandler:
             raise VariableNotDefined(attribute, line)
 
     def load_float(self, float:float):
-        return Expression(float, str(float), ValueType.FLOAT)
+        return Expression(float, str(float), ValueType.NUMBER)
 
     def load_boolean(self, boolean:bool):
         return Expression(boolean, str(boolean), ValueType.BOOLEAN)

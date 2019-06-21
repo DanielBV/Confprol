@@ -71,7 +71,6 @@ class MyVisitor(confprolVisitor):
 
 
     def visitFinalFloat(self, ctx: confprolParser.FinalFloatContext):
-        print(ctx)
         value = float(ctx.FLOAT().getText())
         return self.handler.load_float(value)
 
