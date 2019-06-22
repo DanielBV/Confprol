@@ -66,17 +66,17 @@ class MyVisitor(confprolVisitor):
         if ctx.before.has_attribute(name):
             expression = ctx.before.get_attribute(name)
         else:
-            raise MethodNotDefined(ctx.before.name,name, ctx.start.line) #TODO differenciate between method not defined and function not defined
+            raise MethodNotDefined(ctx.before.name,name, ctx.start.line)
 
         if not isinstance(expression,Callable):
             raise NotCallable()
 
         arg_node = ctx.arguments()
         if arg_node is None:
-            arguments = [ctx.before]
+            arguments = []
         else:
             arguments = self.visitArguments(arg_node)
-            arguments.insert(0,ctx.before)
+
 
 
         return  self.handler.runFunction(expression,arguments,ctx.start.line)
@@ -220,7 +220,7 @@ class MyVisitor(confprolVisitor):
         return super().visitAssign(ctx)
 
     def visitPrint(self, ctx: confprolParser.PrintContext):
-        value = self.visit(ctx.expr()) #TODO Move to hangler
+        value = self.visit(ctx.expr())
 
         self.handler.print_expression(value)
 

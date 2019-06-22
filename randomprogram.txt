@@ -1,11 +1,2 @@
-
-
-funko get(){
-
-}
-print get;
-e = [[6,[5,9],2],2,3,4];
-
-b = e.get;
-print e;
-print b(e,2);
+a = "pepsi".length;
+print a();

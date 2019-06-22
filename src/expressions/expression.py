@@ -32,3 +32,12 @@ class Expression:
 
     def __str__(self):
         return str(self.value)
+
+    def get_deep_value(self):
+        """
+        Returns the value of the expression. If the expression contains subexpressions, it will replace the subexpressions
+        with their correspondent'get_deep_value'
+        :return:
+        """
+
+        return self.value

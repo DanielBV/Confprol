@@ -24,6 +24,8 @@ class ConfprolHandler:
             raise NotCallable()
 
         parameters = callable.get_parameters()
+        #TODO Move this to run()
+        """
         if len(arguments) < len(parameters):
             missing_arguments = parameters[len(arguments):]
             raise ArgumentsMissing("Argument number mismatch", line, callable.get_name(),
@@ -32,7 +34,7 @@ class ConfprolHandler:
             extra_arguments = list(map(lambda arg: arg.name, arguments))
 
             raise TooManyArguments("Too many arguments", line, callable.get_name(), extra_arguments)
-
+        """
         return callable.run(arguments)
 
     def get_attribute(self,attribute,line):
