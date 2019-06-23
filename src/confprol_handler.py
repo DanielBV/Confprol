@@ -3,7 +3,7 @@
 
 
 from src.expressions.callable.callable import Callable
-from src.exceptions import  NotCallable,ArgumentsMissing, TooManyArguments, VariableNotDefined
+from src.exceptions import  NotCallable, VariableNotDefined, RuntimeException, TooManyArguments, ArgumentsMissing
 from src.expressions import Expression,StringExpression, ListExpression
 from src.type import ValueType
 from src.context import Context
@@ -19,29 +19,20 @@ class ConfprolHandler:
         text = text[1:len(text) - 1]
         return StringExpression(text, text)
 
-    def runFunction(self, callable: Callable, arguments, line):
+    def runFunction(self, callable: Callable, arguments,line):
         if callable.type != ValueType.FUNCTION:
-            raise NotCallable()
+            raise RuntimeException(line,NotCallable(callable.name))
 
-        parameters = callable.get_parameters()
-        #TODO Move this to run()
-        """
-        if len(arguments) < len(parameters):
-            missing_arguments = parameters[len(arguments):]
-            raise ArgumentsMissing("Argument number mismatch", line, callable.get_name(),
-                                   missing_arguments)
-        if len(arguments) > len(parameters):
-            extra_arguments = list(map(lambda arg: arg.name, arguments))
-
-            raise TooManyArguments("Too many arguments", line, callable.get_name(), extra_arguments)
-        """
-        return callable.run(arguments)
+        try:
+            return callable.run(arguments)
+        except (ArgumentsMissing,TooManyArguments) as e:
+            raise RuntimeException(line,e)
 
     def get_attribute(self,attribute,line):
         if self.context.has_attribute(attribute):
             return self.context.get_attribute(attribute)
         else:
-            raise VariableNotDefined(attribute, line)
+            raise RuntimeException(line,VariableNotDefined(attribute))
 
     def load_float(self, float:float):
         return Expression(float, str(float), ValueType.NUMBER)

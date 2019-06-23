@@ -3,7 +3,8 @@
 from generated_antlr4.confprolVisitor import confprolVisitor
 from src.expressions.callable.callable import Callable
 from generated_antlr4.confprolParser import confprolParser
-from src.exceptions import ReturnException, NotCallable,DuplicatedParameter,MethodNotDefined,FunctionNotDefined, VariableNotDefined
+from src.exceptions import ReturnException, NotCallable,MethodNotDefined,FunctionNotDefined,\
+    VariableNotDefined, DivisionByZero, RuntimeException, ConfProlSyntaxError, ConfprolException, OperationNotSupported
 
 from src.expressions import CallableFunction
 from .expressions.operations import TypeOperations
@@ -66,7 +67,7 @@ class MyVisitor(confprolVisitor):
         if ctx.before.has_attribute(name):
             expression = ctx.before.get_attribute(name)
         else:
-            raise MethodNotDefined(ctx.before.name,name, ctx.start.line)
+            raise RuntimeException(ctx.start.line,MethodNotDefined(ctx.before.name,name))
 
         if not isinstance(expression,Callable):
             raise NotCallable()
@@ -78,9 +79,10 @@ class MyVisitor(confprolVisitor):
             arguments = self.visitArguments(arg_node)
 
 
-
-        return  self.handler.runFunction(expression,arguments,ctx.start.line)
-
+        try:
+            return self.handler.runFunction(expression,arguments,ctx.start.line)
+        except ConfprolException as e:
+            raise RuntimeException(ctx.start.line,e)
 
     def visitFinalFloat(self, ctx: confprolParser.FinalFloatContext):
         value = float(ctx.FLOAT().getText())
@@ -137,7 +139,7 @@ class MyVisitor(confprolVisitor):
             function = self.handler.get_attribute(function,ctx.start.line)
             return self.handler.runFunction(function,arguments,ctx.start.line)
         else:
-            raise FunctionNotDefined(function,ctx.start.line)
+            raise RuntimeException(ctx.start.line,FunctionNotDefined(function))
 
 
     def visitFunction_declaration(self, ctx: confprolParser.Function_declarationContext):
@@ -148,7 +150,7 @@ class MyVisitor(confprolVisitor):
             duplicated_params = set([x for x in params if params.count(x) > 1])
 
             if len(duplicated_params) != 0:
-                raise DuplicatedParameter(name, duplicated_params, ctx.start.line)
+                raise ConfProlSyntaxError(f"Duplicated parameter {duplicated_params} in function {name}",ctx.start.line,ctx.start.column) #TODO refactor
         else:
             params = []
 
@@ -162,19 +164,29 @@ class MyVisitor(confprolVisitor):
 
     def visitExprMINUS(self, ctx: confprolParser.ExprMINUSContext):
         value = super().visit(ctx.expr2())
-        return  TypeOperations.minus(value,super().visit(ctx.term()))
-
+        try:
+            return  TypeOperations.minus(value,super().visit(ctx.term()))
+        except OperationNotSupported as e:
+            raise RuntimeException(ctx.start.line, e)
 
     def visitExprSUM(self, ctx: confprolParser.ExprSUMContext):
         value = super().visit(ctx.expr2())
-        return TypeOperations.plus(value,super().visit(ctx.term()))
+        try:
+            return TypeOperations.plus(value,super().visit(ctx.term()))
+        except OperationNotSupported as e:
+            raise RuntimeException(ctx.start.line, e)
 
     def visitExprTERM(self, ctx: confprolParser.ExprTERMContext):
         return self.visit(ctx.term())
 
     def visitTermDIV(self, ctx: confprolParser.TermDIVContext):
         value = super().visit(ctx.term())
-        return  TypeOperations.div(value,super().visit(ctx.final()))
+        #TODO Keep moving methods to handler
+        try:
+            return TypeOperations.div(value,super().visit(ctx.final()))
+        except (DivisionByZero,OperationNotSupported) as e:
+            raise RuntimeException(ctx.start.line,e)
+
 
     def visitTermFINAL(self, ctx: confprolParser.TermFINALContext):
         value = super().visit(ctx.final())
@@ -182,7 +194,11 @@ class MyVisitor(confprolVisitor):
 
     def visitTermMULT(self, ctx: confprolParser.TermMULTContext):
         value = super().visit(ctx.term())
-        return  TypeOperations.mult(value,super().visit(ctx.final()))
+        #TODO Move operations to handler
+        try:
+            return  TypeOperations.mult(value,super().visit(ctx.final()))
+        except OperationNotSupported as e:
+            raise RuntimeException(ctx.start.line, e)
 
     def visitFinalPAR(self, ctx: confprolParser.FinalPARContext):
         value = super().visit(ctx.expr())

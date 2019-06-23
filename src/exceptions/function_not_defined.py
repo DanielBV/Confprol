@@ -1,8 +1,13 @@
 
+from .confprol_exception import  ConfprolException
 
+class FunctionNotDefined(ConfprolException):
 
-class FunctionNotDefined(Exception):
-
-    def __init__(self, function, line):
+    def __init__(self, function):
         self.function = function
-        self.line = line
+        super(FunctionNotDefined, self).__init__("FunctionNotDefinedException")
+
+    def get_message(self):
+        return f"Function {self.function} not defined"
+
+

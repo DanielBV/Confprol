@@ -1,3 +1,4 @@
+from .confprol_exception import ConfprolException
 from .arguments_missing import ArgumentsMissing
 from .return_exception import ReturnException
 from .duplicated_parameter import DuplicatedParameter
@@ -9,3 +10,5 @@ from .syntax_error import ConfProlSyntaxError
 from .division_by_zero import DivisionByZero
 from .not_callable import NotCallable
 from .method_not_defined import MethodNotDefined
+from .runtime_exception import RuntimeException
+from .element_not_contained import ElementNotContained

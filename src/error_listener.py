@@ -7,4 +7,4 @@ class MyErrorListener( ErrorListener ):
         super(MyErrorListener, self).__init__()
 
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
-        raise ConfProlSyntaxError(f"line {line}:{column} Syntax Error ({msg})")
+        raise ConfProlSyntaxError(msg,line,column)

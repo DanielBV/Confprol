@@ -41,20 +41,10 @@ def main():
         exit(-1)
     try:
        return execute_file(sys.argv[1])
-    except ArgumentsMissing as e:
-        print(f"Line {e.line}: Missing arguments  {e.missing_arguments} in function {e.function}")
-    except DuplicatedParameter as e:
-        print(f"Line {e.line}: Method declaration '{e.function_name}' hycas duplicated parameters {e.duplicated_parameters}")
-    except FunctionNotDefined as e:
-        print(f"Line {e.line}: Method '{e.function}' isn't defined.")
-    except VariableNotDefined as e:
-        print(f"Line {e.line}: Variable'{e.variable_name}' isn't defined.")
-    except TooManyArguments as e:
-        print(f"Line {e.line}: Too many arguments  {e.extra_arguments} in function {e.function}")
+    except RuntimeException as e:
+        print(e.get_message())
     except ConfProlSyntaxError as e:
-        print(e)
-    except MethodNotDefined as e:
-        print(f"Line {e.line}: Object {e.object_name} has no method '{e.method_name}'")
+        print(e.get_message())
 
 
 

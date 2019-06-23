@@ -1,5 +1,10 @@
 
+from .confprol_exception import ConfprolException
 
+class DivisionByZero(ConfprolException):
 
-class DivisionByZero(Exception):
-    pass
+    def __init__(self):
+        super(DivisionByZero, self).__init__("DivisionByZeroException")
+
+    def get_message(self):
+        return "Division by 0"

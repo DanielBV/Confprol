@@ -1,9 +1,15 @@
 
 
-class ArgumentsMissing(Exception):
+from .confprol_exception import ConfprolException
 
-    def __init__(self, message,line,function, missing_arguments):
-        super(ArgumentsMissing, self).__init__(message)
-        self.line = line
+class ArgumentsMissing(ConfprolException):
+
+    def __init__(self,function:str, missing_arguments):
+
         self.function = function
         self.missing_arguments = missing_arguments
+
+        super(ArgumentsMissing, self).__init__("ArgumentsMissingException")
+
+    def get_message(self):
+        return f" Missing arguments  {self.missing_arguments} in function {self.function}"

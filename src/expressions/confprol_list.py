@@ -2,6 +2,7 @@ from src.type import ValueType
 from .expression import Expression
 from typing import  List
 from .callable import  PythonMethod
+from src.exceptions import ElementNotContained
 
 
 def get_position(arguments):
@@ -67,7 +68,7 @@ class ListExpression(Expression):
             i = values.index(expr.get_deep_value())
             self.value.pop(i)
         else:
-            raise ValueError(f"The list {self.name} doesn't contain {expr}") #TODO Make a better exception system to add line easier
+            raise ElementNotContained(self.name,expr) #TODO Make a better exception system to add line easier
 
     def insert(self, position, expr):
         self.value.insert(position,expr)

@@ -1,2 +1,3 @@
+
 a = "pepsi".length;
-print a();
+print a(c.get(0).get(0));

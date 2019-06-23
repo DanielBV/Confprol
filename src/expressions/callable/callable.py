@@ -1,6 +1,7 @@
 from typing import  List
 from src.expressions.expression import Expression
 from src.type import ValueType
+from src.exceptions import ArgumentsMissing, TooManyArguments
 
 class Callable(Expression):
 
@@ -17,10 +18,16 @@ class Callable(Expression):
         return self.name
 
     def run(self,values):
-        if len(values) != len(self.__arguments):
-            missing_arguments = self.__arguments[len(values):]
-            raise ValueError(f"Argument number mismatch in {self.name}. Missing {missing_arguments} ") #TODO change exception thrown and check if there are more or less
-                                                                                                        #arguments here
+        parameters = self.get_parameters()
+
+        if len(values) < len(parameters):
+            missing_arguments = parameters[len(values):]
+            raise ArgumentsMissing( self.get_name(), missing_arguments)
+        if len(values) > len(parameters):
+            extra_arguments = list(map(lambda arg: arg.name, values))
+
+            raise TooManyArguments("Too many arguments",   self.get_name(), extra_arguments)
+
 
         return self._run(values)
 

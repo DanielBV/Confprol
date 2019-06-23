@@ -1,7 +1,7 @@
 import unittest
 from src.main import execute_file,execute
 from antlr4 import InputStream
-from src.exceptions import ConfProlSyntaxError, OperationNotSupported
+from src.exceptions import ConfProlSyntaxError, OperationNotSupported, RuntimeException
 
 class TestExecution(unittest.TestCase):
 
@@ -28,26 +28,15 @@ class TestExecution(unittest.TestCase):
         self.assertEqual(True, execute(InputStream("return 3+1 == 4;")))
         self.assertEqual(True, execute(InputStream("return 4 == 3+1;")))
 
-    def test_string_plus_number(self):
-        program = """ return "string" + 5;"""
-        self.assertEqual("string5", execute(InputStream(program)))
-        program2 = """ return 5+ "string";"""
-        self.assertEqual("5string", execute(InputStream(program2)))
 
-    def test_strig_mult_number(self):
-        program = """ return "string" * 5;"""
-        with self.assertRaises(OperationNotSupported):
-            execute(InputStream(program))
-
-        program2 = """ return 5* "string";"""
-        with self.assertRaises(OperationNotSupported):
-            execute(InputStream(program2))
 
 
     def test_missing_semicolon(self):
         program = """ return "string" + 5"""
         with self.assertRaises(ConfProlSyntaxError):
             execute(InputStream(program))
+
+        #TODO Add message assert
 
     def test_expression_without_statement(self):
         program = """3+2+10;"""
@@ -179,8 +168,12 @@ class TestExecution(unittest.TestCase):
                        e.remove(9);
                        return e;
                 """
-        self.assertEqual([4, 5, 3, 6], execute(InputStream(program)))
-        #TODO Waiting to refactor the exception system
+        with self.assertRaises(RuntimeException) as e:
+            execute(InputStream(program))
+
+        print(e.exception.get_message())
+        self.assertIn(e.exception.get_message(),"ElementNotContainedException line 3: The list e doesn't contain 9")
+
 
     def test_list_insert(self):
         program = """
@@ -191,6 +184,131 @@ class TestExecution(unittest.TestCase):
                              return [e,f];
                       """
         self.assertEqual([["VALUE"],[1,2,"VALUE",3,4]], execute(InputStream(program)))
+
+    def test_too_many_arguments(self):
+        program = """
+                        funko thisIsAFunction(a,b){
+                                return a + b;
+                        }
+                        
+                        a = 6;
+                        c = 10;
+                        thisIsAFunction(a,thisIsAFunction(a,c),c);
+                            
+                    """
+
+        with self.assertRaises(RuntimeException) as e:
+           execute(InputStream(program))
+
+        self.assertEqual("TooManyArgumentsException line 8:  Too many arguments  ['a', 'thisIsAFunction(a,c)', 'c'] in function thisIsAFunction",
+                      e.exception.get_message())
+
+    def test_missing_arguments(self):
+        program = """
+                           funko thisIsAFunction(a,b){
+                                   return a + b;
+                           }
+
+                           a = 6;
+                           c = 10;
+                           thisIsAFunction(c);
+
+                       """
+
+        with self.assertRaises(RuntimeException) as e:
+            execute(InputStream(program))
+
+        self.assertEqual(
+            "ArgumentsMissingException line 8:  Missing arguments  ['b'] in function thisIsAFunction",
+            e.exception.get_message())
+
+    def test_division_by_zero(self):
+        program = """ 7/0;"""
+
+        with self.assertRaises(RuntimeException) as e:
+             execute(InputStream(program))
+
+        self.assertEqual(
+            "DivisionByZeroException line 1: Division by 0",
+            e.exception.get_message())
+
+    def test_duplicated_parameters(self):
+        program = """ funko thisIsAFunction(param,param){
+                       
+                        }
+                  """
+
+        with self.assertRaises(ConfProlSyntaxError) as e:
+            execute(InputStream(program))
+
+        self.assertEqual(
+            "SyntaxException in line 1:1 Duplicated parameter {'param'} in function thisIsAFunction",
+            e.exception.get_message())
+
+
+    def test_function_not_defined(self):
+        program = """ return pipo();"""
+
+        with self.assertRaises(RuntimeException) as e:
+            execute(InputStream(program))
+
+        self.assertEqual(
+            "FunctionNotDefinedException line 1: Function pipo not defined",
+            e.exception.get_message())
+
+    def test_method_not_define(self):
+        program = """ a = 3;
+                      a.platypus();"""
+
+        with self.assertRaises(RuntimeException) as e:
+            execute(InputStream(program))
+
+        self.assertEqual(
+          "MethodNotDefinedException line 2: Object a has no method platypus.",
+            e.exception.get_message())
+
+
+
+    def test_function_not_callable(self):
+        program = """ a = 3;
+                      a();"""
+
+        with self.assertRaises(RuntimeException) as e:
+            execute(InputStream(program))
+
+        self.assertEqual(
+            "NotCallableException line 2: The variable a is not callable.",
+            e.exception.get_message())
+
+    def test_method_not_callable(self):
+        #TODO Fun fact, I can't test this yet because basic types don't have attributes
+        program = """ a = 3;
+            a.();"""
+
+        with self.assertRaises(RuntimeException) as e:
+            execute(InputStream(program))
+
+        self.fail()
+
+
+    def test_operation_not_supported(self):
+        program = """ return "string" * 5;"""
+        with self.assertRaises(RuntimeException) as e:
+            execute(InputStream(program))
+
+        self.assertEqual(
+            "OperationNotSupportedException line 1: Operation * can't be applied to ValueType.STRING and ValueType.NUMBER",
+            e.exception.get_message())
+
+    def test_variable_not_defined(self):
+        program = """ return a;"""
+        with self.assertRaises(RuntimeException) as e:
+            execute(InputStream(program))
+
+        self.assertEqual(
+            "VariableNotDefinedException line 1: The variable a is not defined.",
+            e.exception.get_message())
+
 
 if __name__ == '__main__':
     unittest.main()
