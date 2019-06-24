@@ -1,7 +1,6 @@
 from .confprol_exception import ConfprolException
 from .arguments_missing import ArgumentsMissing
 from .return_exception import ReturnException
-from .duplicated_parameter import DuplicatedParameter
 from .function_not_defined import FunctionNotDefined
 from .variable_not_defined import VariableNotDefined
 from .too_many_arguments import TooManyArguments

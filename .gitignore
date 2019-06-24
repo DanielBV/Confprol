@@ -3,3 +3,9 @@ generated_antlr4
 .idea/
 .vscode
 __pycache__
+.coverage
+coverage.bat
+sonar.bat
+coverage.xml
+coverage_script.bat
+.scannerwork/

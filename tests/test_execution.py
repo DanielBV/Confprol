@@ -2,11 +2,15 @@ import unittest
 from src.main import execute_file,execute
 from antlr4 import InputStream
 from src.exceptions import ConfProlSyntaxError, OperationNotSupported, RuntimeException
+import os,sys
 
 class TestExecution(unittest.TestCase):
 
+    def setUp(self):
+        self.test_path =   os.path.dirname(__file__)
     def test_functions(self):
-        self.assertEqual(27, execute_file("samples/test_function_declaration.con"))
+
+        self.assertEqual(27, execute_file(f"{self.test_path}/samples/test_function_declaration.con"))
 
     def test_return_no_return(self):
         self.assertEqual(None,execute(InputStream("")))
