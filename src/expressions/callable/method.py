@@ -1,7 +1,7 @@
 from .callable import Callable
 from src.expressions import Expression
 
-class PythonMethod(Callable): #TODO Refactor to avoid having four combinations of (method|function) && (python|confprol)
+class PythonMethod(Callable):
 
     def __init__(self,arguments,name, run_function, called_on:Expression):
         super(PythonMethod, self).__init__(arguments,name)

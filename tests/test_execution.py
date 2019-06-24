@@ -40,7 +40,7 @@ class TestExecution(unittest.TestCase):
         with self.assertRaises(ConfProlSyntaxError):
             execute(InputStream(program))
 
-        #TODO Add message assert
+
 
     def test_expression_without_statement(self):
         program = """3+2+10;"""

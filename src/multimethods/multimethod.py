@@ -29,7 +29,7 @@ class MultiMethod(object):
                 if element is DISPATCH_ANY:
                     continue
 
-                if type(element) == tuple: #TODO Refactor
+                if type(element) == tuple:
                     found = False
                     for type_ in element:
 
@@ -75,8 +75,6 @@ class TypeMultiMethod(MultiMethod):
 def register(function,types,name_factory):
     function = getattr(function, "__lastreg__", function)
     name = function.__name__
-
-    #TODO permitir metodos
 
     mm = registry.get(name)
     if mm is None:

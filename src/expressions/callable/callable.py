@@ -7,7 +7,7 @@ class Callable(Expression):
 
     def __init__(self, arguments:List[str],name):
         self.__arguments = arguments # argument name
-        self.name = name
+        self.function_name = name
         
         super(Callable, self).__init__(None,name,ValueType.FUNCTION)
 
@@ -35,4 +35,4 @@ class Callable(Expression):
         raise NotImplementedError("Callable 'run' not implemented")
 
     def __str__(self):
-        return f"{self.name}"
+        return f"[function {self.function_name}]"

@@ -5,7 +5,7 @@ python:
 install:
 - pip install antlr4-python3-runtime
 - sudo curl -O https://www.antlr.org/download/antlr-4.7.2-complete.jar
--  
+
 
 script:
   - java -jar ./antlr-4.7.2-complete.jar -Dlanguage=Python3 confprol.g4 -o ./generated_antlr4/  -visitor -no-listener

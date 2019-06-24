@@ -318,8 +318,5 @@ class TestOperations(unittest.TestCase):
 
 
 
-
-    #TODO Test division /0
-
 if __name__ == '__main__':
     unittest.main()
