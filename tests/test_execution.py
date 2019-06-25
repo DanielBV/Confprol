@@ -347,7 +347,26 @@ class TestExecution(unittest.TestCase):
         self.assertEqual(7, execute(InputStream(program)))
 
 
+    def test_function_attributes(self):
+        program = """
+        funko ralph(){
+            }
+        ralph.a = 3;
+        return ralph.a;
+        
+        """
 
+        self.assertEqual(3, execute(InputStream(program)))
 
+    def test_method_attributes(self):
+        program = """
+                string = "This is a string";
+                string.length.a = 42;
+                
+                return string.length.a;
+
+              """
+
+        self.assertEqual(42, execute(InputStream(program)))
 if __name__ == '__main__':
     unittest.main()

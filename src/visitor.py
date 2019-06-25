@@ -17,6 +17,9 @@ class MyVisitor(confprolVisitor):
 
 
 
+    def visitExprNE(self, ctx: confprolParser.ExprNEContext):
+        return super().visitExprNE(ctx)
+
     def visitAttribute_assign(self, ctx: confprolParser.Attribute_assignContext):
         base_expr = self.visit(ctx.expr(0))
         value = self.visit(ctx.expr(1))
@@ -234,13 +237,12 @@ class MyVisitor(confprolVisitor):
         return super().visitStatement(ctx)
 
     def visitAssign(self, ctx: confprolParser.AssignContext):
-
         variable = ctx.ID().getText()
         value =  super().visit(ctx.expr())
 
         self.handler.assign_variable(variable,value)
 
-        return super().visitAssign(ctx)
+
 
     def visitPrint(self, ctx: confprolParser.PrintContext):
         value = self.visit(ctx.expr())

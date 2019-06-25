@@ -3,6 +3,7 @@ from src.expressions.basic_expression import BasicExpression
 from src.type import ValueType
 from src.exceptions import ArgumentsMissing, TooManyArguments
 from ..none import confprol_none
+from ..confprol_object import ConfprolObject
 
 class Callable(BasicExpression):
 
@@ -10,7 +11,7 @@ class Callable(BasicExpression):
         self.__arguments = arguments # argument name
         self.function_name = name
         
-        super(Callable, self).__init__(None,name,ValueType.FUNCTION)
+        super(Callable, self).__init__(ConfprolObject(self),name,ValueType.FUNCTION)
 
     def get_parameters(self):
         return self.__arguments

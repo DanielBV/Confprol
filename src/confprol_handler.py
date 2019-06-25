@@ -22,6 +22,7 @@ class ConfprolHandler:
         return StringExpression(ConfprolObject(text), text)
 
     def run_function(self, callable: Callable, arguments, line):
+
         if callable.type != ValueType.FUNCTION:
             raise RuntimeException(line,NotCallable(callable.name))
 

@@ -1,14 +1,33 @@
 funko objectfactory(){
     object = 3;
-
+    object.value = 3;
     funko next(){
         return object+1;
     }
-    object.next = next;
+
+    funko getValue(){
+        return object.value;
+    }
+
+    funko increaseValue(){
+        object.value = object.value + 1;
+    }
+
+    funko newObject(){
+        object = objectfactory();
+    }
+
+    object.getValue = getValue;
+    object.increaseValue = increaseValue;
+    object.newObject = newObject;
     return object;
 }
-objectfactory();
-a = [objectfactory()];
 
-print objectfactory.a;
-print objectfactory;
+
+a = objectfactory();
+print a.getValue();
+a.increaseValue();
+print a.getValue();
+a.newObject();
+a.increaseValue();
+print a.getValue();
