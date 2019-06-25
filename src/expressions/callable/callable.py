@@ -34,5 +34,8 @@ class Callable(Expression):
     def _run(self, values):
         raise NotImplementedError("Callable 'run' not implemented")
 
+    def copy(self):
+        raise NotImplementedError("Callable 'copy' not implemented")
+
     def __str__(self):
         return f"[function {self.function_name}]"

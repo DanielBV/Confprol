@@ -285,14 +285,16 @@ class TestExecution(unittest.TestCase):
             e.exception.get_message())
 
     def test_method_not_callable(self):
-        #TODO Fun fact, I can't test this yet because basic types don't have attributes
-        program = """ a = 3;
-            a.();"""
+        program = """ a=3;
+                      a.b = 3;
+                      a.b();"""
 
         with self.assertRaises(RuntimeException) as e:
             execute(InputStream(program))
 
-        self.fail()
+        self.assertEqual(
+            "NotCallableException line 3: The variable 3 is not callable.",
+            e.exception.get_message())
 
 
     def test_operation_not_supported(self):
@@ -312,6 +314,40 @@ class TestExecution(unittest.TestCase):
         self.assertEqual(
             "VariableNotDefinedException line 1: The variable a is not defined.",
             e.exception.get_message())
+
+    def test_assign_subattributes(self):
+        program = """
+            a = 6;
+            a.a = 3;
+            a.a.B = 5;
+            return [a.a,a.a.B];"""
+
+        self.assertEqual([3,5],   execute(InputStream(program)))
+
+    def test_assignation_keeps_attribute(self):
+        program = """
+        a = 3;
+        a.a = 5;
+        
+        b = a;
+        return b.a;
+        """
+
+        self.assertEqual( 5, execute(InputStream(program)))
+
+    def test_changin_attributes_changes_all_alias(self):
+        program = """
+        a = 3;
+        a.a = 5;
+
+        b = a;
+        b.a = 7;
+        return a.a;
+        """
+
+        self.assertEqual(7, execute(InputStream(program)))
+
+
 
 
 if __name__ == '__main__':

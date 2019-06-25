@@ -4,10 +4,10 @@ from generated_antlr4.confprolVisitor import confprolVisitor
 from src.expressions.callable.callable import Callable
 from generated_antlr4.confprolParser import confprolParser
 from src.exceptions import ReturnException, NotCallable,MethodNotDefined,FunctionNotDefined,\
-    VariableNotDefined, RuntimeException, ConfProlSyntaxError, ConfprolException, OperationNotSupported
+    VariableNotDefined, RuntimeException, ConfProlSyntaxError, ConfprolException
 
 from src.expressions import CallableFunction
-from .expressions.operations import TypeOperations
+
 from .confprol_handler import ConfprolHandler
 
 
@@ -16,6 +16,16 @@ class MyVisitor(confprolVisitor):
 
 
 
+
+    def visitAttribute_assign(self, ctx: confprolParser.Attribute_assignContext):
+        base_expr = self.visit(ctx.expr(0))
+        value = self.visit(ctx.expr(1))
+
+        if ctx.subattributes() is not None:
+            ctx.subattributes().before = base_expr
+            base_expr = super(MyVisitor, self).visit(ctx.subattributes())
+
+        base_expr.set_attribute(ctx.ID().getText(),value)
 
     def visitList_creation(self, ctx: confprolParser.List_creationContext):
         arg_node = ctx.arguments()
@@ -48,7 +58,7 @@ class MyVisitor(confprolVisitor):
         if ctx.before.has_attribute(name):
             return ctx.before.get_attribute(name)
         else:
-            raise VariableNotDefined(name, ctx.start.line) #T
+            raise RuntimeException(ctx.start.line,VariableNotDefined(name))
 
 
 
@@ -69,8 +79,7 @@ class MyVisitor(confprolVisitor):
         else:
             raise RuntimeException(ctx.start.line,MethodNotDefined(ctx.before.name,name))
 
-        if not isinstance(expression,Callable):
-            raise NotCallable()
+
 
         arg_node = ctx.arguments()
         if arg_node is None:

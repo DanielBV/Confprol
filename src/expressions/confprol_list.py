@@ -3,6 +3,7 @@ from .expression import Expression
 from typing import  List
 from .callable import  PythonMethod
 from src.exceptions import ElementNotContained
+from .confprol_object import ConfprolObject
 
 
 def get_position(arguments):
@@ -15,7 +16,7 @@ def get_position(arguments):
 def length_function(expr:List[Expression]):
     expr = expr[0]
     value = len(expr.value)
-    return Expression(value,f"length({expr.name})",ValueType.NUMBER)
+    return Expression(ConfprolObject(value),f"length({expr.name})",ValueType.NUMBER)
 
 def append(arguments:List[Expression]):
     list_ = arguments[0]
@@ -39,14 +40,15 @@ def insert(arguments:List[Expression]):
 class ListExpression(Expression):
 
 
-    def __init__(self,values:List[Expression],name):
+    def __init__(self,values:List[Expression],name): #TODO refactor
         super(ListExpression, self).__init__(values,name,ValueType.LIST)
 
-        self.attributes["get"] = PythonMethod(["self","position"],"get",get_position,self)
-        self.attributes["length"] = PythonMethod(["self"], "get", length_function,self)
-        self.attributes["append"] = PythonMethod(["self","value"],"append", append, self)
-        self.attributes["remove"] = PythonMethod(["self", "value"], "remove", remove,self)
-        self.attributes["insert"] = PythonMethod(["self", "position", "value"], "insert", insert,self)
+        self.set_attribute("get",PythonMethod(["self","position"],"get",get_position,self))
+        self.set_attribute("length",PythonMethod(["self"], "get", length_function,self))
+        self.set_attribute("append",  PythonMethod(["self","value"],"append", append, self))
+        self.set_attribute("remove",PythonMethod(["self", "value"], "remove", remove,self))
+        self.set_attribute("insert", PythonMethod(["self", "position", "value"], "insert", insert,self))
+
 
     def __str__(self):
         values = map(lambda expr:str(expr),self.value)
@@ -70,3 +72,6 @@ class ListExpression(Expression):
 
     def insert(self, position, expr):
         self.value.insert(position,expr)
+
+    def copy(self):
+        return ListExpression(self.object,self.name)

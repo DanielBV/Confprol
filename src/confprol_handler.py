@@ -9,7 +9,7 @@ from src.expressions import Expression,StringExpression, ListExpression
 from src.expressions.operations import TypeOperations
 from src.type import ValueType
 from src.context import Context
-
+from src.expressions.confprol_object import ConfprolObject
 
 
 class ConfprolHandler:
@@ -19,7 +19,7 @@ class ConfprolHandler:
 
     def load_string(self, text: str):
         text = text[1:len(text) - 1]
-        return StringExpression(text, text)
+        return StringExpression(ConfprolObject(text), text)
 
     def run_function(self, callable: Callable, arguments, line):
         if callable.type != ValueType.FUNCTION:
@@ -37,18 +37,19 @@ class ConfprolHandler:
             raise RuntimeException(line,VariableNotDefined(attribute))
 
     def load_float(self, float:float):
-        return Expression(float, str(float), ValueType.NUMBER)
+        return Expression(ConfprolObject(float), str(float), ValueType.NUMBER)
 
     def load_boolean(self, boolean:bool):
-        return Expression(boolean, str(boolean), ValueType.BOOLEAN)
+        return Expression(ConfprolObject(boolean), str(boolean), ValueType.BOOLEAN)
 
     def load_number(self, number:int):
-        a =  Expression(number, str(number), ValueType.NUMBER)
+        a =  Expression(ConfprolObject(number), str(number), ValueType.NUMBER)
         return a
 
     def assign_variable(self, variable, value):
-        self.context.set_variable(variable,value)
-        value.name = variable
+        new_value = value.copy()
+        self.context.set_variable(variable,new_value)
+        new_value.name = variable
 
 
     def has_attribute(self,attribute):
@@ -60,7 +61,7 @@ class ConfprolHandler:
     def load_list(self, values):
         expression_names = list(map(lambda expr: expr.name,values))
         name = "[" + ",".join(expression_names) + "]"
-        return ListExpression(values,name)
+        return ListExpression(ConfprolObject(values),name)
 
     def print_expression(self, value):
         print(value)

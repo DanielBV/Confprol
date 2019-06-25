@@ -1,37 +1,39 @@
 
 from src.type import ValueType
+from .confprol_object import ConfprolObject
 
 class Expression:
 
 
 
-    def __init__(self, value, name,type_:ValueType):
-        self.value = value
+    def __init__(self, value:ConfprolObject, name,type_:ValueType):
+        self.object = value
         self.name  = name
-        self.attributes = {}
         self.__type = type_
 
 
-
-
+    @property
+    def value(self):
+        return self.object.value
 
     @property
     def type(self):
         return self.__type
 
-
-    def get_attribute(self, attribute):
-
-        if attribute in self.attributes:
-            return self.attributes[attribute]
-        else:
-            return None
-
-    def has_attribute(self,attribute):
-        return attribute in self.attributes
-
     def __str__(self):
         return str(self.value)
+
+    def get_attribute(self,attribute):
+        return self.object.get_attribute(attribute)
+
+    def set_attribute(self, name, value: 'Expression'):
+        self.object.set_attribute(name,value)
+
+    def set_attributes(self, attr):
+        self.object.set_attributes(attr)
+
+    def has_attribute(self, attribute):
+        return self.object.has_attribute(attribute)
 
     def get_deep_value(self):
         """
@@ -41,3 +43,9 @@ class Expression:
         """
 
         return self.value
+
+    def __repr__(self):
+        return self.__str__()
+
+    def copy(self):
+         return Expression(self.object,self.name,self.type)

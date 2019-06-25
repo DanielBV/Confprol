@@ -1,4 +1,6 @@
 import unittest
+
+from src.expressions.confprol_object import ConfprolObject
 from src.expressions.operations import TypeOperations
 from src.expressions.expression import Expression
 from src.type import ValueType
@@ -7,12 +9,12 @@ from src.exceptions import OperationNotSupported, DivisionByZero
 class TestOperations(unittest.TestCase):
 
     def setUp(self):
-        self.number1 = Expression(3,3,ValueType.NUMBER)
-        self.number2 = Expression(5, 5, ValueType.NUMBER)
-        self.boolean_true = Expression(True, True, ValueType.BOOLEAN)
-        self.boolean_false = Expression(False, False, ValueType.BOOLEAN)
-        self.string1 = Expression("firstString", "firstString", ValueType.STRING)
-        self.string2 = Expression("secondString","secondString", ValueType.STRING)
+        self.number1 = Expression(ConfprolObject(3),3,ValueType.NUMBER)
+        self.number2 = Expression( ConfprolObject(5), 5, ValueType.NUMBER)
+        self.boolean_true = Expression(ConfprolObject(True), True, ValueType.BOOLEAN)
+        self.boolean_false = Expression(ConfprolObject(False), False, ValueType.BOOLEAN)
+        self.string1 = Expression(ConfprolObject("firstString"), "firstString", ValueType.STRING)
+        self.string2 = Expression(ConfprolObject("secondString"),"secondString", ValueType.STRING)
 
     def test_plus_two_numbers(self):
         expr = TypeOperations.plus(self.number1,self.number2)
@@ -136,7 +138,7 @@ class TestOperations(unittest.TestCase):
         self.assertEqual("3 / 5", expr.name)
 
     def test_div_by_0(self):
-        zero = Expression(0,0,ValueType.NUMBER)
+        zero = Expression(ConfprolObject(0),0,ValueType.NUMBER)
         with self.assertRaises(DivisionByZero):
             TypeOperations.div(self.number1,zero)
 
@@ -264,13 +266,13 @@ class TestOperations(unittest.TestCase):
         self.assertFalse(expr.value)
         self.assertEqual("3 == True", expr.name)
 
-        zero = Expression(0,0,ValueType.NUMBER)
+        zero = Expression(ConfprolObject(0),0,ValueType.NUMBER)
         expr2 = TypeOperations.equals(self.boolean_false, zero)
         self.assertTrue(expr2.value)
         self.assertEqual("False == 0", expr2.name)
 
     def test_equal_number_string(self):
-        three_str = Expression("3","3",ValueType.STRING)
+        three_str = Expression( ConfprolObject("3"),"3",ValueType.STRING)
         expr = TypeOperations.equals(self.number1,three_str)
         self.assertFalse(expr.value)
         self.assertEqual("3 == 3", expr.name)

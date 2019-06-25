@@ -16,3 +16,6 @@ class PythonMethod(Callable):
         values.insert(0, self.called_on)
 
         return super(PythonMethod, self).run(values)
+
+    def copy(self):
+        return PythonMethod(self.value,self.name,self._run, self.called_on)

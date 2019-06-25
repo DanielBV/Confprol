@@ -3,9 +3,10 @@ program   :  statement* EOF;
 
 
 
-statement : (assign | print  | expr | return_value)';' | ( condition | function_declaration) ;
+statement : (assign | print  | expr | return_value | attribute_assign)';' | ( condition | function_declaration) ;
 
 assign    : ID '=' expr ;
+attribute_assign    :  expr '.' (subattributes '.')? ID '=' expr;
 print     : 'print' expr ;
 condition : 'if' expr '{' statement* '}' elsecondition?;
 elsecondition: 'else' '{' statement* '}';
