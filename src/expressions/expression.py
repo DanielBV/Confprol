@@ -26,7 +26,7 @@ class Expression:
     def get_attribute(self,attribute):
         return self.object.get_attribute(attribute)
 
-    def set_attribute(self, name, value: 'Expression'):
+    def set_attribute(self, name, value: 'BasicExpression'):
         self.object.set_attribute(name,value)
 
     def set_attributes(self, attr):
@@ -42,10 +42,10 @@ class Expression:
         :return:
         """
 
-        return self.value
+        raise NotImplementedError("get_deep_value not implemented")
 
     def __repr__(self):
         return self.__str__()
 
     def copy(self):
-         return Expression(self.object,self.name,self.type)
+        raise NotImplementedError("copy not implemented")

@@ -175,7 +175,6 @@ class TestExecution(unittest.TestCase):
         with self.assertRaises(RuntimeException) as e:
             execute(InputStream(program))
 
-        print(e.exception.get_message())
         self.assertIn(e.exception.get_message(),"ElementNotContainedException line 3: The list e doesn't contain 9")
 
 

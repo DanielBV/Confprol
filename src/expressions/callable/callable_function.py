@@ -1,6 +1,7 @@
 from typing import  List
 
 from src.exceptions import ReturnException
+from ..none import confprol_none
 from .callable import Callable
 
 
@@ -44,6 +45,7 @@ class CallableFunction(Callable):
 
 
         self.visitor.set_context(old_state)
+        return confprol_none
 
     def copy(self):
         return CallableFunction(self.__arguments,self.__function_content,self.name,self.visitor,self.context) #TODO attributes

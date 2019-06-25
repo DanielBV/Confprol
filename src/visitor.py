@@ -65,6 +65,7 @@ class MyVisitor(confprolVisitor):
     def visitIntermediateIDs(self, ctx:confprolParser.IntermediateIDsContext):
         ctx.subattributes(0).before = ctx.before
         before = super(MyVisitor, self).visit(ctx.subattributes(0))
+
         ctx.subattributes(1).before = before
         return super(MyVisitor, self).visit(ctx.subattributes(1))
 
@@ -89,7 +90,11 @@ class MyVisitor(confprolVisitor):
 
 
         try:
-            return self.handler.run_function(expression, arguments, ctx.start.line)
+            expr =  self.handler.run_function(expression, arguments, ctx.start.line)
+            expr = expr.copy() #TODO test if its required
+            arguments_name = list(map(lambda a:a.name,arguments))
+            expr.name = f"{expression.name}(" + ",".join(arguments_name) + ")"
+            return expr
         except ConfprolException as e:
             raise RuntimeException(ctx.start.line,e)
 

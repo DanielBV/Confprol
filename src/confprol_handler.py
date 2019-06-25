@@ -5,7 +5,7 @@
 from src.expressions.callable.callable import Callable
 from src.exceptions import  NotCallable, VariableNotDefined, RuntimeException, TooManyArguments, ArgumentsMissing, \
 OperationNotSupported,DivisionByZero
-from src.expressions import Expression,StringExpression, ListExpression
+from src.expressions import BasicExpression,StringExpression, ListExpression
 from src.expressions.operations import TypeOperations
 from src.type import ValueType
 from src.context import Context
@@ -37,13 +37,13 @@ class ConfprolHandler:
             raise RuntimeException(line,VariableNotDefined(attribute))
 
     def load_float(self, float:float):
-        return Expression(ConfprolObject(float), str(float), ValueType.NUMBER)
+        return BasicExpression(ConfprolObject(float), str(float), ValueType.NUMBER)
 
     def load_boolean(self, boolean:bool):
-        return Expression(ConfprolObject(boolean), str(boolean), ValueType.BOOLEAN)
+        return BasicExpression(ConfprolObject(boolean), str(boolean), ValueType.BOOLEAN)
 
     def load_number(self, number:int):
-        a =  Expression(ConfprolObject(number), str(number), ValueType.NUMBER)
+        a =  BasicExpression(ConfprolObject(number), str(number), ValueType.NUMBER)
         return a
 
     def assign_variable(self, variable, value):
@@ -66,22 +66,22 @@ class ConfprolHandler:
     def print_expression(self, value):
         print(value)
 
-    def division(self, expr1:Expression, expr2:Expression, line):
+    def division(self, expr1:BasicExpression, expr2:BasicExpression, line):
         try:
             return TypeOperations.div(expr1,expr2)
         except (DivisionByZero, OperationNotSupported) as e:
             raise RuntimeException(line, e)
 
-    def multiplication(self,expr1:Expression,expr2:Expression,line):
+    def multiplication(self, expr1:BasicExpression, expr2:BasicExpression, line):
         try:
             return  TypeOperations.mult(expr1,expr2)
         except OperationNotSupported as e:
             raise RuntimeException(line, e)
 
-    def equal(self, expr1:Expression, expr2:Expression):
+    def equal(self, expr1:BasicExpression, expr2:BasicExpression):
         return TypeOperations.equals(expr1,expr2)
 
-    def minus(self, expr1:Expression, expr2:Expression, line):
+    def minus(self, expr1:BasicExpression, expr2:BasicExpression, line):
         try:
             return TypeOperations.minus(expr1,expr2)
         except OperationNotSupported as e:

@@ -1,4 +1,5 @@
 from src.type import ValueType
+from .basic_expression import BasicExpression
 from .expression import Expression
 from typing import  List
 from .callable import  PythonMethod
@@ -13,24 +14,24 @@ def get_position(arguments):
     return list_[pos]
 
 
-def length_function(expr:List[Expression]):
+def length_function(expr:List[BasicExpression]):
     expr = expr[0]
     value = len(expr.value)
-    return Expression(ConfprolObject(value),f"length({expr.name})",ValueType.NUMBER)
+    return BasicExpression(ConfprolObject(value), f"length({expr.name})", ValueType.NUMBER)
 
-def append(arguments:List[Expression]):
+def append(arguments:List[BasicExpression]):
     list_ = arguments[0]
     expr = arguments[1]
 
     list_.append(expr)
 
-def remove(arguments:List[Expression]):
+def remove(arguments:List[BasicExpression]):
     list_ = arguments[0]
     expr = arguments[1]
 
     list_.remove(expr)
 
-def insert(arguments:List[Expression]):
+def insert(arguments:List[BasicExpression]):
     list_ = arguments[0]
     position = arguments[1].value
     expr = arguments[2]
@@ -40,7 +41,7 @@ def insert(arguments:List[Expression]):
 class ListExpression(Expression):
 
 
-    def __init__(self,values:List[Expression],name): #TODO refactor
+    def __init__(self, values:List[BasicExpression], name): #TODO refactor
         super(ListExpression, self).__init__(values,name,ValueType.LIST)
 
         self.set_attribute("get",PythonMethod(["self","position"],"get",get_position,self))

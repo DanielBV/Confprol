@@ -1,9 +1,9 @@
 from .callable import Callable
-from src.expressions import Expression
+from src.expressions import BasicExpression
 
 class PythonMethod(Callable):
 
-    def __init__(self,arguments,name, run_function, called_on:Expression):
+    def __init__(self, arguments, name, run_function, called_on:BasicExpression):
         super(PythonMethod, self).__init__(arguments,name)
         self._run = run_function
         self.called_on =called_on

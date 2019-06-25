@@ -1,17 +1,17 @@
 from src.expressions.confprol_object import ConfprolObject
-from .expression import Expression
+from .basic_expression import BasicExpression
 from src.type import ValueType
 from src.expressions.callable import  PythonMethod
 from typing import List
 
 
-def length_function(expr:List[Expression]):
+def length_function(expr:List[BasicExpression]):
     expr = expr[0]
     value = len(expr.value)
 
-    return Expression(ConfprolObject(value),f"length({expr.name})",ValueType.NUMBER)
+    return BasicExpression(ConfprolObject(value), f"length({expr.name})", ValueType.NUMBER)
 
-class StringExpression(Expression):
+class StringExpression(BasicExpression):
 
     def __init__(self,value,name):
         super(StringExpression, self).__init__(value,name,ValueType.STRING)

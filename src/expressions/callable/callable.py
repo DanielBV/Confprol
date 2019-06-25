@@ -1,9 +1,10 @@
 from typing import  List
-from src.expressions.expression import Expression
+from src.expressions.basic_expression import BasicExpression
 from src.type import ValueType
 from src.exceptions import ArgumentsMissing, TooManyArguments
+from ..none import confprol_none
 
-class Callable(Expression):
+class Callable(BasicExpression):
 
     def __init__(self, arguments:List[str],name):
         self.__arguments = arguments # argument name
@@ -28,14 +29,16 @@ class Callable(Expression):
 
             raise TooManyArguments("Too many arguments",   self.get_name(), extra_arguments)
 
-
-        return self._run(values)
+        object = self._run(values)
+        if object is None:
+            return confprol_none
+        else:
+            return object
 
     def _run(self, values):
         raise NotImplementedError("Callable 'run' not implemented")
 
-    def copy(self):
-        raise NotImplementedError("Callable 'copy' not implemented")
 
+    #TODO implement get_deep_value?
     def __str__(self):
         return f"[function {self.function_name}]"

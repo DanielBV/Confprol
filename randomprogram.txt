@@ -1,1 +1,14 @@
-print [3,4,5,6];
+funko objectfactory(){
+    object = 3;
+
+    funko next(){
+        return object+1;
+    }
+    object.next = next;
+    return object;
+}
+objectfactory();
+a = [objectfactory()];
+
+print objectfactory.a;
+print objectfactory;
