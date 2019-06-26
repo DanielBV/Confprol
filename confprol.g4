@@ -3,11 +3,11 @@ program   :  statement* EOF;
 
 
 
-statement : (assign | print  | expr | return_value | attribute_assign)';' | ( condition | function_declaration) ;
+statement : (assign | print_  | expr | return_value | attribute_assign)';' | ( condition | function_declaration) ;
 
 assign    : ID '=' expr ;
 attribute_assign    :  expr '.' (subattributes '.')? ID '=' expr;
-print     : 'print' expr ;
+print_     : 'print' expr ;
 condition : 'if' expr '{' statement* '}' elsecondition?;
 elsecondition: 'else' '{' statement* '}';
 return_value: 'return' expr;
@@ -36,7 +36,7 @@ final     : '('expr')' #finalPAR
 attributes locals [before]: (ID | STRING)'.' subattributes #attributeBeginning;
 subattributes  locals[before]:    ID #attribute
                 | subattributes'.'subattributes#intermediateIDs
-                | ID'('arguments?')' #call;
+                | ID'('arguments?')' #methodCall;
 
 
 

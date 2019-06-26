@@ -5,6 +5,7 @@ from typing import  List
 from .callable import  PythonMethod
 from src.exceptions import ElementNotContained
 from .confprol_object import ConfprolObject
+from  .runnable_expression import RunnableExpression
 
 
 def get_position(arguments):
@@ -41,14 +42,14 @@ def insert(arguments:List[BasicExpression]):
 class ListExpression(Expression):
 
 
-    def __init__(self, values:List[BasicExpression], name): #TODO refactor
+    def __init__(self, values:ConfprolObject, name): #TODO refactor
         super(ListExpression, self).__init__(values,name,ValueType.LIST)
 
-        self.set_attribute("get",PythonMethod(["self","position"],"get",get_position,self))
-        self.set_attribute("length",PythonMethod(["self"], "get", length_function,self))
-        self.set_attribute("append",  PythonMethod(["self","value"],"append", append, self))
-        self.set_attribute("remove",PythonMethod(["self", "value"], "remove", remove,self))
-        self.set_attribute("insert", PythonMethod(["self", "position", "value"], "insert", insert,self))
+        self.set_attribute("get",RunnableExpression(PythonMethod(["self","position"],get_position,self),"get"))
+        self.set_attribute("length",RunnableExpression(PythonMethod(["self"], length_function,self),"length"))
+        self.set_attribute("append",  RunnableExpression(PythonMethod(["self","value"], append, self),"append"))
+        self.set_attribute("remove",RunnableExpression(PythonMethod(["self", "value"], remove,self),"remove"))
+        self.set_attribute("insert", RunnableExpression(PythonMethod(["self", "position", "value"],  insert,self),"insert"))
 
 
     def __str__(self):

@@ -1,12 +1,12 @@
 
 
 from generated_antlr4.confprolVisitor import confprolVisitor
-from src.expressions.callable.callable import Callable
 from generated_antlr4.confprolParser import confprolParser
-from src.exceptions import ReturnException, NotCallable,MethodNotDefined,FunctionNotDefined,\
+from src.exceptions import ReturnException,MethodNotDefined,FunctionNotDefined,\
     VariableNotDefined, RuntimeException, ConfProlSyntaxError, ConfprolException
 
-from src.expressions import CallableFunction
+from src.expressions.runnable_expression import RunnableExpression
+from src.expressions.callable.callable_function import CallableFunction
 
 from .confprol_handler import ConfprolHandler
 
@@ -59,7 +59,10 @@ class MyVisitor(confprolVisitor):
         name = ctx.ID().getText()
 
         if ctx.before.has_attribute(name):
-            return ctx.before.get_attribute(name)
+            expr = ctx.before.get_attribute(name)
+            expr = expr.copy()
+            expr.name = f"{ctx.before.name}.{name}"
+            return expr
         else:
             raise RuntimeException(ctx.start.line,VariableNotDefined(name))
 
@@ -76,7 +79,7 @@ class MyVisitor(confprolVisitor):
 
 
 
-    def visitCall(self, ctx:confprolParser.CallContext):
+    def visitMethodCall(self, ctx:confprolParser.MethodCallContext):
         name = ctx.ID().getText()
         if ctx.before.has_attribute(name):
             expression = ctx.before.get_attribute(name)
@@ -94,6 +97,7 @@ class MyVisitor(confprolVisitor):
 
         try:
             expr =  self.handler.run_function(expression, arguments, ctx.start.line)
+
             expr = expr.copy() #TODO test if its required
             arguments_name = list(map(lambda a:a.name,arguments))
             expr.name = f"{expression.name}(" + ",".join(arguments_name) + ")"
@@ -171,7 +175,7 @@ class MyVisitor(confprolVisitor):
         else:
             params = []
 
-        expression = CallableFunction(params,ctx.statement(),name,self)
+        expression = RunnableExpression(CallableFunction(params,ctx.statement(),self),name)
         self.handler.assign_variable(name,expression)
 
 
@@ -239,12 +243,11 @@ class MyVisitor(confprolVisitor):
     def visitAssign(self, ctx: confprolParser.AssignContext):
         variable = ctx.ID().getText()
         value =  super().visit(ctx.expr())
-
         self.handler.assign_variable(variable,value)
 
 
 
-    def visitPrint(self, ctx: confprolParser.PrintContext):
+    def visitPrint_(self, ctx: confprolParser.Print_Context):
         value = self.visit(ctx.expr())
 
         self.handler.print_expression(value)

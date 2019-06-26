@@ -1,8 +1,11 @@
 import unittest
-from src.main import execute_file,execute
+from src.main import execute_file,execute, main
 from antlr4 import InputStream
 from src.exceptions import ConfProlSyntaxError, OperationNotSupported, RuntimeException
 import os,sys
+from unittest.mock import patch, call, MagicMock
+
+
 
 class TestExecution(unittest.TestCase):
 
@@ -38,7 +41,7 @@ class TestExecution(unittest.TestCase):
     def test_missing_semicolon(self):
         program = """ return "string" + 5"""
         with self.assertRaises(ConfProlSyntaxError):
-            execute(InputStream(program))
+            execute(InputStream(program),True)
 
 
 
@@ -173,7 +176,7 @@ class TestExecution(unittest.TestCase):
                        return e;
                 """
         with self.assertRaises(RuntimeException) as e:
-            execute(InputStream(program))
+            execute(InputStream(program),True)
 
         self.assertIn(e.exception.get_message(),"ElementNotContainedException line 3: The list e doesn't contain 9")
 
@@ -201,7 +204,7 @@ class TestExecution(unittest.TestCase):
                     """
 
         with self.assertRaises(RuntimeException) as e:
-           execute(InputStream(program))
+           execute(InputStream(program),True)
 
         self.assertEqual("TooManyArgumentsException line 8:  Too many arguments  ['a', 'thisIsAFunction(a,c)', 'c'] in function thisIsAFunction",
                       e.exception.get_message())
@@ -219,7 +222,7 @@ class TestExecution(unittest.TestCase):
                        """
 
         with self.assertRaises(RuntimeException) as e:
-            execute(InputStream(program))
+            execute(InputStream(program),True)
 
         self.assertEqual(
             "ArgumentsMissingException line 8:  Missing arguments  ['b'] in function thisIsAFunction",
@@ -229,7 +232,7 @@ class TestExecution(unittest.TestCase):
         program = """ 7/0;"""
 
         with self.assertRaises(RuntimeException) as e:
-             execute(InputStream(program))
+             execute(InputStream(program),True)
 
         self.assertEqual(
             "DivisionByZeroException line 1: Division by 0",
@@ -242,7 +245,7 @@ class TestExecution(unittest.TestCase):
                   """
 
         with self.assertRaises(ConfProlSyntaxError) as e:
-            execute(InputStream(program))
+            execute(InputStream(program),True)
 
         self.assertEqual(
             "SyntaxException in line 1:1 Duplicated parameter {'param'} in function thisIsAFunction",
@@ -253,7 +256,7 @@ class TestExecution(unittest.TestCase):
         program = """ return pipo();"""
 
         with self.assertRaises(RuntimeException) as e:
-            execute(InputStream(program))
+            execute(InputStream(program),True)
 
         self.assertEqual(
             "FunctionNotDefinedException line 1: Function pipo not defined",
@@ -264,7 +267,7 @@ class TestExecution(unittest.TestCase):
                       a.platypus();"""
 
         with self.assertRaises(RuntimeException) as e:
-            execute(InputStream(program))
+            execute(InputStream(program),True)
 
         self.assertEqual(
           "MethodNotDefinedException line 2: Object a has no method platypus.",
@@ -277,7 +280,7 @@ class TestExecution(unittest.TestCase):
                       a();"""
 
         with self.assertRaises(RuntimeException) as e:
-            execute(InputStream(program))
+            execute(InputStream(program),True)
 
         self.assertEqual(
             "NotCallableException line 2: The variable a is not callable.",
@@ -289,7 +292,7 @@ class TestExecution(unittest.TestCase):
                       a.b();"""
 
         with self.assertRaises(RuntimeException) as e:
-            execute(InputStream(program))
+            execute(InputStream(program),True)
 
         self.assertEqual(
             "NotCallableException line 3: The variable 3 is not callable.",
@@ -299,7 +302,7 @@ class TestExecution(unittest.TestCase):
     def test_operation_not_supported(self):
         program = """ return "string" * 5;"""
         with self.assertRaises(RuntimeException) as e:
-            execute(InputStream(program))
+            execute(InputStream(program),True)
 
         self.assertEqual(
             "OperationNotSupportedException line 1: Operation * can't be applied to ValueType.STRING and ValueType.NUMBER",
@@ -308,7 +311,7 @@ class TestExecution(unittest.TestCase):
     def test_variable_not_defined(self):
         program = """ return a;"""
         with self.assertRaises(RuntimeException) as e:
-            execute(InputStream(program))
+            execute(InputStream(program),True)
 
         self.assertEqual(
             "VariableNotDefinedException line 1: The variable a is not defined.",
@@ -362,11 +365,69 @@ class TestExecution(unittest.TestCase):
         program = """
                 string = "This is a string";
                 string.length.a = 42;
-                
                 return string.length.a;
 
               """
 
         self.assertEqual(42, execute(InputStream(program)))
+
+    @patch('builtins.print')
+    def test_message_to_many_arguments_function_call(self,mocked_print:MagicMock):
+
+        program = """funko pop(){}
+                    b = 3;
+                    c = b;
+                    a = [c,4,5,6];
+                    pop(a.get(0));
+        """
+
+        execute(InputStream(program),False)
+        mocked_print.assert_called_once_with("TooManyArgumentsException line 5:  Too many arguments  ['get(a,0)'] in function pop")
+
+    @patch('builtins.print')
+    def test_message_prints_right_variable_name(self, mocked_print: MagicMock):
+        program = """funko pop(){}
+                       b = 3;
+                       c = b;
+                       pop(c);
+
+           """
+
+        execute(InputStream(program),False)
+        mocked_print.assert_called_once_with(
+            "TooManyArgumentsException line 4:  Too many arguments  ['c'] in function pop")
+
+    @patch('builtins.print')
+    def test_message_prints_full_attribute_path(self, mocked_print: MagicMock):
+        program = """funko pop(){}
+                         a = 0;
+                         a.a = 0;
+                         a.a.a = 0;
+                         a.a.a.a = 0;
+                         a.a.a.a.b = 0;
+                         a.a.a.a.b.attribute = 3;
+                         pop(a.a.a.a.b.attribute);
+
+             """
+
+        execute(InputStream(program), False)
+        mocked_print.assert_called_once_with(
+            "TooManyArgumentsException line 8:  Too many arguments  ['a.a.a.a.b.attribute'] in function pop")
+
+    @patch('builtins.print')
+    def test_message_prints_full_method_and_attribute_path(self, mocked_print: MagicMock):
+        program = """funko pop(){}
+                            a = 3;
+                            a.a = 6;
+                            a.a.list = [[[0]]];
+                          
+                            pop(a.a.list.get(0).get(0).get(0));
+
+                """
+
+        execute(InputStream(program), False)
+        mocked_print.assert_called_once_with(
+            "TooManyArgumentsException line 6:  Too many arguments  ['get(get(get(a.a.list,0),0),0)'] in function pop")
+
 if __name__ == '__main__':
     unittest.main()

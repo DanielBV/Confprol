@@ -3,6 +3,7 @@ from .basic_expression import BasicExpression
 from src.type import ValueType
 from src.expressions.callable import  PythonMethod
 from typing import List
+from src.expressions.runnable_expression import RunnableExpression
 
 
 def length_function(expr:List[BasicExpression]):
@@ -16,7 +17,7 @@ class StringExpression(BasicExpression):
     def __init__(self,value,name):
         super(StringExpression, self).__init__(value,name,ValueType.STRING)
 
-        self.set_attribute("length",PythonMethod(["this"],"length",length_function,self))
+        self.set_attribute("length",RunnableExpression(PythonMethod(["this"],length_function,self),"length"))
 
     def __str__(self):
         return self.value

@@ -11,25 +11,30 @@ import os
 from src.confprol_handler import ConfprolHandler
 
 
-def execute(input_stream):
+def execute(input_stream,raise_exception=False):
     lexer = confprolLexer(input_stream)
     stream = CommonTokenStream(lexer)
     parser = confprolParser(stream)
     parser.removeErrorListener(ConsoleErrorListener.INSTANCE)
     parser.addErrorListener(MyErrorListener())
-    tree = parser.program()
 
-
-    visitor = MyVisitor(ConfprolHandler())
 
     try:
+        tree = parser.program()
+        visitor = MyVisitor(ConfprolHandler())
         visitor.visit(tree)
     except ReturnException as e:
         return e.return_value.get_deep_value()
+    except (RuntimeException,ConfProlSyntaxError) as e:
+        if raise_exception:
+            raise e
+        else:
+            print(e.get_message())
 
-def execute_file(file_path:str):
+
+def execute_file(file_path:str,raise_exception=False):
     input_stream = FileStream(file_path,"utf-8")
-    return execute(input_stream)
+    return execute(input_stream,raise_exception)
 
 
 
@@ -39,12 +44,8 @@ def main():
         script_name = os.path.basename(__file__)
         print(f"Usage: python {script_name} <file_path>")
         exit(-1)
-    try:
-       return execute_file(sys.argv[1])
-    except RuntimeException as e:
-        print(e.get_message())
-    except ConfProlSyntaxError as e:
-        print(e.get_message())
+
+    return execute_file(sys.argv[1],False)
 
 
 

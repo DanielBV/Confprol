@@ -1,10 +1,10 @@
 from .callable import Callable
-from src.expressions import BasicExpression
+from src.expressions.basic_expression import Expression
 
 class PythonMethod(Callable):
 
-    def __init__(self, arguments, name, run_function, called_on:BasicExpression):
-        super(PythonMethod, self).__init__(arguments,name)
+    def __init__(self, arguments, run_function, called_on:Expression):
+        super(PythonMethod, self).__init__(arguments)
         self._run = run_function
         self.called_on =called_on
 
@@ -17,5 +17,4 @@ class PythonMethod(Callable):
 
         return super(PythonMethod, self).run(values)
 
-    def copy(self):
-        return PythonMethod(self.value,self.name,self._run, self.called_on)
+    

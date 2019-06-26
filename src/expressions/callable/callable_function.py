@@ -7,23 +7,20 @@ from .callable import Callable
 
 class CallableFunction(Callable):
 
-    def __init__(self, arguments:List[str], function_tree,name, visitor: 'MyVisitor', context=None):
+    def __init__(self, arguments:List[str], function_tree, visitor: 'MyVisitor', context=None):
         self.__arguments = arguments
         self.__function_content = function_tree
         self.visitor = visitor
         if context is None:
-         self.context = self.visitor.get_context() #TODO refactor
+            self.context = self.visitor.get_context() #TODO refactor and review this
         else:
             self.context = context
 
 
-        super(CallableFunction, self).__init__(arguments,name)
+        super(CallableFunction, self).__init__(arguments)
 
     def get_parameters(self):
         return self.__arguments
-
-    def get_name(self):
-        return self.name
 
     def _run(self, values):
 
@@ -38,15 +35,9 @@ class CallableFunction(Callable):
                 self.visitor.visitStatement(statement)
         except ReturnException as e:
             self.visitor.set_context(old_state)
-            value_names = list(map(lambda a:a.name,values))
-            e.return_value.name = f"{self.name}(" + ",".join(value_names)+")"
-
             return e.return_value
 
 
         self.visitor.set_context(old_state)
         return confprol_none
-
-    def copy(self):
-        return CallableFunction(self.__arguments,self.__function_content,self.name,self.visitor,self.context) #TODO attributes
 
