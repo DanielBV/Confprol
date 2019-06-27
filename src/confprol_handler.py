@@ -5,7 +5,7 @@
 from src.expressions.callable.callable import Callable
 from src.exceptions import  NotCallable, VariableNotDefined, RuntimeException, TooManyArguments, ArgumentsMissing, \
 OperationNotSupported,DivisionByZero
-from src.expressions import BasicExpression,StringExpression, ListExpression
+from src.expressions import BasicExpression,StringExpression, ListExpression,RunnableExpression
 from src.expressions.operations import TypeOperations
 from src.type import ValueType
 from src.context import Context
@@ -21,8 +21,7 @@ class ConfprolHandler:
         text = text[1:len(text) - 1]
         return StringExpression(ConfprolObject(text), text)
 
-    def run_function(self, callable: Callable, arguments, line):
-
+    def run_function(self, callable: RunnableExpression, arguments, line):
         if callable.type != ValueType.FUNCTION:
             raise RuntimeException(line,NotCallable(callable.name))
 

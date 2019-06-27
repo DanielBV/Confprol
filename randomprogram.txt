@@ -1,7 +1,1 @@
-   funko thisIsAFunction(a,b){
-                                return a + b;
-                        }
-                        
-                        a = 6;
-                        c = 10;
-                        thisIsAFunction(a,thisIsAFunction(a,c),c);
+print "QUACK";

@@ -2,7 +2,7 @@
 
 from generated_antlr4.confprolVisitor import confprolVisitor
 from generated_antlr4.confprolParser import confprolParser
-from src.exceptions import ReturnException,MethodNotDefined,FunctionNotDefined,\
+from src.exceptions import ReturnException,AttributeNotDefined,FunctionNotDefined,\
     VariableNotDefined, RuntimeException, ConfProlSyntaxError, ConfprolException
 
 from src.expressions.runnable_expression import RunnableExpression
@@ -28,7 +28,10 @@ class MyVisitor(confprolVisitor):
             ctx.subattributes().before = base_expr
             base_expr = super(MyVisitor, self).visit(ctx.subattributes())
 
-        base_expr.set_attribute(ctx.ID().getText(),value)
+        value = value.copy()
+        attr_name = ctx.ID().getText()
+        value.name = f"{base_expr.name}.{attr_name}"
+        base_expr.set_attribute(attr_name,value)
 
     def visitList_creation(self, ctx: confprolParser.List_creationContext):
         arg_node = ctx.arguments()
@@ -64,7 +67,7 @@ class MyVisitor(confprolVisitor):
             expr.name = f"{ctx.before.name}.{name}"
             return expr
         else:
-            raise RuntimeException(ctx.start.line,VariableNotDefined(name))
+            raise RuntimeException(ctx.start.line, AttributeNotDefined(ctx.before.name,ctx.before.type, name))
 
 
 
@@ -84,8 +87,8 @@ class MyVisitor(confprolVisitor):
         if ctx.before.has_attribute(name):
             expression = ctx.before.get_attribute(name)
         else:
-            raise RuntimeException(ctx.start.line,MethodNotDefined(ctx.before.name,name))
 
+            raise RuntimeException(ctx.start.line, AttributeNotDefined(ctx.before.name,ctx.before.type, name))
 
 
         arg_node = ctx.arguments()
@@ -104,6 +107,7 @@ class MyVisitor(confprolVisitor):
             return expr
         except ConfprolException as e:
             raise RuntimeException(ctx.start.line,e)
+
 
     def visitFinalFloat(self, ctx: confprolParser.FinalFloatContext):
         value = float(ctx.FLOAT().getText())

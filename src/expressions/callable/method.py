@@ -17,4 +17,3 @@ class PythonMethod(Callable):
 
         return super(PythonMethod, self).run(values)
 
-    

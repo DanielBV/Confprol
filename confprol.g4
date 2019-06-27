@@ -60,3 +60,5 @@ WS     : [ \t\r\n] -> skip;
 
 
 STRING: '"' (~["\\\r\n] | [\\][\\]* .)* '"';
+
+OTHERCHARACTER : . ; /* To avoid token recognition errors with characters like "`" */

@@ -9,3 +9,6 @@ class ValueType(Enum):
     LIST = 4
     NONE = 5
 
+
+    def __str__(self):
+        return str(self.name)

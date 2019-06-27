@@ -270,7 +270,7 @@ class TestExecution(unittest.TestCase):
             execute(InputStream(program),True)
 
         self.assertEqual(
-          "MethodNotDefinedException line 2: Object a has no method platypus.",
+          "AttributeNotDefinedException line 2: Object a of type NUMBER doesn't have an attribute platypus.",
             e.exception.get_message())
 
 
@@ -295,7 +295,7 @@ class TestExecution(unittest.TestCase):
             execute(InputStream(program),True)
 
         self.assertEqual(
-            "NotCallableException line 3: The variable 3 is not callable.",
+            "NotCallableException line 3: The variable a.b is not callable.",
             e.exception.get_message())
 
 
@@ -305,7 +305,7 @@ class TestExecution(unittest.TestCase):
             execute(InputStream(program),True)
 
         self.assertEqual(
-            "OperationNotSupportedException line 1: Operation * can't be applied to ValueType.STRING and ValueType.NUMBER",
+            "OperationNotSupportedException line 1: Operation * can't be applied to STRING and NUMBER",
             e.exception.get_message())
 
     def test_variable_not_defined(self):
@@ -428,6 +428,8 @@ class TestExecution(unittest.TestCase):
         execute(InputStream(program), False)
         mocked_print.assert_called_once_with(
             "TooManyArgumentsException line 6:  Too many arguments  ['get(get(get(a.a.list,0),0),0)'] in function pop")
+
+
 
 if __name__ == '__main__':
     unittest.main()

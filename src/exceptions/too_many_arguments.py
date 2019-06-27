@@ -5,8 +5,7 @@ from .confprol_exception import ConfprolException
 class TooManyArguments(ConfprolException):
 
 
-    def __init__(self, message, function, extra_arguments):
-        super(TooManyArguments, self).__init__(message)
+    def __init__(self, function, extra_arguments):
         self.function = function
         self.extra_arguments = extra_arguments
         

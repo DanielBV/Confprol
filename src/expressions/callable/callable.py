@@ -23,7 +23,7 @@ class Callable(ConfprolObject):
         if len(values) > len(parameters):
             extra_arguments = list(map(lambda arg: arg.name, values))
 
-            raise TooManyArguments("Too many arguments",   None, extra_arguments)
+            raise TooManyArguments( None, extra_arguments)
 
         object = self._run(values)
 
