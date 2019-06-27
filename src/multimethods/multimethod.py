@@ -1,6 +1,6 @@
 registry = {}
-DEFAULT_VALUE = (None,)
-DISPATCH_ANY = None
+
+
 
 
 
@@ -26,8 +26,6 @@ class MultiMethod(object):
                 continue
 
             for i,element in enumerate(key):
-                if element is DISPATCH_ANY:
-                    continue
 
                 if type(element) == tuple:
                     found = False
@@ -52,6 +50,7 @@ class MultiMethod(object):
                 return self.typemap.get(key)(*args)
 
         raise TypeError("No match")
+    
 
     def register(self, types, function):
         if types in self.typemap:
@@ -70,7 +69,7 @@ class TypeMultiMethod(MultiMethod):
         return tuple(arg.type for arg in types)
 
     def compare(self,expected_type,found_type):
-        return found_type == expected_type
+        return found_type == expected_type or expected_type == object
 
 def register(function,types,name_factory):
     function = getattr(function, "__lastreg__", function)

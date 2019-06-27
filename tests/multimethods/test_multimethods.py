@@ -1,17 +1,17 @@
 import unittest
-from src.multimethods.multimethod import multimethod,DISPATCH_ANY
+from src.multimethods.multimethod import multimethod
 
 
 @multimethod((float,bool),(float,bool))
 def add(first,second):
     return first + second
 
-@multimethod(str,DISPATCH_ANY)
-@multimethod(DISPATCH_ANY,str)
+@multimethod(str,object)
+@multimethod(object,str)
 def add(first,second):
     return str(first) + str(second)
 
-@multimethod(DISPATCH_ANY)
+@multimethod(object)
 def add(oneParameter):
     return oneParameter
 
@@ -24,7 +24,7 @@ class TestMultiMethod(unittest.TestCase):
         self.assertEqual(2, add(2.0,False))
         self.assertEqual(0, add(False, False))
 
-    def test_dispatch_any(self):
+    def test_dispatch_any_object(self):
         self.assertEqual("hey listen", add("hey ", "listen"))
         self.assertEqual("3listen", add(3, "listen"))
         self.assertEqual("hey14.0", add("hey",14.0))

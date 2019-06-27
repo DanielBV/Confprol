@@ -431,5 +431,27 @@ class TestExecution(unittest.TestCase):
 
 
 
+    def test_context_is_stored_appropriately(self):
+        program ="""
+                funko mylength(value,original){
+        
+                        funko oneMore(){
+                            return original + 1;
+                    
+                        }
+        
+                        return oneMore;
+                }
+        
+                a =  mylength(3,4);
+                first = a();
+                b =  mylength(3,5);
+                return [first,a(),b()];
+               
+                """
+        self.assertEqual([5,5,6], execute(InputStream(program), False))
+
+
+
 if __name__ == '__main__':
     unittest.main()

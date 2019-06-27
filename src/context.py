@@ -34,5 +34,25 @@ class Context:
         for key in dicts_.keys():
             self.set_variable(key,dicts_[key])
 
+    def shallow_copy(self):
+        if self.parent is not None:
+            base = self.parent.create_subcontext()
+        else:
+            base = Context()
+
+        base.set_variables(self.variables)
+        print(self.variables)
+        return base
+
+
+    def __str__(self):
+        if self.parent is None:
+            parent_str = ""
+        else:
+            parent_str = str(self.parent)
+
+        return str({"context":self.variables, "parent":parent_str})
+
+
 
 

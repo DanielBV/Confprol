@@ -100,8 +100,7 @@ class MyVisitor(confprolVisitor):
 
         try:
             expr =  self.handler.run_function(expression, arguments, ctx.start.line)
-
-            expr = expr.copy() #TODO test if its required
+            expr = expr.copy()
             arguments_name = list(map(lambda a:a.name,arguments))
             expr.name = f"{expression.name}(" + ",".join(arguments_name) + ")"
             return expr

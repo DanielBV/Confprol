@@ -2,7 +2,7 @@ from src.expressions.confprol_object import ConfprolObject
 from ..type import ValueType
 from . import BasicExpression,StringExpression
 from src.exceptions import OperationNotSupported, DivisionByZero
-from src.multimethods.multimethod import  typemultimethod,DISPATCH_ANY
+from src.multimethods.multimethod import  typemultimethod
 
 class TypeOperations:
 
@@ -14,15 +14,15 @@ class TypeOperations:
         return BasicExpression(ConfprolObject(value), name, ValueType.NUMBER)
 
     @staticmethod
-    @typemultimethod(ValueType.STRING,DISPATCH_ANY)
-    @typemultimethod(DISPATCH_ANY, ValueType.STRING)
+    @typemultimethod(ValueType.STRING,object)
+    @typemultimethod(object, ValueType.STRING)
     def plus(expr1: BasicExpression, expr2: BasicExpression):
         name = f"{expr1.name} + {expr2.name}"
         value = str(expr1.value) + str(expr2.value)
         return  StringExpression(ConfprolObject(value),name)
 
     @staticmethod
-    @typemultimethod(DISPATCH_ANY, DISPATCH_ANY)
+    @typemultimethod(object, object)
     def plus(expr1: BasicExpression, expr2: BasicExpression):
         raise OperationNotSupported("+", expr1, expr2)
 
@@ -37,7 +37,7 @@ class TypeOperations:
 
 
     @staticmethod
-    @typemultimethod(DISPATCH_ANY,DISPATCH_ANY)
+    @typemultimethod(object,object)
     def mult(expr1:BasicExpression, expr2:BasicExpression):
         raise OperationNotSupported("*", expr1, expr2)
 
@@ -52,7 +52,7 @@ class TypeOperations:
         return  BasicExpression(ConfprolObject(value), name, ValueType.NUMBER)
 
     @staticmethod
-    @typemultimethod(DISPATCH_ANY, DISPATCH_ANY)
+    @typemultimethod(object, object)
     def div(expr1: BasicExpression, expr2: BasicExpression):
         raise OperationNotSupported("/", expr1, expr2)
 
@@ -64,7 +64,7 @@ class TypeOperations:
         return  BasicExpression(ConfprolObject(value), name, ValueType.NUMBER)
 
     @staticmethod
-    @typemultimethod(DISPATCH_ANY, DISPATCH_ANY)
+    @typemultimethod(object, object)
     def minus(expr1: BasicExpression, expr2: BasicExpression):
         raise OperationNotSupported("-", expr1, expr2)
 

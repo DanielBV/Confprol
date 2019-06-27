@@ -7,14 +7,12 @@ from .callable import Callable
 
 class CallableFunction(Callable):
 
-    def __init__(self, arguments:List[str], function_tree, visitor: 'MyVisitor', context=None):
+    def __init__(self, arguments:List[str], function_tree, visitor: 'MyVisitor'):
         self.__arguments = arguments
         self.__function_content = function_tree
         self.visitor = visitor
-        if context is None:
-            self.context = self.visitor.get_context() #TODO refactor and review this
-        else:
-            self.context = context
+
+        self.context = self.visitor.get_context()
 
 
         super(CallableFunction, self).__init__(arguments)

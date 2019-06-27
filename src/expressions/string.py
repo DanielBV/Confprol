@@ -1,16 +1,11 @@
-from src.expressions.confprol_object import ConfprolObject
+
 from .basic_expression import BasicExpression
 from src.type import ValueType
 from src.expressions.callable import  PythonMethod
-from typing import List
 from src.expressions.runnable_expression import RunnableExpression
+from .common_methods import length_function
 
 
-def length_function(expr:List[BasicExpression]):
-    expr = expr[0]
-    value = len(expr.value)
-
-    return BasicExpression(ConfprolObject(value), f"length({expr.name})", ValueType.NUMBER)
 
 class StringExpression(BasicExpression):
 

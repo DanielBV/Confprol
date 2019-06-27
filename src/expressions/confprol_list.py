@@ -6,6 +6,7 @@ from .callable import  PythonMethod
 from src.exceptions import ElementNotContained
 from .confprol_object import ConfprolObject
 from  .runnable_expression import RunnableExpression
+from .common_methods import length_function
 
 
 def get_position(arguments):
@@ -15,10 +16,6 @@ def get_position(arguments):
     return list_[pos]
 
 
-def length_function(expr:List[BasicExpression]):
-    expr = expr[0]
-    value = len(expr.value)
-    return BasicExpression(ConfprolObject(value), f"length({expr.name})", ValueType.NUMBER)
 
 def append(arguments:List[BasicExpression]):
     list_ = arguments[0]
@@ -42,7 +39,7 @@ def insert(arguments:List[BasicExpression]):
 class ListExpression(Expression):
 
 
-    def __init__(self, values:ConfprolObject, name): #TODO refactor
+    def __init__(self, values:ConfprolObject, name):
         super(ListExpression, self).__init__(values,name,ValueType.LIST)
 
         self.set_attribute("get",RunnableExpression(PythonMethod(["self","position"],get_position,self),"get"))
