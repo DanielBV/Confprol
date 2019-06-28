@@ -3,7 +3,7 @@
 from generated_antlr4.confprolVisitor import confprolVisitor
 from generated_antlr4.confprolParser import confprolParser
 from src.exceptions import ReturnException,AttributeNotDefined,FunctionNotDefined,\
-    VariableNotDefined, RuntimeException, ConfProlSyntaxError, ConfprolException
+     RuntimeException, ConfProlSyntaxError, ConfprolException
 
 from src.expressions.runnable_expression import RunnableExpression
 from src.expressions.callable.callable_function import CallableFunction
@@ -16,6 +16,10 @@ class MyVisitor(confprolVisitor):
 
 
 
+
+    def visitFinalNegativeNumber(self, ctx: confprolParser.FinalNegativeNumberContext):
+        value = int(ctx.getText())
+        return self.handler.load_number(value)
 
     def visitExprNE(self, ctx: confprolParser.ExprNEContext):
         return super().visitExprNE(ctx)

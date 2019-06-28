@@ -452,6 +452,12 @@ class TestExecution(unittest.TestCase):
         self.assertEqual([5,5,6], execute(InputStream(program), False))
 
 
+    def test_negative_numbers(self):
+        program = """
+                    return -3 * -6 / -1;
+        
+                  """
+        self.assertEqual(-18, execute(InputStream(program), False))
 
 if __name__ == '__main__':
     unittest.main()

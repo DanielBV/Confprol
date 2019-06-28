@@ -30,7 +30,8 @@ final     : '('expr')' #finalPAR
             | functionCall #finalFunctionCall
             | BOOLEAN #finalBoolean
             | FLOAT #finalFloat
-            | list_creation #finalListCreation;
+            | list_creation #finalListCreation
+            | '-' NUMBER #finalNegativeNumber;
 
 
 attributes locals [before]: (ID | STRING)'.' subattributes #attributeBeginning;

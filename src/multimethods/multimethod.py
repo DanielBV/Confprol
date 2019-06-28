@@ -3,7 +3,6 @@ registry = {}
 
 
 
-
 class MultiMethod(object):
     def __init__(self, name):
         self.name = name
@@ -18,39 +17,39 @@ class MultiMethod(object):
             return self.cache[args_types](*args)
 
 
-
         for key in self.typemap.keys():
-            matches = True
-
-            if len(key)!=len(args_types):
+            if len(key) != len(args_types):
                 continue
 
-            for i,element in enumerate(key):
-
-                if type(element) == tuple:
-                    found = False
-                    for type_ in element:
-
-                        if  self.compare(type_,args_types[i]):
-                            found = True
-                            break
-
-                    if found:
-                        continue
-                    else:
-                        matches = False
-                        break
-
-                if not  self.compare(element,args_types[i]):
-                    matches = False
-                    break
-
-            if matches:
+            if self.check_key_matches(key, args_types):
                 self.cache[args_types] = self.typemap.get(key)
                 return self.typemap.get(key)(*args)
 
         raise TypeError("No match")
-    
+
+    def check_key_matches(self, key, args_types):
+
+        for i, element in enumerate(key):
+
+            if type(element) == tuple:
+                found = False
+                for type_ in element:
+
+                    if self.compare(type_, args_types[i]):
+                        found = True
+                        break
+
+                if not found:
+                    return False
+
+
+            elif not self.compare(element, args_types[i]):
+                return False
+
+
+        return True
+
+
 
     def register(self, types, function):
         if types in self.typemap:
