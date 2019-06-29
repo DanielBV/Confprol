@@ -10,7 +10,7 @@ from src.expressions.operations import TypeOperations
 from src.type import ValueType
 from src.context import Context
 from src.expressions.confprol_object import ConfprolObject
-
+from src.expressions.none import confprol_none
 
 class ConfprolHandler:
 
@@ -92,3 +92,6 @@ class ConfprolHandler:
             return TypeOperations.plus(expr1,expr2)
         except OperationNotSupported as e:
             raise RuntimeException(line, e)
+
+    def load_none(self):
+        return confprol_none

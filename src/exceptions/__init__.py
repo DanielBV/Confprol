@@ -11,3 +11,4 @@ from .not_callable import NotCallable
 from .attribute_not_defined import AttributeNotDefined
 from .runtime_exception import RuntimeException
 from .element_not_contained import ElementNotContained
+from .confprol_value_error import ConfprolValueError

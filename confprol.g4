@@ -24,6 +24,7 @@ term      : term '*' final #termMULT
             | final #termFINAL;
 final     : '('expr')' #finalPAR
             | NUMBER #finalNUMBER
+            | NONE #finalNone
             | ID #finalID
             | attributes #finalIDS
             | STRING #finalSTRING
@@ -55,6 +56,7 @@ parameters   : ID',' parameters | ID;
 
 
 FLOAT  : NUMBER+'.'NUMBER*;
+NONE: 'None';
 ID     : [a-zA-Z]+ ;
 NUMBER : [0-9]+ ;
 WS     : [ \t\r\n] -> skip;

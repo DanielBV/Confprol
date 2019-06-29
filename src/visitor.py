@@ -15,6 +15,9 @@ class MyVisitor(confprolVisitor):
 
 
 
+    def visitFinalNone(self, ctx: confprolParser.FinalNoneContext):
+        return self.handler.load_none()
+
     def visitFinalNegativeNumber(self, ctx: confprolParser.FinalNegativeNumberContext):
         value = int(ctx.getText())
         return self.handler.load_number(value)

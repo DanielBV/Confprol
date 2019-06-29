@@ -3,7 +3,7 @@ from .basic_expression import BasicExpression
 from .expression import Expression
 from typing import  List
 from .callable import  PythonMethod
-from src.exceptions import ElementNotContained
+from src.exceptions import ElementNotContained, ConfprolValueError
 from .confprol_object import ConfprolObject
 from  .runnable_expression import RunnableExpression
 from .common_methods import length_function
@@ -70,6 +70,10 @@ class ListExpression(Expression):
             raise ElementNotContained(self.name,expr) #
 
     def insert(self, position, expr):
+        if type(position) == float and int(position) == position:
+            position = int(position)
+        if type(position)!=int:
+            raise ConfprolValueError("The first argument of the method 'insert' must be an integer")
         self.value.insert(position,expr)
 
     def copy(self):

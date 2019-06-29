@@ -79,6 +79,28 @@ class TestLists(unittest.TestCase):
                                """
         self.assertEqual(99, execute(InputStream(program)))
 
+    @patch('builtins.print')
+    def test_list_insert_first_argument_not_integer(self,mocked_print):
+        program = """
+                            list = [3,4];
+                            list.insert(3.1,"VALUE");
+                            return list;
+
+                                      """
+        execute(InputStream(program))
+
+        mocked_print.assert_called_once_with(
+            "ValueException line 3: The first argument of the method 'insert' must be an integer")
+
+    def test_list_insert_position_can_be_float_without_decimal(self):
+        program = """
+                                list = [3,4];
+                                list.insert(1.000000000000000,"VALUE");
+                                return list;
+
+                                          """
+        self.assertEqual([3,"VALUE",4],execute(InputStream(program)))
+
 
 if __name__ == '__main__':
     unittest.main()
