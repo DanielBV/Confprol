@@ -4,10 +4,8 @@ from generated_antlr4.confprolVisitor import confprolVisitor
 from generated_antlr4.confprolParser import confprolParser
 from src.exceptions import ReturnException,AttributeNotDefined,FunctionNotDefined,\
      RuntimeException, ConfProlSyntaxError, ConfprolException
-
 from src.expressions.runnable_expression import RunnableExpression
 from src.expressions.callable.callable_function import CallableFunction
-
 from .confprol_handler import ConfprolHandler
 
 
@@ -178,7 +176,7 @@ class MyVisitor(confprolVisitor):
             duplicated_params = set([x for x in params if params.count(x) > 1])
 
             if len(duplicated_params) != 0:
-                raise ConfProlSyntaxError(f"Duplicated parameter {duplicated_params} in function {name}",ctx.start.line,ctx.start.column)
+                raise ConfProlSyntaxError(f"Duplicated parameter {duplicated_params} in function {name}.",ctx.start.line,ctx.start.column)
         else:
             params = []
 

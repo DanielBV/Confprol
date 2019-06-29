@@ -8,6 +8,6 @@ class FunctionNotDefined(ConfprolException):
         super(FunctionNotDefined, self).__init__("FunctionNotDefinedException")
 
     def get_message(self):
-        return f"Function {self.function} not defined"
+        return f"Function {self.function} not defined."
 
 
