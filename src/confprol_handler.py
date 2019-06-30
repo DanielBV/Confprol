@@ -2,7 +2,6 @@
 
 
 
-from src.expressions.callable.callable import Callable
 from src.exceptions import  NotCallable, VariableNotDefined, RuntimeException, TooManyArguments, ArgumentsMissing, \
 OperationNotSupported,DivisionByZero
 from src.expressions import BasicExpression,StringExpression, ListExpression,RunnableExpression
@@ -11,6 +10,15 @@ from src.type import ValueType
 from src.context import Context
 from src.expressions.confprol_object import ConfprolObject
 from src.expressions.none import confprol_none
+from antlr4 import *
+from antlr4.error.ErrorListener import ConsoleErrorListener
+from generated_antlr4.confprolParser import confprolParser
+
+from src.error_listener import  MyErrorListener
+from generated_antlr4.confprolLexer import confprolLexer
+from src.expressions.object_expression import ObjectExpression
+from src.utilities.constants import ENCODING
+
 
 class ConfprolHandler:
 
@@ -95,3 +103,24 @@ class ConfprolHandler:
 
     def load_none(self):
         return confprol_none
+
+    def import_path(self, path,import_id):
+        from src.visitor import MyVisitor
+        lexer = confprolLexer(FileStream(path,ENCODING))
+        stream = CommonTokenStream(lexer)
+        parser = confprolParser(stream)
+        parser.removeErrorListener(ConsoleErrorListener.INSTANCE)
+        parser.addErrorListener(MyErrorListener())
+
+
+        tree = parser.program()
+        visitor = MyVisitor(ConfprolHandler())
+        visitor.visit(tree)
+
+        expr = ObjectExpression(import_id)
+
+        imported_variables = visitor.get_context().variables
+
+        expr.set_attributes(imported_variables)
+        self.assign_variable(import_id,expr)
+

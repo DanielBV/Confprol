@@ -1,16 +1,7 @@
-funko objectfactory(){
-    object = 3;
+import "../imported_file.confprol" as pipo;
 
-    funko next(){
-        return object+1;
-    }
-    object.next = next;
-    return object;
-}
-
-a = [objectfactory()];
-print a;
-a = "";
-a.lengtho = objectfactory();
-
-print a.lengtho();
+print pipo;
+e = pipo;
+print e.a;
+print pipo.a;
+print e*7;

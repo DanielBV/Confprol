@@ -8,6 +8,7 @@ class ValueType(Enum):
     FUNCTION = 3
     LIST = 4
     NONE = 5
+    OBJECT = 6
 
 
     def __str__(self):

@@ -1,19 +1,29 @@
 
 
 from generated_antlr4.confprolVisitor import confprolVisitor
-from generated_antlr4.confprolParser import confprolParser
 from src.exceptions import ReturnException,AttributeNotDefined,FunctionNotDefined,\
      RuntimeException, ConfProlSyntaxError, ConfprolException
 from src.expressions.runnable_expression import RunnableExpression
 from src.expressions.callable.callable_function import CallableFunction
+
 from .confprol_handler import ConfprolHandler
 
+from generated_antlr4.confprolParser import confprolParser
 
 class MyVisitor(confprolVisitor):
 
 
 
 
+
+
+    def visitImport_(self, ctx: confprolParser.Import_Context):
+        path = ctx.STRING().getText()
+        path = path[1:len(path)-1]
+
+        import_id = ctx.ID().getText()
+
+        self.handler.import_path(path,import_id)
 
     def visitFinalNone(self, ctx: confprolParser.FinalNoneContext):
         return self.handler.load_none()

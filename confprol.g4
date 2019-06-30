@@ -3,7 +3,11 @@ program   :  statement* EOF;
 
 
 
-statement : (assign | print_  | expr | return_value | attribute_assign)';' | ( condition | function_declaration) ;
+statement : (assign | print_  | expr | return_value | attribute_assign|import_)';' | ( condition | function_declaration) ;
+
+import_: 'import' STRING 'as' ID;
+
+
 
 assign    : ID '=' expr ;
 attribute_assign    :  expr '.' (subattributes '.')? ID '=' expr;
@@ -60,8 +64,7 @@ NONE: 'None';
 ID     : [a-zA-Z]+ ;
 NUMBER : [0-9]+ ;
 WS     : [ \t\r\n] -> skip;
-
+NUMBERED_ID  : [a-zA-Z0-9]+;
 
 STRING: '"' (~["\\\r\n] | [\\][\\]* .)* '"';
-
 OTHERCHARACTER : . ; /* To avoid token recognition errors with characters like "`" */

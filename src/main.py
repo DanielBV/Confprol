@@ -9,6 +9,7 @@ from src.error_listener import  MyErrorListener
 import sys
 import os
 from src.confprol_handler import ConfprolHandler
+from src.utilities.constants import ENCODING
 
 
 def execute(input_stream,raise_exception=False):
@@ -33,7 +34,7 @@ def execute(input_stream,raise_exception=False):
 
 
 def execute_file(file_path:str,raise_exception=False):
-    input_stream = FileStream(file_path,"utf-8")
+    input_stream = FileStream(file_path,ENCODING)
     return execute(input_stream,raise_exception)
 
 

@@ -2,7 +2,7 @@ import unittest
 from src.main import execute
 from antlr4 import InputStream
 
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 class TestNone(unittest.TestCase):
     def test_void_functions_return_none(self):
