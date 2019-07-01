@@ -1,15 +1,1 @@
-
-
-a = 3;
-b = "hola";
-a.hola = 3;
-print has_attribute(a,b);
-
-import "../imported_file.confprol" as pipo;
-
-
-print(int(3.6));
-print(int(False));
-print int("-3");
-int(None);
-int("NANI");
+print string(3);

@@ -39,3 +39,4 @@ class CallableFunction(Callable):
         self.visitor.set_context(old_state)
         return confprol_none
 
+
