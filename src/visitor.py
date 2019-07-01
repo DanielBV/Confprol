@@ -23,7 +23,7 @@ class MyVisitor(confprolVisitor):
 
         import_id = ctx.ID().getText()
 
-        self.handler.import_path(path,import_id)
+        self.handler.import_path(path,import_id,ctx.start.line)
 
     def visitFinalNone(self, ctx: confprolParser.FinalNoneContext):
         return self.handler.load_none()
@@ -175,8 +175,11 @@ class MyVisitor(confprolVisitor):
             arguments = self.visitArguments(arg_node)
 
         if self.handler.has_attribute(function):
-            function = self.handler.get_attribute(function,ctx.start.line)
-            return self.handler.run_function(function, arguments, ctx.start.line)
+            try:
+                function = self.handler.get_attribute(function,ctx.start.line)
+                return self.handler.run_function(function, arguments, ctx.start.line)
+            except ConfprolException as e:
+                raise RuntimeException(ctx.start.line, e)
         else:
             raise RuntimeException(ctx.start.line,FunctionNotDefined(function))
 

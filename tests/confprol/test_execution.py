@@ -2,8 +2,9 @@ import unittest
 from src.main import execute_file,execute
 from antlr4 import InputStream
 import os
+from src.exceptions.syntax_error import ConfProlSyntaxError
 
-
+from unittest.mock import patch
 
 class TestExecution(unittest.TestCase):
 
@@ -144,7 +145,7 @@ class TestExecution(unittest.TestCase):
 
         self.assertEqual( 5, execute(InputStream(program)))
 
-    def test_changin_attributes_changes_all_alias(self):
+    def test_changing_attributes_changes_all_alias(self):
         program = """
         a = 3;
         a.a = 5;
@@ -209,6 +210,63 @@ class TestExecution(unittest.TestCase):
         
                   """
         self.assertEqual(-18, execute(InputStream(program), False))
+
+    def test_variables_cant_start_with_number(self):
+        program = """
+                         6a = 3;
+                         """
+
+        with self.assertRaises(ConfProlSyntaxError) as e:
+            execute(InputStream(program), True)
+
+        self.assertEqual("SyntaxException in line 2:25 mismatched input '6a' expecting {<EOF>, 'import', 'print', 'if', 'return', '-', '(', '[', 'funko', BOOLEAN, FLOAT, 'None', ID, NUMBER, STRING}",e.exception.get_message())
+
+    def test_variables_with_numbers_and_underscore(self):
+        program = """
+                    __oh_bOy53 =  14;
+    
+                    return __oh_bOy53;
+                   """
+
+        self.assertEqual(14,execute(InputStream(program), True))
+
+
+
+    def test_import(self):
+        program = """
+            import "REPLACE_PATH" as imported;
+            
+            return [imported.value, imported.plus6(4)];
+        """
+        path = os.path.join(self.test_path, "samples","imported_file")
+        program = program.replace("REPLACE_PATH", path)
+
+
+        self.assertEqual([3,10],execute(InputStream(program), True))
+
+    @patch('builtins.print')
+    def test_import_file_not_found(self, mocked_print):
+        program = """
+                   import "./thisfileshouldntexist/nope/pizza" as smth;
+
+                   return [imported.value, imported.plus6(4)];
+               """
+
+        execute(InputStream(program), False)
+        mocked_print.assert_called_with(
+            "FileNotFoundException line 2: File ./thisfileshouldntexist/nope/pizza not found.")
+
+    @patch('builtins.print')
+    def test_import_directory(self, mocked_print):
+        program = """
+                           import "REPLACE_PATH" as foo;
+                       """
+
+        path = os.path.join(self.test_path,"samples")
+        program = program.replace("REPLACE_PATH",path)
+        execute(InputStream(program), False)
+        mocked_print.assert_called_with(
+            f"CannotOpenDirectoryException line 2: The directory {path} can't be opened or imported.")
 
 
 if __name__ == '__main__':

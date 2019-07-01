@@ -41,7 +41,6 @@ class Context:
             base = Context()
 
         base.set_variables(self.variables)
-        print(self.variables)
         return base
 
 

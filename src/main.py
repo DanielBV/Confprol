@@ -10,6 +10,7 @@ import sys
 import os
 from src.confprol_handler import ConfprolHandler
 from src.utilities.constants import ENCODING
+from src.default_functions import default_functions
 
 
 def execute(input_stream,raise_exception=False):
@@ -22,7 +23,9 @@ def execute(input_stream,raise_exception=False):
 
     try:
         tree = parser.program()
+
         visitor = MyVisitor(ConfprolHandler())
+        visitor.get_context().set_variables(default_functions) #TODO refactor
         visitor.visit(tree)
     except ReturnException as e:
         return e.return_value.get_deep_value()

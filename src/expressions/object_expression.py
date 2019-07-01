@@ -19,5 +19,8 @@ class ObjectExpression(Expression):
         expr.object = self.object
         return expr
 
+    def get_deep_value(self):
+        return self.value
+
     def __str__(self):
         return f"[Object {id(self.value)}]"

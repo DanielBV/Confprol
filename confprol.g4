@@ -61,7 +61,7 @@ parameters   : ID',' parameters | ID;
 
 FLOAT  : NUMBER+'.'NUMBER*;
 NONE: 'None';
-ID     : [a-zA-Z]+ ;
+ID     : [a-zA-Z_][a-zA-Z_0-9]* ;
 NUMBER : [0-9]+ ;
 WS     : [ \t\r\n] -> skip;
 NUMBERED_ID  : [a-zA-Z0-9]+;

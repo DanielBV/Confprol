@@ -3,7 +3,7 @@
 
 
 from src.exceptions import  NotCallable, VariableNotDefined, RuntimeException, TooManyArguments, ArgumentsMissing, \
-OperationNotSupported,DivisionByZero
+OperationNotSupported,DivisionByZero, FileNotFound, CannotOpenDirectory
 from src.expressions import BasicExpression,StringExpression, ListExpression,RunnableExpression
 from src.expressions.operations import TypeOperations
 from src.type import ValueType
@@ -18,7 +18,7 @@ from src.error_listener import  MyErrorListener
 from generated_antlr4.confprolLexer import confprolLexer
 from src.expressions.object_expression import ObjectExpression
 from src.utilities.constants import ENCODING
-
+import os
 
 class ConfprolHandler:
 
@@ -104,23 +104,28 @@ class ConfprolHandler:
     def load_none(self):
         return confprol_none
 
-    def import_path(self, path,import_id):
+    def import_path(self, path,import_id,line):
         from src.visitor import MyVisitor
-        lexer = confprolLexer(FileStream(path,ENCODING))
-        stream = CommonTokenStream(lexer)
-        parser = confprolParser(stream)
-        parser.removeErrorListener(ConsoleErrorListener.INSTANCE)
-        parser.addErrorListener(MyErrorListener())
+        try:
+            lexer = confprolLexer(FileStream(path,ENCODING))
+            stream = CommonTokenStream(lexer)
+            parser = confprolParser(stream)
+            parser.removeErrorListener(ConsoleErrorListener.INSTANCE)
+            parser.addErrorListener(MyErrorListener())
 
 
-        tree = parser.program()
-        visitor = MyVisitor(ConfprolHandler())
-        visitor.visit(tree)
+            tree = parser.program()
+            visitor = MyVisitor(ConfprolHandler())
+            visitor.visit(tree)
 
-        expr = ObjectExpression(import_id)
+            expr = ObjectExpression(import_id)
 
-        imported_variables = visitor.get_context().variables
+            imported_variables = visitor.get_context().variables
 
-        expr.set_attributes(imported_variables)
-        self.assign_variable(import_id,expr)
+            expr.set_attributes(imported_variables)
+            self.assign_variable(import_id,expr)
+        except FileNotFoundError:
+            raise RuntimeException(line,FileNotFound(path))
+        except PermissionError:
+            raise RuntimeException(line, CannotOpenDirectory(path))
 
