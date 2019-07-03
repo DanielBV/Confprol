@@ -1,1 +1,8 @@
-print string(3);
+
+
+a = 6;
+a.a = 7;
+
+a/= object();
+print a;
+

@@ -3,7 +3,7 @@ program   :  statement* EOF;
 
 
 
-statement : (assign | print_  | expr | return_value | attribute_assign|import_)';' | ( condition | function_declaration) ;
+statement : (assign |in_operations| print_  | expr | return_value | attribute_assign|import_)';' | ( condition | function_declaration) ;
 
 import_: 'import' STRING 'as' ID;
 
@@ -15,6 +15,9 @@ print_     : 'print' expr ;
 condition : 'if' expr '{' statement* '}' elsecondition?;
 elsecondition: 'else' '{' statement* '}';
 return_value: 'return' expr;
+
+in_operations: (ID|attributes) '+=' expr #inOperationsSum |  (ID|attributes) '-=' expr #inOperationsMinus|
+                (ID|attributes) '*=' expr #inOperationsMult | (ID|attributes) '/=' expr #inOperationsDivision ;
 
 expr      : expr2 '==' expr2 #exprEqual | expr2 #exprNE;
 
@@ -39,7 +42,7 @@ final     : '('expr')' #finalPAR
             | '-' NUMBER #finalNegativeNumber;
 
 
-attributes locals [before]: (ID | STRING)'.' subattributes #attributeBeginning;
+attributes : (ID | STRING)'.' subattributes #attributeBeginning;
 subattributes  locals[before]:    ID #attribute
                 | subattributes'.'subattributes#intermediateIDs
                 | ID'('arguments?')' #methodCall;

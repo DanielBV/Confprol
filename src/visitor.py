@@ -3,6 +3,7 @@
 from generated_antlr4.confprolVisitor import confprolVisitor
 from src.exceptions import ReturnException,AttributeNotDefined,FunctionNotDefined,\
      RuntimeException, ConfProlSyntaxError, ConfprolException
+from src.expressions.confprol_object import ConfprolObject
 from src.expressions.runnable_expression import RunnableExpression
 from src.expressions.callable.callable_function import CallableFunction
 
@@ -14,6 +15,45 @@ class MyVisitor(confprolVisitor):
 
 
 
+
+
+
+    def visitInOperationsSum(self, ctx: confprolParser.InOperationsSumContext):
+        if ctx.ID():
+            base = self.handler.get_attribute(ctx.ID().getText(),ctx.start.line)
+        else:
+            base = super(MyVisitor, self).visit(ctx.attributes())
+
+        other = super(MyVisitor, self).visit(ctx.expr())
+        self.handler.in_sum(base,other, ctx.start.line)
+
+    def visitInOperationsMinus(self, ctx: confprolParser.InOperationsMinusContext):
+        if ctx.ID():
+            base = self.handler.get_attribute(ctx.ID().getText(), ctx.start.line)
+        else:
+            base = super(MyVisitor, self).visit(ctx.attributes())
+
+        other = super(MyVisitor, self).visit(ctx.expr())
+        self.handler.in_minus(base, other,ctx.start.line)
+
+
+    def visitInOperationsMult(self, ctx: confprolParser.InOperationsMultContext):
+        if ctx.ID():
+            base = self.handler.get_attribute(ctx.ID().getText(), ctx.start.line)
+        else:
+            base = super(MyVisitor, self).visit(ctx.attributes())
+
+        other = super(MyVisitor, self).visit(ctx.expr())
+        self.handler.in_mult(base, other,ctx.start.line)
+
+    def visitInOperationsDivision(self, ctx: confprolParser.InOperationsDivisionContext):
+        if ctx.ID():
+            base = self.handler.get_attribute(ctx.ID().getText(), ctx.start.line)
+        else:
+            base = super(MyVisitor, self).visit(ctx.attributes())
+
+        other = super(MyVisitor, self).visit(ctx.expr())
+        self.handler.in_div(base, other,ctx.start.line)
 
 
 

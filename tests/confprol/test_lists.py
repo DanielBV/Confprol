@@ -102,5 +102,21 @@ class TestLists(unittest.TestCase):
         self.assertEqual([3,"VALUE",4],execute(InputStream(program)))
 
 
+    def test_list_remove_with_object(self):
+        program = """       
+                           a = object();
+                           b = object();
+                           list = [];
+                           list.append(a);
+                           list.append(b);
+                           
+                           
+                           return list.get(0) == a;
+                           
+
+                                                 """
+        self.assertTrue(execute(InputStream(program),True))
+
+
 if __name__ == '__main__':
     unittest.main()

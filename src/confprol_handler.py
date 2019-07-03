@@ -129,3 +129,21 @@ class ConfprolHandler:
         except PermissionError:
             raise RuntimeException(line, CannotOpenDirectory(path))
 
+    def in_sum(self, base, other, line):
+            new_value = self.sum(base,other,line)
+            base.object.value = new_value.object.value
+
+    def in_minus(self, base, other, line):
+        new_value = self.minus(base, other, line)
+        base.object.value = new_value.object.value
+
+    def in_mult(self, base, other,line):
+        new_value = self.multiplication(base, other, line)
+        base.object.value = new_value.object.value
+
+    def in_div(self, base, other,line):
+
+        new_value = self.division(base, other, line)
+        base.object.value = new_value.object.value
+
+

@@ -269,5 +269,42 @@ class TestExecution(unittest.TestCase):
             f"CannotOpenDirectoryException line 2: The directory {path} can't be opened or imported.")
 
 
+    def test_insum(self):
+        program = """
+                 a = 4;
+                 a+=5;
+                 return a;
+             """
+
+        self.assertEqual(9, execute(InputStream(program), True))
+
+    def test_inmult(self):
+        program = """
+                 a = 4;
+                 a*=5;
+                 return a;
+             """
+
+        self.assertEqual(20, execute(InputStream(program), True))
+
+    def test_indivision(self):
+        program = """
+                    a = 4;
+                    a/=5;
+                    return a;
+                """
+
+        self.assertEqual(0.8, execute(InputStream(program), True))
+
+    def test_inminus(self):
+        program = """
+                       a = 4;
+                       a-=5;
+                       return a;
+                   """
+
+        self.assertEqual(-1, execute(InputStream(program), True))
+
+
 if __name__ == '__main__':
     unittest.main()
