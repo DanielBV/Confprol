@@ -126,7 +126,7 @@ class ConfprolHandler:
             self.assign_variable(import_id,expr)
         except FileNotFoundError:
             raise RuntimeException(line,FileNotFound(path))
-        except PermissionError:
+        except (PermissionError,IsADirectoryError):
             raise RuntimeException(line, CannotOpenDirectory(path))
 
     def in_sum(self, base, other, line):
