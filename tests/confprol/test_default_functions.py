@@ -8,8 +8,8 @@ class TestDefaultFunctions(unittest.TestCase):
 
     def test_object_attributes(self):
         program = """
-            a = object();
-            a.b = 1;
+            a == object();
+            a.b == 1;
             return [a,a.b];
 
         """
@@ -21,9 +21,9 @@ class TestDefaultFunctions(unittest.TestCase):
 
     def test_object_equality(self):
         program = """
-                    a = object();
-                    b = object();
-                    return a == b;
+                    a == object();
+                    b == object();
+                    return a := b;
 
                 """
 
@@ -80,8 +80,8 @@ class TestDefaultFunctions(unittest.TestCase):
 
     def test_has_attribute(self):
         program = """
-                    a = object();
-                    a.attribute = 3;
+                    a == object();
+                    a.attribute == 3;
                     
                     return [has_attribute(a,"nope"), has_attribute(a,"attribute")];                
     
@@ -92,7 +92,7 @@ class TestDefaultFunctions(unittest.TestCase):
     @patch('builtins.print')
     def test_has_attribute_second_argument_not_string(self,mocked_print):
         program = """
-                            a = object();
+                            a == object();
                             has_attribute(a,3.0);              
 
                             """
@@ -155,10 +155,10 @@ class TestDefaultFunctions(unittest.TestCase):
     def test_to_string(self):
         program = """
                             funko functionName(){}
-                             int_ = 3;
-                             float_ = 3.6;
-                             str =  "This is a string";
-                             list = [[[6,7]],4];
+                             int_ == 3;
+                             float_ == 3.6;
+                             str == "This is a string";
+                             list == [[[6,7]],4];
                              
                             return [string(int_),string(float_),string(str),string(list),string(functionName)];
                         """

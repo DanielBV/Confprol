@@ -20,10 +20,11 @@ class TestExecution(unittest.TestCase):
     def test_recursion(self):
         program = """  
         funko factorial(a){
-            if(a==1){
-                return 1;
-            }else{
+            if not (a:=1){
                 return a*factorial(a-1);
+            }else{
+                return 1;
+               
             }
 
         }
@@ -31,8 +32,8 @@ class TestExecution(unittest.TestCase):
         self.assertEqual(3628800, execute(InputStream(program)))
 
     def test_equal_precedence(self):
-        self.assertEqual(True, execute(InputStream("return 3+1 == 4;")))
-        self.assertEqual(True, execute(InputStream("return 4 == 3+1;")))
+        self.assertEqual(True, execute(InputStream("return 3+1 := 4;")))
+        self.assertEqual(True, execute(InputStream("return 4 := 3+1;")))
 
 
 
@@ -44,7 +45,7 @@ class TestExecution(unittest.TestCase):
         self.assertEqual(None, execute(InputStream(program)))
 
     def test_inline_comment(self):
-        program = """if 3  // THIS IS A COMMENT
+        program = """if not 0  // THIS IS A COMMENT
                     { // A comment
                         // return 1;
                         return 6;  //Other comment
@@ -52,7 +53,7 @@ class TestExecution(unittest.TestCase):
         self.assertEqual(6, execute(InputStream(program)))
 
     def test_comments(self):
-        program = """if 3 /* IS THIS A REFERENCE? */
+        program = """if not 0 /* IS THIS A REFERENCE? */
                       { //
                         /**/
                           /*Random string
@@ -68,27 +69,29 @@ class TestExecution(unittest.TestCase):
         self.assertEqual(6, execute(InputStream(program)))
 
     def test_boolean_true(self):
-        program = """if True { 
-                            return 6;
+        program = """if not True { 
+                           return 10;
                      }else{
-                            return 10;
+                          return 6;
+                           
                     }
 
                               """
         self.assertEqual(6, execute(InputStream(program)))
 
     def test_boolean_false(self):
-        program = """if False { 
-                               return 6;
+        program = """if not False { 
+                              return 10; 
                         }else{
-                               return 10;
+                            return 6;
+                               
                        }
 
                                  """
         self.assertEqual(10, execute(InputStream(program)))
 
     def test_string_length_inside_variable(self):
-        program = """a = "Hey listen";
+        program = """a == "Hey listen";
                     return a.length();"""
         self.assertEqual(10, execute(InputStream(program)))
 
@@ -107,7 +110,7 @@ class TestExecution(unittest.TestCase):
             
             }
             
-            a = function();
+            a == function();
             return a(2,3);
             
         
@@ -116,7 +119,7 @@ class TestExecution(unittest.TestCase):
 
     def test_float(self):
         program = """
-                  a = 0.0000003;
+                  a == 0.0000003;
                   return a;
 
                 """
@@ -127,19 +130,19 @@ class TestExecution(unittest.TestCase):
 
     def test_assign_subattributes(self):
         program = """
-            a = 6;
-            a.a = 3;
-            a.a.B = 5;
+            a == 6;
+            a.a == 3;
+            a.a.B == 5;
             return [a.a,a.a.B];"""
 
         self.assertEqual([3,5],   execute(InputStream(program)))
 
     def test_assignation_keeps_attribute(self):
         program = """
-        a = 3;
-        a.a = 5;
+        a == 3;
+        a.a == 5;
         
-        b = a;
+        b == a;
         return b.a;
         """
 
@@ -147,11 +150,11 @@ class TestExecution(unittest.TestCase):
 
     def test_changing_attributes_changes_all_alias(self):
         program = """
-        a = 3;
-        a.a = 5;
+        a == 3;
+        a.a == 5;
 
-        b = a;
-        b.a = 7;
+        b == a;
+        b.a == 7;
         return a.a;
         """
 
@@ -162,7 +165,7 @@ class TestExecution(unittest.TestCase):
         program = """
         funko ralph(){
             }
-        ralph.a = 3;
+        ralph.a == 3;
         return ralph.a;
         
         """
@@ -171,8 +174,8 @@ class TestExecution(unittest.TestCase):
 
     def test_method_attributes(self):
         program = """
-                string = "This is a string";
-                string.length.a = 42;
+                string == "This is a string";
+                string.length.a == 42;
                 return string.length.a;
 
               """
@@ -195,9 +198,9 @@ class TestExecution(unittest.TestCase):
                         return oneMore;
                 }
         
-                a =  mylength(3,4);
-                first = a();
-                b =  mylength(3,5);
+                a ==  mylength(3,4);
+                first == a();
+                b ==  mylength(3,5);
                 return [first,a(),b()];
                
                 """
@@ -213,7 +216,7 @@ class TestExecution(unittest.TestCase):
 
     def test_variables_cant_start_with_number(self):
         program = """
-                         6a = 3;
+                         6a == 3;
                          """
 
         with self.assertRaises(ConfProlSyntaxError) as e:
@@ -223,7 +226,7 @@ class TestExecution(unittest.TestCase):
 
     def test_variables_with_numbers_and_underscore(self):
         program = """
-                    __oh_bOy53 =  14;
+                    __oh_bOy53 ==  14;
     
                     return __oh_bOy53;
                    """
@@ -271,7 +274,7 @@ class TestExecution(unittest.TestCase):
 
     def test_insum(self):
         program = """
-                 a = 4;
+                 a == 4;
                  a+=5;
                  return a;
              """
@@ -280,7 +283,7 @@ class TestExecution(unittest.TestCase):
 
     def test_inmult(self):
         program = """
-                 a = 4;
+                 a == 4;
                  a*=5;
                  return a;
              """
@@ -289,7 +292,7 @@ class TestExecution(unittest.TestCase):
 
     def test_indivision(self):
         program = """
-                    a = 4;
+                    a == 4;
                     a/=5;
                     return a;
                 """
@@ -298,7 +301,7 @@ class TestExecution(unittest.TestCase):
 
     def test_inminus(self):
         program = """
-                       a = 4;
+                       a == 4;
                        a-=5;
                        return a;
                    """

@@ -5,15 +5,15 @@
     }
 
     funko parameters(a,b){
-        d = 5 + 3 * (a+b) / 2 -2;
+        d == 5 + 3 * (a+b) / 2 -2;
         return d;
     }
 
 
 
-    value = noParameters();
+    value == noParameters();
 
-    otherValue = 7;
+    otherValue == 7;
 
     return parameters(value,otherValue);
 

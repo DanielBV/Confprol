@@ -70,7 +70,7 @@ class TypeOperations:
 
     @staticmethod
     def equals(expr1:BasicExpression, expr2:BasicExpression):
-        name = f"{expr1.name} == {expr2.name}"
+        name = f"{expr1.name} := {expr2.name}"
         value = expr1.value == expr2.value
         return  BasicExpression(ConfprolObject(value), name, ValueType.BOOLEAN)
 

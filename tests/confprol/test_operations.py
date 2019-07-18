@@ -256,7 +256,7 @@ class TestOperations(unittest.TestCase):
         expr = TypeOperations.equals(self.number1,self.number2)
 
         self.assertFalse(expr.value)
-        self.assertEqual("3 == 5", expr.name)
+        self.assertEqual("3 := 5", expr.name)
 
         expr2 = TypeOperations.equals(self.number1,self.number1)
         self.assertTrue(expr2.value)
@@ -264,49 +264,49 @@ class TestOperations(unittest.TestCase):
     def test_equal_number_boolean(self):
         expr = TypeOperations.equals(self.number1, self.boolean_true)
         self.assertFalse(expr.value)
-        self.assertEqual("3 == True", expr.name)
+        self.assertEqual("3 := True", expr.name)
 
         zero = BasicExpression(ConfprolObject(0), 0, ValueType.NUMBER)
         expr2 = TypeOperations.equals(self.boolean_false, zero)
         self.assertTrue(expr2.value)
-        self.assertEqual("False == 0", expr2.name)
+        self.assertEqual("False := 0", expr2.name)
 
     def test_equal_number_string(self):
         three_str = BasicExpression(ConfprolObject("3"), "3", ValueType.STRING)
         expr = TypeOperations.equals(self.number1,three_str)
         self.assertFalse(expr.value)
-        self.assertEqual("3 == 3", expr.name)
+        self.assertEqual("3 := 3", expr.name)
 
         expr2 = TypeOperations.equals(self.string1,self.number2)
         self.assertFalse(expr2.value)
-        self.assertEqual("firstString == 5", expr2.name)
+        self.assertEqual("firstString := 5", expr2.name)
 
     def test_equal_two_booleans(self):
         expr = TypeOperations.equals(self.boolean_true, self.boolean_true)
         self.assertTrue(expr.value)
-        self.assertEqual("True == True", expr.name)
+        self.assertEqual("True := True", expr.name)
 
         expr2 = TypeOperations.equals(self.boolean_false, self.boolean_true)
         self.assertFalse(expr2.value)
-        self.assertEqual("False == True", expr2.name)
+        self.assertEqual("False := True", expr2.name)
 
     def test_equals_string_boolean(self):
         expr = TypeOperations.equals(self.string1, self.boolean_true)
         self.assertFalse(expr.value)
-        self.assertEqual("firstString == True", expr.name)
+        self.assertEqual("firstString := True", expr.name)
 
         expr2 = TypeOperations.equals(self.boolean_false, self.string1)
         self.assertFalse(expr2.value)
-        self.assertEqual("False == firstString", expr2.name)
+        self.assertEqual("False := firstString", expr2.name)
 
     def test_equals_two_string(self):
         expr = TypeOperations.equals(self.string1,self.string1)
         self.assertTrue(expr.value)
-        self.assertEqual("firstString == firstString", expr.name)
+        self.assertEqual("firstString := firstString", expr.name)
 
         expr2 = TypeOperations.equals(self.string2, self.string1)
         self.assertFalse(expr2.value)
-        self.assertEqual("secondString == firstString", expr2.name)
+        self.assertEqual("secondString := firstString", expr2.name)
 
     def test_equals_second_argument_not_expression(self):
         with self.assertRaises(AttributeError):

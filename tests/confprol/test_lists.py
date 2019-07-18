@@ -10,7 +10,7 @@ class TestLists(unittest.TestCase):
     @patch('builtins.print')
     def test_list_remove_not_contained(self, mocked_print):
         program = """
-                          e = [];
+                          e == [];
                           e.remove(9);
                           return e;
                    """
@@ -22,7 +22,7 @@ class TestLists(unittest.TestCase):
     def test_list(self):
         program = """
 
-              e = [[6,[5,9],2],2,3,4];
+              e == [[6,[5,9],2],2,3,4];
               return  e.get(0).get(1).get(1);
           """
         self.assertEqual(9, execute(InputStream(program)))
@@ -32,21 +32,21 @@ class TestLists(unittest.TestCase):
                   funko returnsFour(){
                       return 5; // The four was a lie, the cake too.   
                   }
-                    e = [6*5+4+ returnsFour()];
+                    e == [6*5+4+ returnsFour()];
                     return  e.get(0);
                 """
         self.assertEqual(39, execute(InputStream(program)))
 
     def test_list_length(self):
         program = """
-                     e = [3,[1,2,3],4];
+                     e == [3,[1,2,3],4];
                      return  e.length();
                  """
         self.assertEqual(3, execute(InputStream(program)))
 
     def test_list_add(self):
         program = """
-                        e = [3];
+                        e == [3];
                         e.append(4);
                         return  [e.length(),e.get(1),e];
                     """
@@ -54,7 +54,7 @@ class TestLists(unittest.TestCase):
 
     def test_list_remove(self):
         program = """
-                           e = [3,4,5,3,6];
+                           e == [3,4,5,3,6];
                            e.remove(3);
                            return [e,e.length()];
                        """
@@ -62,9 +62,9 @@ class TestLists(unittest.TestCase):
 
     def test_list_insert(self):
         program = """
-                               e = [];
+                               e == [];
                                e.insert(3,"VALUE");
-                               f = [1,2,3,4];
+                               f == [1,2,3,4];
                                f.insert(2,"VALUE");
                                return [e,f];
                         """
@@ -72,8 +72,8 @@ class TestLists(unittest.TestCase):
 
     def test_list_attributes(self):
         program = """
-                     list = [3,4];
-                     list.attr = 99;
+                     list == [3,4];
+                     list.attr == 99;
                      return list.attr;
                      
                                """
@@ -82,7 +82,7 @@ class TestLists(unittest.TestCase):
     @patch('builtins.print')
     def test_list_insert_first_argument_not_integer(self,mocked_print):
         program = """
-                            list = [3,4];
+                            list == [3,4];
                             list.insert(3.1,"VALUE");
                             return list;
 
@@ -94,7 +94,7 @@ class TestLists(unittest.TestCase):
 
     def test_list_insert_position_can_be_float_without_decimal(self):
         program = """
-                                list = [3,4];
+                                list == [3,4];
                                 list.insert(1.000000000000000,"VALUE");
                                 return list;
 
@@ -104,14 +104,14 @@ class TestLists(unittest.TestCase):
 
     def test_list_remove_with_object(self):
         program = """       
-                           a = object();
-                           b = object();
-                           list = [];
+                           a == object();
+                           b == object();
+                           list == [];
                            list.append(a);
                            list.append(b);
                            
                            
-                           return list.get(0) == a;
+                           return list.get(0) := a;
                            
 
                                                  """

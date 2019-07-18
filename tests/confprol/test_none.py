@@ -20,13 +20,13 @@ class TestNone(unittest.TestCase):
         self.assertEqual(None, execute(InputStream(program)),True)
 
     def test_none_equals_none(self):
-        program = """return None == None;"""
+        program = """return None := None;"""
         self.assertEqual(True, execute(InputStream(program)), True)
 
     def test_only_one_none_and_attributes(self):
-        program = """ a  = None;
-                      a.attr = "duck";
-                      b = None;
+        program = """ a  == None;
+                      a.attr == "duck";
+                      b == None;
                       return b.attr;"""
         self.assertEqual("duck", execute(InputStream(program)), True)
 

@@ -4,4 +4,4 @@ funko plus6(v){
     return 6+v;
 }
 
-value = 3;
+value == 3;

@@ -287,7 +287,7 @@ class MyVisitor(confprolVisitor):
 
     def visitCondition(self, ctx:confprolParser.ConditionContext):
         value = super().visit(ctx.expr()).value
-        if value:
+        if not value:
             statements = ctx.statement()
             for s in statements:
                 super().visit(s)

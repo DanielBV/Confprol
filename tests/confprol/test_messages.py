@@ -11,7 +11,7 @@ class TestMessages(unittest.TestCase):
 
     @patch('builtins.print')
     def test_function_not_callable(self,mocked_print):
-        program = """ a = 3;
+        program = """ a == 3;
                          a();"""
 
 
@@ -24,9 +24,9 @@ class TestMessages(unittest.TestCase):
     @patch('builtins.print')
     def test_message_prints_full_method_and_attribute_path(self, mocked_print: MagicMock):
         program = """funko pop(){}
-                            a = 3;
-                            a.a = 6;
-                            a.a.list = [[[0]]];
+                            a == 3;
+                            a.a == 6;
+                            a.a.list == [[[0]]];
 
                             pop(a.a.list.get(0).get(0).get(0));
 
@@ -39,12 +39,12 @@ class TestMessages(unittest.TestCase):
     @patch('builtins.print')
     def test_message_prints_full_attribute_path(self, mocked_print: MagicMock):
         program = """funko pop(){}
-                            a = 0;
-                            a.a = 0;
-                            a.a.a = 0;
-                            a.a.a.a = 0;
-                            a.a.a.a.b = 0;
-                            a.a.a.a.b.attribute = 3;
+                            a == 0;
+                            a.a == 0;
+                            a.a.a == 0;
+                            a.a.a.a == 0;
+                            a.a.a.a.b == 0;
+                            a.a.a.a.b.attribute == 3;
                             pop(a.a.a.a.b.attribute);
 
                 """
@@ -58,9 +58,9 @@ class TestMessages(unittest.TestCase):
     @patch('builtins.print')
     def test_message_to_many_arguments_function_call(self, mocked_print: MagicMock):
         program = """funko pop(){}
-                      b = 3;
-                      c = b;
-                      a = [c,4,5,6];
+                      b == 3;
+                      c == b;
+                      a == [c,4,5,6];
                       pop(a.get(0));
           """
 
@@ -71,8 +71,8 @@ class TestMessages(unittest.TestCase):
     @patch('builtins.print')
     def test_message_prints_right_variable_name(self, mocked_print: MagicMock):
         program = """funko pop(){}
-                                  b = 3;
-                                  c = b;
+                                  b == 3;
+                                  c == b;
                                   pop(c);
 
                       """
@@ -83,7 +83,7 @@ class TestMessages(unittest.TestCase):
 
     @patch('builtins.print')
     def test_method_not_defined(self,mocked_print):
-        program = """ a = 3;
+        program = """ a == 3;
                       a.platypus();"""
 
         execute(InputStream(program), False)
@@ -109,8 +109,8 @@ class TestMessages(unittest.TestCase):
 
     @patch('builtins.print')
     def test_method_not_callable(self, mocked_print):
-        program = """ a=3;
-                         a.b = 3;
+        program = """ a==3;
+                         a.b == 3;
                          a.b();"""
 
         execute(InputStream(program), False)
@@ -155,8 +155,8 @@ class TestMessages(unittest.TestCase):
                                     return a + b;
                             }
 
-                            a = 6;
-                            c = 10;
+                            a == 6;
+                            c == 10;
                             thisIsAFunction(c);
 
                         """

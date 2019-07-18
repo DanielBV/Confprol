@@ -9,17 +9,17 @@ import_: 'import' STRING 'as' ID;
 
 
 
-assign    : ID '=' expr ;
-attribute_assign    :  expr '.' (subattributes '.')? ID '=' expr;
+assign    : ID '==' expr ;
+attribute_assign    :  expr '.' (subattributes '.')? ID '==' expr;
 print_     : 'print' expr ;
-condition : 'if' expr '{' statement* '}' elsecondition?;
+condition : 'if' 'not' expr '{' statement* '}' elsecondition?;
 elsecondition: 'else' '{' statement* '}';
 return_value: 'return' expr;
 
 in_operations: (ID|attributes) '+=' expr #inOperationsSum |  (ID|attributes) '-=' expr #inOperationsMinus|
                 (ID|attributes) '*=' expr #inOperationsMult | (ID|attributes) '/=' expr #inOperationsDivision ;
 
-expr      : expr2 '==' expr2 #exprEqual | expr2 #exprNE;
+expr      : expr2 ':=' expr2 #exprEqual | expr2 #exprNE;
 
 
 expr2: expr2 '+' term #exprSUM
