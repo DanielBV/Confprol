@@ -12,7 +12,7 @@ class TestLists(unittest.TestCase):
         program = """
                           e == [];
                           e.remove(9);
-                          return e;
+                          run away with e;
                    """
         execute(InputStream(program), False)
 
@@ -23,24 +23,24 @@ class TestLists(unittest.TestCase):
         program = """
 
               e == [[6,[5,9],2],2,3,4];
-              return  e.get(0).get(1).get(1);
+              run away with  e.get(0).get(1).get(1);
           """
         self.assertEqual(9, execute(InputStream(program)))
 
     def test_lists_evaluate_expressions(self):
         program = """
-                  funko returnsFour(){
-                      return 5; // The four was a lie, the cake too.   
+                  funko returnFour(){
+                      run away with 5; @useless_comment(The four was a lie, the cake too.)   
                   }
-                    e == [6*5+4+ returnsFour()];
-                    return  e.get(0);
+                    e == [6*5+4+ returnFour()];
+                    run away with  e.get(0);
                 """
         self.assertEqual(39, execute(InputStream(program)))
 
     def test_list_length(self):
         program = """
                      e == [3,[1,2,3],4];
-                     return  e.length();
+                     run away with  e.length();
                  """
         self.assertEqual(3, execute(InputStream(program)))
 
@@ -48,7 +48,7 @@ class TestLists(unittest.TestCase):
         program = """
                         e == [3];
                         e.append(4);
-                        return  [e.length(),e.get(1),e];
+                        run away with  [e.length(),e.get(1),e];
                     """
         self.assertEqual([2, 4, [3, 4]], execute(InputStream(program)))
 
@@ -56,7 +56,7 @@ class TestLists(unittest.TestCase):
         program = """
                            e == [3,4,5,3,6];
                            e.remove(3);
-                           return [e,e.length()];
+                           run away with [e,e.length()];
                        """
         self.assertEqual([[4, 5, 3, 6], 4], execute(InputStream(program)))
 
@@ -66,7 +66,7 @@ class TestLists(unittest.TestCase):
                                e.insert(3,"VALUE");
                                f == [1,2,3,4];
                                f.insert(2,"VALUE");
-                               return [e,f];
+                               run away with [e,f];
                         """
         self.assertEqual([["VALUE"], [1, 2, "VALUE", 3, 4]], execute(InputStream(program)))
 
@@ -74,7 +74,7 @@ class TestLists(unittest.TestCase):
         program = """
                      list == [3,4];
                      list.attr == 99;
-                     return list.attr;
+                     run away with list.attr;
                      
                                """
         self.assertEqual(99, execute(InputStream(program)))
@@ -84,7 +84,7 @@ class TestLists(unittest.TestCase):
         program = """
                             list == [3,4];
                             list.insert(3.1,"VALUE");
-                            return list;
+                            run away with list;
 
                                       """
         execute(InputStream(program))
@@ -96,7 +96,7 @@ class TestLists(unittest.TestCase):
         program = """
                                 list == [3,4];
                                 list.insert(1.000000000000000,"VALUE");
-                                return list;
+                                run away with list;
 
                                           """
         self.assertEqual([3,"VALUE",4],execute(InputStream(program)))
@@ -111,7 +111,7 @@ class TestLists(unittest.TestCase):
                            list.append(b);
                            
                            
-                           return list.get(0) := a;
+                           run away with list.get(0) := a;
                            
 
                                                  """

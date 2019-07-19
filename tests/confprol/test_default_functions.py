@@ -10,7 +10,7 @@ class TestDefaultFunctions(unittest.TestCase):
         program = """
             a == object();
             a.b == 1;
-            return [a,a.b];
+            run away with [a,a.b];
 
         """
         return_value = execute(InputStream(program), True)
@@ -23,7 +23,7 @@ class TestDefaultFunctions(unittest.TestCase):
         program = """
                     a == object();
                     b == object();
-                    return a := b;
+                    run away with a := b;
 
                 """
 
@@ -31,7 +31,7 @@ class TestDefaultFunctions(unittest.TestCase):
 
     def test_number_to_integer(self):
         program = """
-                       return [int(3.001), int(4.0), int(5), int(6.9)];
+                       run away with [int(3.001), int(4.0), int(5), int(6.9)];
 
                       """
 
@@ -39,7 +39,7 @@ class TestDefaultFunctions(unittest.TestCase):
 
     def test_boolean_to_integer(self):
         program = """
-                         return [int(True),int(False)];
+                         run away with [int(True),int(False)];
 
                         """
 
@@ -49,7 +49,7 @@ class TestDefaultFunctions(unittest.TestCase):
 
     def test_string_to_integer(self):
         program = """
-                                return [int("3.2"),int("-5")];
+                                run away with [int("3.2"),int("-5")];
 
                                """
 
@@ -83,7 +83,7 @@ class TestDefaultFunctions(unittest.TestCase):
                     a == object();
                     a.attribute == 3;
                     
-                    return [has_attribute(a,"nope"), has_attribute(a,"attribute")];                
+                    run away with [has_attribute(a,"nope"), has_attribute(a,"attribute")];                
     
                     """
 
@@ -106,7 +106,7 @@ class TestDefaultFunctions(unittest.TestCase):
 
     def test_number_to_float(self):
         program = """
-                       return [float(3.001), float(4.0), float(-5), float(6.9)];
+                       run away with [float(3.001), float(4.0), float(-5), float(6.9)];
 
                       """
 
@@ -114,7 +114,7 @@ class TestDefaultFunctions(unittest.TestCase):
 
     def test_boolean_to_float(self):
         program = """
-                         return [float(True),float(False)];
+                         run away with [float(True),float(False)];
 
                         """
 
@@ -124,7 +124,7 @@ class TestDefaultFunctions(unittest.TestCase):
 
     def test_string_to_float(self):
         program = """
-                                return [float("3.2"),float("-5")];
+                                run away with [float("3.2"),float("-5")];
 
                                """
 
@@ -160,7 +160,7 @@ class TestDefaultFunctions(unittest.TestCase):
                              str == "This is a string";
                              list == [[[6,7]],4];
                              
-                            return [string(int_),string(float_),string(str),string(list),string(functionName)];
+                            run away with [string(int_),string(float_),string(str),string(list),string(functionName)];
                         """
 
         self.assertEqual(['3', '3.6', 'This is a string', '[[[6,7]],4]', '[function functionName]'], execute(InputStream(program), True))

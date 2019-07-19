@@ -70,6 +70,7 @@ function_to_integer = RunnableExpression(PythonCallabe(["element"],lambda args: 
 function_to_float = RunnableExpression(PythonCallabe(["element"],lambda args: to_float(args[0]) ),"float")
 function_to_string = RunnableExpression(PythonCallabe(["element"],lambda args: to_string(args[0]) ),"string")
 
+
 default_functions = {"object":object_constructor, "has_attribute":function_has_attribute, "int":function_to_integer,
                      "float":function_to_float, "string":function_to_string}
 

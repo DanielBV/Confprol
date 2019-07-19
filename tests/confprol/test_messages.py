@@ -92,7 +92,7 @@ class TestMessages(unittest.TestCase):
 
     @patch('builtins.print')
     def test_operation_not_supported(self,mocked_print):
-        program = """ return "string" * 5;"""
+        program = """ run away with "string" * 5;"""
 
         execute(InputStream(program), False)
 
@@ -101,7 +101,7 @@ class TestMessages(unittest.TestCase):
 
     @patch('builtins.print')
     def test_variable_not_defined(self,mocked_print):
-        program = """ return a;"""
+        program = """ run away with a;"""
         execute(InputStream(program), False)
 
         mocked_print.assert_called_once_with(
@@ -120,7 +120,7 @@ class TestMessages(unittest.TestCase):
 
     @patch('builtins.print')
     def test_function_not_defined(self, mocked_print):
-        program = """ return pipo();"""
+        program = """ run away with pipo();"""
 
         execute(InputStream(program), False)
 
@@ -152,7 +152,7 @@ class TestMessages(unittest.TestCase):
     def test_missing_arguments(self, mocked_print):
         program = """
                             funko thisIsAFunction(a,b){
-                                    return a + b;
+                                    run away with a + b;
                             }
 
                             a == 6;
@@ -168,9 +168,9 @@ class TestMessages(unittest.TestCase):
 
     @patch('builtins.print')
     def test_missing_semicolon(self, mocked_print):
-        program = """ return "string" + 5"""
+        program = """ run away with "string" + 5"""
 
         execute(InputStream(program), False)
 
         mocked_print.assert_called_once_with(
-            "SyntaxException in line 1:20 missing ';' at '<EOF>'")
+            "SyntaxException in line 1:27 missing ';' at '<EOF>'")

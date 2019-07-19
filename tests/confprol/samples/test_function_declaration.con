@@ -1,12 +1,12 @@
 
     funko noParameters(){
-        return 9;
+        run away with 9;
 
     }
 
     funko parameters(a,b){
         d == 5 + 3 * (a+b) / 2 -2;
-        return d;
+        run away with d;
     }
 
 
@@ -15,6 +15,6 @@
 
     otherValue == 7;
 
-    return parameters(value,otherValue);
+    run away with parameters(value,otherValue);
 
 

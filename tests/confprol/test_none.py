@@ -10,30 +10,30 @@ class TestNone(unittest.TestCase):
                     funko a(){
                     
                     }
-                    return a();
+                    run away with a();
 
                                                """
         self.assertEqual(None, execute(InputStream(program)))
 
     def test_none_token(self):
-        program = """return None;"""
+        program = """run away with None;"""
         self.assertEqual(None, execute(InputStream(program)),True)
 
     def test_none_equals_none(self):
-        program = """return None := None;"""
+        program = """run away with None := None;"""
         self.assertEqual(True, execute(InputStream(program)), True)
 
     def test_only_one_none_and_attributes(self):
         program = """ a  == None;
                       a.attr == "duck";
                       b == None;
-                      return b.attr;"""
+                      run away with b.attr;"""
         self.assertEqual("duck", execute(InputStream(program)), True)
 
 
     @patch('builtins.print')
     def test_none_operations(self,mocked_print):
-        program = """ return None * 6;"""
+        program = """ run away with None * 6;"""
 
         execute(InputStream(program), False)
 

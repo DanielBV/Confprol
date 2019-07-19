@@ -14,26 +14,26 @@ class TestExecution(unittest.TestCase):
 
         self.assertEqual(27, execute_file(f"{self.test_path}/samples/test_function_declaration.con"))
 
-    def test_return_no_return(self):
+    def test_returns_none_if_there_isnt_run_away_with(self):
         self.assertEqual(None,execute(InputStream("")))
 
     def test_recursion(self):
         program = """  
         funko factorial(a){
             if not (a:=1){
-                return a*factorial(a-1);
+                run away with a*factorial(a-1);
             }else{
-                return 1;
+                run away with 1;
                
             }
 
         }
-        return factorial(10);"""
+        run away with factorial(10);"""
         self.assertEqual(3628800, execute(InputStream(program)))
 
     def test_equal_precedence(self):
-        self.assertEqual(True, execute(InputStream("return 3+1 := 4;")))
-        self.assertEqual(True, execute(InputStream("return 4 := 3+1;")))
+        self.assertEqual(True, execute(InputStream("run away with 3+1 := 4;")))
+        self.assertEqual(True, execute(InputStream("run away with 4 := 3+1;")))
 
 
 
@@ -44,35 +44,29 @@ class TestExecution(unittest.TestCase):
         program = """3+2+10;"""
         self.assertEqual(None, execute(InputStream(program)))
 
-    def test_inline_comment(self):
-        program = """if not 0  // THIS IS A COMMENT
-                    { // A comment
-                        // return 1;
-                        return 6;  //Other comment
-                    } // Is this a comment?"""
-        self.assertEqual(6, execute(InputStream(program)))
 
     def test_comments(self):
-        program = """if not 0 /* IS THIS A REFERENCE? */
-                      { //
-                        /**/
-                          /*Random string
-                           // * /
+        program = """if not 0 @useless_comment    (IS THIS A REFERENCE? 
+        )
+                      { 
+                        @useless_comment()
+                          @useless_comment( run away with 1;)
+                           
                           
-                                return 1;
-                          Another random string*/
-                          return 6;  
+                               
+                         
+                          run away with 6;  
                       } 
-                      /* NO, THIS ISN'T A REFERENCE */
+                      @useless_comment( NO, THIS ISN'T A REFERENCE )
                       
                       """
         self.assertEqual(6, execute(InputStream(program)))
 
     def test_boolean_true(self):
         program = """if not True { 
-                           return 10;
+                           run away with 10;
                      }else{
-                          return 6;
+                          run away with 6;
                            
                     }
 
@@ -81,9 +75,9 @@ class TestExecution(unittest.TestCase):
 
     def test_boolean_false(self):
         program = """if not False { 
-                              return 10; 
+                              run away with 10; 
                         }else{
-                            return 6;
+                            run away with 6;
                                
                        }
 
@@ -92,26 +86,26 @@ class TestExecution(unittest.TestCase):
 
     def test_string_length_inside_variable(self):
         program = """a == "Hey listen";
-                    return a.length();"""
+                    run away with a.length();"""
         self.assertEqual(10, execute(InputStream(program)))
 
     def test_string_length(self):
-        program = """return "Heylisten".length();"""
+        program = """run away with "Heylisten".length();"""
         self.assertEqual(9, execute(InputStream(program)))
 
     def test_store_function_as_variable(self):
         program = """
             funko function(){
                 funko gearsOfFunko(a,b){
-                    return a+b;
+                    run away with a+b;
                 }
                 
-                return gearsOfFunko;
+                run away with gearsOfFunko;
             
             }
             
             a == function();
-            return a(2,3);
+            run away with a(2,3);
             
         
         """
@@ -120,7 +114,7 @@ class TestExecution(unittest.TestCase):
     def test_float(self):
         program = """
                   a == 0.0000003;
-                  return a;
+                  run away with a;
 
                 """
         self.assertEqual(0.0000003, execute(InputStream(program)),0.0000000000000001)
@@ -133,7 +127,7 @@ class TestExecution(unittest.TestCase):
             a == 6;
             a.a == 3;
             a.a.B == 5;
-            return [a.a,a.a.B];"""
+            run away with [a.a,a.a.B];"""
 
         self.assertEqual([3,5],   execute(InputStream(program)))
 
@@ -143,7 +137,7 @@ class TestExecution(unittest.TestCase):
         a.a == 5;
         
         b == a;
-        return b.a;
+        run away with b.a;
         """
 
         self.assertEqual( 5, execute(InputStream(program)))
@@ -155,7 +149,7 @@ class TestExecution(unittest.TestCase):
 
         b == a;
         b.a == 7;
-        return a.a;
+        run away with a.a;
         """
 
         self.assertEqual(7, execute(InputStream(program)))
@@ -166,7 +160,7 @@ class TestExecution(unittest.TestCase):
         funko ralph(){
             }
         ralph.a == 3;
-        return ralph.a;
+        run away with ralph.a;
         
         """
 
@@ -176,7 +170,7 @@ class TestExecution(unittest.TestCase):
         program = """
                 string == "This is a string";
                 string.length.a == 42;
-                return string.length.a;
+                run away with string.length.a;
 
               """
 
@@ -191,17 +185,17 @@ class TestExecution(unittest.TestCase):
                 funko mylength(value,original){
         
                         funko oneMore(){
-                            return original + 1;
+                            run away with original + 1;
                     
                         }
         
-                        return oneMore;
+                        run away with oneMore;
                 }
         
                 a ==  mylength(3,4);
                 first == a();
                 b ==  mylength(3,5);
-                return [first,a(),b()];
+                run away with [first,a(),b()];
                
                 """
         self.assertEqual([5,5,6], execute(InputStream(program), False))
@@ -209,7 +203,7 @@ class TestExecution(unittest.TestCase):
 
     def test_negative_numbers(self):
         program = """
-                    return -3 * -6 / -1;
+                    run away with -3 * -6 / -1;
         
                   """
         self.assertEqual(-18, execute(InputStream(program), False))
@@ -222,13 +216,13 @@ class TestExecution(unittest.TestCase):
         with self.assertRaises(ConfProlSyntaxError) as e:
             execute(InputStream(program), True)
 
-        self.assertEqual("SyntaxException in line 2:25 mismatched input '6a' expecting {<EOF>, 'import', 'print', 'if', 'return', '-', '(', '[', 'funko', BOOLEAN, FLOAT, 'None', ID, NUMBER, STRING}",e.exception.get_message())
+        self.assertEqual("SyntaxException in line 2:25 mismatched input '6a' expecting {<EOF>, 'import', 'print', 'if', 'run', '-', '(', '[', 'funko', BOOLEAN, FLOAT, 'None', ID, NUMBER, STRING}",e.exception.get_message())
 
     def test_variables_with_numbers_and_underscore(self):
         program = """
                     __oh_bOy53 ==  14;
     
-                    return __oh_bOy53;
+                    run away with __oh_bOy53;
                    """
 
         self.assertEqual(14,execute(InputStream(program), True))
@@ -239,7 +233,7 @@ class TestExecution(unittest.TestCase):
         program = """
             import "REPLACE_PATH" as imported;
             
-            return [imported.value, imported.plus6(4)];
+            run away with [imported.value, imported.plus6(4)];
         """
         path = os.path.join(self.test_path, "samples","imported_file")
         program = program.replace("REPLACE_PATH", path)
@@ -252,7 +246,7 @@ class TestExecution(unittest.TestCase):
         program = """
                    import "./thisfileshouldntexist/nope/pizza" as smth;
 
-                   return [imported.value, imported.plus6(4)];
+                   run away with [imported.value, imported.plus6(4)];
                """
 
         execute(InputStream(program), False)
@@ -276,7 +270,7 @@ class TestExecution(unittest.TestCase):
         program = """
                  a == 4;
                  a+=5;
-                 return a;
+                 run away with a;
              """
 
         self.assertEqual(9, execute(InputStream(program), True))
@@ -285,7 +279,7 @@ class TestExecution(unittest.TestCase):
         program = """
                  a == 4;
                  a*=5;
-                 return a;
+                 run away with a;
              """
 
         self.assertEqual(20, execute(InputStream(program), True))
@@ -294,7 +288,7 @@ class TestExecution(unittest.TestCase):
         program = """
                     a == 4;
                     a/=5;
-                    return a;
+                    run away with a;
                 """
 
         self.assertEqual(0.8, execute(InputStream(program), True))
@@ -303,10 +297,17 @@ class TestExecution(unittest.TestCase):
         program = """
                        a == 4;
                        a-=5;
-                       return a;
+                       run away with a;
                    """
 
         self.assertEqual(-1, execute(InputStream(program), True))
+
+    def test_run_away_with_with_spaces(self):
+        program = """
+                    run                       away                   with             9   ;
+                          """
+
+        self.assertEqual(9, execute(InputStream(program), True))
 
 
 if __name__ == '__main__':

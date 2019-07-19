@@ -14,7 +14,8 @@ attribute_assign    :  expr '.' (subattributes '.')? ID '==' expr;
 print_     : 'print' expr ;
 condition : 'if' 'not' expr '{' statement* '}' elsecondition?;
 elsecondition: 'else' '{' statement* '}';
-return_value: 'return' expr;
+return_value: 'run' 'away' 'with' expr;
+
 
 in_operations: (ID|attributes) '+=' expr #inOperationsSum |  (ID|attributes) '-=' expr #inOperationsMinus|
                 (ID|attributes) '*=' expr #inOperationsMult | (ID|attributes) '/=' expr #inOperationsDivision ;
@@ -55,8 +56,9 @@ functionCall :  ID'(' arguments?')';
 arguments   : expr',' arguments | expr;
 
 BOOLEAN : 'True' | 'False';
-INLINE_COMMENT  : '//' ~[\r\n]*  -> skip;
-COMMENT: '/*' .*? '*/'  -> skip;
+//INLINE_COMMENT  : '//' ~[\r\n]*  -> skip;
+//COMMENT: '/*' .*? '*/'  -> skip;
+COMMENT: '@useless_comment' [ ]* '(' .*? ')' ->skip;
 function_declaration:  'funko' ID '(' parameters? ')''{' statement* '}';
 
 parameters   : ID',' parameters | ID;
