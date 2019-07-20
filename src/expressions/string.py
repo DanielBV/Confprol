@@ -9,8 +9,8 @@ from .common_methods import length_function
 
 class StringExpression(BasicExpression):
 
-    def __init__(self,value,name):
-        super(StringExpression, self).__init__(value,name,ValueType.STRING)
+    def __init__(self, object, name):
+        super(StringExpression, self).__init__(object, name, ValueType.STRING)
 
         self.set_attribute("length",RunnableExpression(PythonMethod(["this"],length_function,self),"length"))
 

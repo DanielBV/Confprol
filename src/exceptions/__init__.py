@@ -13,3 +13,4 @@ from .runtime_exception import RuntimeException
 from .element_not_contained import ElementNotContained
 from .confprol_value_error import ConfprolValueError
 from .file_not_found import FileNotFound, CannotOpenDirectory
+from .cant_evaluate_quantic_boolean import  EvaluateQuanticBooleanError

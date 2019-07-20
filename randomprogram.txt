@@ -1,12 +1,4 @@
-if not 0 @useless_comment    (IS THIS A REFERENCE? 
-        )
-                      { 
-                        @useless_comment()
-                          @useless_comment(Random string)
 
-                          
-                                return 1;
-                         
-                          return 6;  
-                      } 
-                      @useless_comment( NO, THIS ISN'T A REFERENCE )
+
+print evalX(yTrue);
+print evalY(xTrue);

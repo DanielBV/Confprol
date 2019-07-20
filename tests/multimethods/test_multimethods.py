@@ -12,8 +12,8 @@ def add(first,second):
     return str(first) + str(second)
 
 @multimethod(object)
-def add(oneParameter):
-    return oneParameter
+def add(one_parameter):
+    return one_parameter
 
 
 class TestMultiMethod(unittest.TestCase):

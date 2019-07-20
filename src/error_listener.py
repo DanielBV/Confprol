@@ -6,5 +6,5 @@ class MyErrorListener( ErrorListener ):
     def __init__(self):
         super(MyErrorListener, self).__init__()
 
-    def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
+    def syntaxError(self, recognizer, offending_symbol, line, column, msg, e):
         raise ConfProlSyntaxError(msg,line,column)

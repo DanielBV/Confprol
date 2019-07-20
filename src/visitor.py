@@ -3,11 +3,11 @@
 from generated_antlr4.confprolVisitor import confprolVisitor
 from src.exceptions import ReturnException,AttributeNotDefined,FunctionNotDefined,\
      RuntimeException, ConfProlSyntaxError, ConfprolException
-from src.expressions.confprol_object import ConfprolObject
 from src.expressions.runnable_expression import RunnableExpression
 from src.expressions.callable.callable_function import CallableFunction
 
 from .confprol_handler import ConfprolHandler
+from src.expressions.booleans.quantic_axis import QuanticAxis
 
 from generated_antlr4.confprolParser import confprolParser
 
@@ -17,6 +17,23 @@ class MyVisitor(confprolVisitor):
 
 
 
+    def visitBooleanTrue(self, ctx: confprolParser.BooleanTrueContext):
+        return self.handler.load_boolean(True)
+
+    def visitBooleanFalse(self, ctx: confprolParser.BooleanFalseContext):
+        return self.handler.load_boolean(False)
+
+    def visitBooleanXTrue(self, ctx: confprolParser.BooleanXTrueContext):
+        return self.handler.load_qubit(True,QuanticAxis.X)
+
+    def visitBooleanXFalse(self, ctx: confprolParser.BooleanXFalseContext):
+        return self.handler.load_qubit(False, QuanticAxis.X)
+
+    def visitBooleanYTrue(self, ctx: confprolParser.BooleanYTrueContext):
+        return self.handler.load_qubit(True, QuanticAxis.Y)
+
+    def visitBooleanYFalse(self, ctx: confprolParser.BooleanYFalseContext):
+        return self.handler.load_qubit(False, QuanticAxis.Y)
 
     def visitInOperationsSum(self, ctx: confprolParser.InOperationsSumContext):
         if ctx.ID():
@@ -167,10 +184,6 @@ class MyVisitor(confprolVisitor):
         value = float(ctx.FLOAT().getText())
         return self.handler.load_float(value)
 
-    def visitFinalBoolean(self, ctx: confprolParser.FinalBooleanContext):
-        value = 'True' == ctx.getText()
-        return self.handler.load_boolean(value)
-
 
     def visitReturn_value(self, ctx: confprolParser.Return_valueContext):
         value =  super().visit(ctx.expr())
@@ -179,7 +192,11 @@ class MyVisitor(confprolVisitor):
     def visitExprEqual(self, ctx: confprolParser.ExprEqualContext):
         value1 = self.visit(ctx.expr2(0))
         value2 = self.visit(ctx.expr2(1))
-        return self.handler.equal(value1,value2)
+        try:
+            return self.handler.equal(value1,value2)
+        except ConfprolException as e:
+            raise RuntimeException(ctx.start.line, e)
+
 
     def __init__(self,handler:ConfprolHandler):
         self.handler = handler
@@ -286,7 +303,11 @@ class MyVisitor(confprolVisitor):
         return self.handler.load_number(value)
 
     def visitCondition(self, ctx:confprolParser.ConditionContext):
-        value = super().visit(ctx.expr()).value
+        try:
+            value = super().visit(ctx.expr()).to_boolean()
+        except ConfprolException as e:
+            raise RuntimeException(ctx.start.line, e)
+
         if not value:
             statements = ctx.statement()
             for s in statements:

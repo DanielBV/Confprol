@@ -3,7 +3,7 @@
 
 
 from src.exceptions import  NotCallable, VariableNotDefined, RuntimeException, TooManyArguments, ArgumentsMissing, \
-OperationNotSupported,DivisionByZero, FileNotFound, CannotOpenDirectory
+ConfprolException,DivisionByZero, FileNotFound, CannotOpenDirectory, ConfprolException
 from src.expressions import BasicExpression,StringExpression, ListExpression,RunnableExpression
 from src.expressions.operations import TypeOperations
 from src.type import ValueType
@@ -18,6 +18,7 @@ from src.error_listener import  MyErrorListener
 from generated_antlr4.confprolLexer import confprolLexer
 from src.expressions.object_expression import ObjectExpression
 from src.utilities.constants import ENCODING
+from src.expressions.booleans.quantic_boolean import QuanticBoolean
 import os
 
 class ConfprolHandler:
@@ -77,13 +78,13 @@ class ConfprolHandler:
     def division(self, expr1:BasicExpression, expr2:BasicExpression, line):
         try:
             return TypeOperations.div(expr1,expr2)
-        except (DivisionByZero, OperationNotSupported) as e:
+        except (DivisionByZero, ConfprolException) as e:
             raise RuntimeException(line, e)
 
     def multiplication(self, expr1:BasicExpression, expr2:BasicExpression, line):
         try:
             return  TypeOperations.mult(expr1,expr2)
-        except OperationNotSupported as e:
+        except ConfprolException as e:
             raise RuntimeException(line, e)
 
     def equal(self, expr1:BasicExpression, expr2:BasicExpression):
@@ -92,13 +93,13 @@ class ConfprolHandler:
     def minus(self, expr1:BasicExpression, expr2:BasicExpression, line):
         try:
             return TypeOperations.minus(expr1,expr2)
-        except OperationNotSupported as e:
+        except ConfprolException as e:
             raise RuntimeException(line, e)
 
     def sum(self, expr1, expr2, line):
         try:
             return TypeOperations.plus(expr1,expr2)
-        except OperationNotSupported as e:
+        except ConfprolException as e:
             raise RuntimeException(line, e)
 
     def load_none(self):
@@ -145,5 +146,8 @@ class ConfprolHandler:
 
         new_value = self.division(base, other, line)
         base.object.value = new_value.object.value
+
+    def load_qubit(self, value, axis):
+        return QuanticBoolean(axis,value)
 
 

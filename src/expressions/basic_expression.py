@@ -7,8 +7,8 @@ class BasicExpression(Expression):
 
 
 
-    def __init__(self, value:ConfprolObject, name,type_:ValueType):
-        super(BasicExpression, self).__init__(value,name,type_)
+    def __init__(self, object:ConfprolObject, name, type_:ValueType):
+        super(BasicExpression, self).__init__(object, name, type_)
 
 
 
@@ -22,4 +22,9 @@ class BasicExpression(Expression):
         return self.value
 
     def copy(self):
-         return BasicExpression(self.object, self.name, self.type)
+        """
+        Copies the expression (not the object that it represents)
+        Used to allow multiple alias for variables
+        :return:
+        """
+        return BasicExpression(self.object, self.name, self.type)

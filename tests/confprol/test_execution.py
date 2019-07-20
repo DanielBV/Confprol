@@ -216,7 +216,7 @@ class TestExecution(unittest.TestCase):
         with self.assertRaises(ConfProlSyntaxError) as e:
             execute(InputStream(program), True)
 
-        self.assertEqual("SyntaxException in line 2:25 mismatched input '6a' expecting {<EOF>, 'import', 'print', 'if', 'run', '-', '(', '[', 'funko', BOOLEAN, FLOAT, 'None', ID, NUMBER, STRING}",e.exception.get_message())
+        self.assertIn("SyntaxException in line 2:25 mismatched input '6a' expecting",e.exception.get_message())
 
     def test_variables_with_numbers_and_underscore(self):
         program = """

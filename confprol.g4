@@ -37,7 +37,7 @@ final     : '('expr')' #finalPAR
             | attributes #finalIDS
             | STRING #finalSTRING
             | functionCall #finalFunctionCall
-            | BOOLEAN #finalBoolean
+            | boolean #finalBoolean
             | FLOAT #finalFloat
             | list_creation #finalListCreation
             | '-' NUMBER #finalNegativeNumber;
@@ -55,7 +55,8 @@ list_creation   : '[' arguments? ']';
 functionCall :  ID'(' arguments?')';
 arguments   : expr',' arguments | expr;
 
-BOOLEAN : 'True' | 'False';
+boolean : 'True' #booleanTrue | 'False' #booleanFalse | 'xTrue' #booleanXTrue
+| 'xFalse' #booleanXFalse | 'yTrue' #booleanYTrue | 'yFalse' #booleanYFalse  ;
 //INLINE_COMMENT  : '//' ~[\r\n]*  -> skip;
 //COMMENT: '/*' .*? '*/'  -> skip;
 COMMENT: '@useless_comment' [ ]* '(' .*? ')' ->skip;

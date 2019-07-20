@@ -49,3 +49,6 @@ class Expression:
 
     def copy(self):
         raise NotImplementedError("copy not implemented")
+
+    def to_boolean(self):
+        return bool(self.value)
