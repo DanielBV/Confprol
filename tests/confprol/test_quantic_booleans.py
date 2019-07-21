@@ -1,7 +1,9 @@
 import unittest
+
+from src.expressions.booleans.quantic_axis import QuanticAxis
 from src.main import execute
 from antlr4 import InputStream
-
+from src.expressions.booleans.quantic_boolean import QuanticBoolean
 
 from unittest.mock import patch
 
@@ -203,3 +205,30 @@ class TestQuanticBooleans(unittest.TestCase):
         mocked_random.assert_called_once()
         self.assertEqual(False, result)
 
+
+    def test_evaluate_in_other_axis_changes_the_axis_x_axis(self):
+        boolean = QuanticBoolean(QuanticAxis.X,True)
+
+        value = boolean.evaluate(QuanticAxis.Y).value
+
+        self.assertEqual(QuanticAxis.Y, boolean.object.axis)
+        self.assertEqual(value, boolean.evaluate(QuanticAxis.Y).value)
+
+    def test_evaluate_in_other_axis_changes_the_axis_y_axis(self):
+        boolean = QuanticBoolean(QuanticAxis.Y, True)
+
+        value = boolean.evaluate(QuanticAxis.X).value
+
+        self.assertEqual(QuanticAxis.X, boolean.object.axis)
+        self.assertEqual(value, boolean.evaluate(QuanticAxis.X).value)
+
+
+    def test_return_quantic_boolean(self):
+        program = """
+                    run away with xTrue;
+                  """
+
+        result = execute(InputStream(program), False)
+
+        self.assertIsNotNone(result)
+        self.assertTrue(result.value)

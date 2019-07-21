@@ -1,10 +1,10 @@
 from src.expressions.basic_expression import BasicExpression
 from src.type import ValueType
 from .quantic_axis import QuanticAxis
-from src.expressions.quantic_object import QuanticObject
+from src.expressions.objects.quantic_object import QuanticObject
 from src.exceptions  import EvaluateQuanticBooleanError
 import random
-from src.expressions.confprol_object import ConfprolObject
+from src.expressions.objects.confprol_object import ConfprolObject
 
 
 class QuanticBoolean(BasicExpression):
@@ -39,3 +39,6 @@ class QuanticBoolean(BasicExpression):
                 self.object.value = False
 
         return BasicExpression(ConfprolObject(self.object.value),f"evalX{self}",ValueType.BOOLEAN)
+
+    def get_exit_value(self):
+        return self.object

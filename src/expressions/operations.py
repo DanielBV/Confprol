@@ -1,4 +1,4 @@
-from src.expressions.confprol_object import ConfprolObject
+from src.expressions.objects.confprol_object import ConfprolObject
 from ..type import ValueType
 from . import BasicExpression,StringExpression
 from src.exceptions import OperationNotSupported, DivisionByZero

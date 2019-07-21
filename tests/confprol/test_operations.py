@@ -1,6 +1,6 @@
 import unittest
 
-from src.expressions.confprol_object import ConfprolObject
+from src.expressions.objects.confprol_object import ConfprolObject
 from src.expressions.operations import TypeOperations
 from src.expressions.basic_expression import BasicExpression
 from src.type import ValueType

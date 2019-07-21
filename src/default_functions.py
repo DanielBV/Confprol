@@ -4,10 +4,11 @@ from .expressions.callable import  PythonCallabe
 from src.exceptions.confprol_value_error import ConfprolValueError
 from .expressions import BasicExpression, StringExpression
 from .type import ValueType
-from .expressions.confprol_object import ConfprolObject
+from src.expressions.objects.confprol_object import ConfprolObject
 from .multimethods.multimethod import typemultimethod, multimethod
 from src.expressions.booleans.quantic_axis import QuanticAxis
 from src.expressions.booleans.quantic_boolean import QuanticBoolean
+from src.expressions.confprol_list import ListExpression
 
 def new_object(args):
     return ObjectExpression("object")
@@ -33,7 +34,7 @@ def to_integer(expression):
         int_value = int(float(expression.value))  # First to float to allow strings like "3.2"
         return BasicExpression(ConfprolObject(int_value), f"int({expression.value})", ValueType.NUMBER)
     except ValueError:
-        raise ConfprolValueError(f"The string '{expression.value}' can't be transformed to integer.")
+        raise ConfprolValueError(f"The string/variable '{expression.name}' can't be transformed to integer.")
 
 
 @typemultimethod(object)
@@ -52,7 +53,7 @@ def to_float(expression):
         float_value = float(expression.value)
         return BasicExpression(ConfprolObject(float_value), f"int({expression.value})", ValueType.NUMBER)
     except ValueError:
-        raise ConfprolValueError(f"The string '{expression.value}' can't be transformed to float.")
+        raise ConfprolValueError(f"The string/variable '{expression.name}' can't be transformed to float.")
 
 
 @typemultimethod(object)
@@ -88,6 +89,24 @@ def evaluate_quantic_y(expression):
 def evaluate_quantic_y(expression):
     raise ConfprolValueError(f"Cannot evaluate a non quantic value.")
 
+@typemultimethod(ValueType.NUMBER, ValueType.NUMBER)
+def confprol_range(start_expr,end_expr):
+    start = start_expr.value
+    end = end_expr.value
+
+    if not type(start)==int:
+        raise ConfprolValueError(f"The start value in range() must be an integer.")
+
+    if not type(end)==int:
+        raise ConfprolValueError(f"The end value in range() must be an integer.")
+
+    range_ = range(start,end)
+    list_ = map(lambda x: BasicExpression(ConfprolObject(x),x,ValueType.NUMBER),range_)
+    return ListExpression(ConfprolObject(list_),f"range({start},{end})")
+
+@typemultimethod(object,object)
+def confprol_range(start,end):
+    raise ConfprolValueError(f"The start and end in range() must be integers.")
 
 object_constructor = RunnableExpression(PythonCallabe([],new_object),"object")
 function_has_attribute = RunnableExpression(PythonCallabe(["object","attribute"],has_attribute),"has_attribute")
@@ -97,9 +116,9 @@ function_to_string = RunnableExpression(PythonCallabe(["element"],lambda args: t
 function_input = RunnableExpression(PythonCallabe(["prompt"],lambda args: get_input(args[0])),"ask_user_to_type_words_to_use_them_for_something")
 function_evaluate_x = RunnableExpression(PythonCallabe(["quantic_boolean"],lambda args: evaluate_quantic_x(args[0])),"evalX")
 function_evaluate_y = RunnableExpression(PythonCallabe(["quantic_boolean"],lambda args: evaluate_quantic_y(args[0])),"evalY")
-
+function_range = RunnableExpression(PythonCallabe(["start","end"],lambda args: confprol_range(args[0],args[1])),"range")
 
 default_functions = {"object":object_constructor, "has_attribute":function_has_attribute, "int":function_to_integer,
                      "float":function_to_float, "string":function_to_string, "ask_user_to_type_words_to_use_them_for_something":function_input,
-                     "evalX":function_evaluate_x,"evalY":function_evaluate_y}
+                     "evalX":function_evaluate_x,"evalY":function_evaluate_y, "range":function_range }
 

@@ -4,7 +4,7 @@ from .expression import Expression
 from typing import  List
 from .callable import  PythonMethod
 from src.exceptions import ElementNotContained, ConfprolValueError
-from .confprol_object import ConfprolObject
+from src.expressions.objects.confprol_object import ConfprolObject
 from  .runnable_expression import RunnableExpression
 from .common_methods import length_function
 

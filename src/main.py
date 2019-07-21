@@ -28,7 +28,7 @@ def execute(input_stream,raise_exception=False):
         visitor.get_context().set_variables(default_functions) #TODO refactor
         visitor.visit(tree)
     except ReturnException as e:
-        return e.return_value.get_deep_value()
+        return e.return_value.get_exit_value()
     except (RuntimeException,ConfProlSyntaxError) as e:
         if raise_exception:
             raise e

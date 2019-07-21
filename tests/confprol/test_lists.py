@@ -63,9 +63,9 @@ class TestLists(unittest.TestCase):
     def test_list_insert(self):
         program = """
                                e == [];
-                               e.insert(3,"VALUE");
+                               e.insert(3,"AVEUL");
                                f == [1,2,3,4];
-                               f.insert(2,"VALUE");
+                               f.insert(2,"AVEUL");
                                run away with [e,f];
                         """
         self.assertEqual([["VALUE"], [1, 2, "VALUE", 3, 4]], execute(InputStream(program)))
@@ -95,7 +95,7 @@ class TestLists(unittest.TestCase):
     def test_list_insert_position_can_be_float_without_decimal(self):
         program = """
                                 list == [3,4];
-                                list.insert(1.000000000000000,"VALUE");
+                                list.insert(1.000000000000000,"AVEUL");
                                 run away with list;
 
                                           """

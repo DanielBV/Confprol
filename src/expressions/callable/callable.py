@@ -1,7 +1,7 @@
 from typing import  List
 from src.exceptions import ArgumentsMissing, TooManyArguments
 from ..none import confprol_none
-from ..confprol_object import ConfprolObject
+from src.expressions.objects.confprol_object import ConfprolObject
 
 class Callable(ConfprolObject):
 

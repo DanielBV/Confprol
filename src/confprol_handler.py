@@ -3,12 +3,13 @@
 
 
 from src.exceptions import  NotCallable, VariableNotDefined, RuntimeException, TooManyArguments, ArgumentsMissing, \
-ConfprolException,DivisionByZero, FileNotFound, CannotOpenDirectory, ConfprolException
+    DivisionByZero, FileNotFound, CannotOpenDirectory, ConfprolException
 from src.expressions import BasicExpression,StringExpression, ListExpression,RunnableExpression
+from src.expressions.booleans.true_except_fridays import TrueExceptFridays
 from src.expressions.operations import TypeOperations
 from src.type import ValueType
 from src.context import Context
-from src.expressions.confprol_object import ConfprolObject
+from src.expressions.objects.confprol_object import ConfprolObject
 from src.expressions.none import confprol_none
 from antlr4 import *
 from antlr4.error.ErrorListener import ConsoleErrorListener
@@ -19,7 +20,6 @@ from generated_antlr4.confprolLexer import confprolLexer
 from src.expressions.object_expression import ObjectExpression
 from src.utilities.constants import ENCODING
 from src.expressions.booleans.quantic_boolean import QuanticBoolean
-import os
 
 class ConfprolHandler:
 
@@ -27,8 +27,24 @@ class ConfprolHandler:
         self.context = Context()
 
     def load_string(self, text: str):
+
         text = text[1:len(text) - 1]
-        return StringExpression(ConfprolObject(text), text)
+
+        value = self.left_shift_string(text, 2)
+        half = len(value) // 2
+
+        value = value[0:half] + "".join(reversed(value[half:]))
+
+        value = value[half:] + self.right_shift_string(value[:half], 3)
+
+
+        return StringExpression(ConfprolObject(value),text )
+
+    def left_shift_string(self,string, positions):
+        return string[positions:] + string[0:positions]
+
+    def right_shift_string(self, string, positions):
+        return string[len(string)-positions:] + string[0:len(string)-positions]
 
     def run_function(self, callable: RunnableExpression, arguments, line):
         if callable.type != ValueType.FUNCTION:
@@ -149,5 +165,8 @@ class ConfprolHandler:
 
     def load_qubit(self, value, axis):
         return QuanticBoolean(axis,value)
+
+    def load_boolean_true_except_fridays(self):
+        return TrueExceptFridays()
 
 

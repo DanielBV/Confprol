@@ -25,7 +25,7 @@ class TestNone(unittest.TestCase):
 
     def test_only_one_none_and_attributes(self):
         program = """ a  == None;
-                      a.attr == "duck";
+                      a.attr == "udkc";
                       b == None;
                       run away with b.attr;"""
         self.assertEqual("duck", execute(InputStream(program)), True)

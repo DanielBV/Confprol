@@ -15,7 +15,8 @@ class MyVisitor(confprolVisitor):
 
 
 
-
+    def visitBooleanTrueFridays(self, ctx:confprolParser.BooleanTrueFridaysContext):
+        return self.handler.load_boolean_true_except_fridays()
 
     def visitBooleanTrue(self, ctx: confprolParser.BooleanTrueContext):
         return self.handler.load_boolean(True)

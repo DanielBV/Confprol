@@ -49,7 +49,7 @@ class TestDefaultFunctions(unittest.TestCase):
 
     def test_string_to_integer(self):
         program = """
-                                run away with [int("3.2"),int("-5")];
+                                run away with [int(".32"),int("5-")];
 
                                """
 
@@ -58,13 +58,13 @@ class TestDefaultFunctions(unittest.TestCase):
     @patch('builtins.print')
     def test_random_string_to_integer(self,mocked_print):
         program = """
-                        int("hey listen");
+                        int("ehenistl y");
 
                  """
 
         execute(InputStream(program), False)
         mocked_print.assert_called_once_with(
-           "ValueException line 2: The string 'hey listen' can't be transformed to integer.")
+           "ValueException line 2: The string/variable 'ehenistl y' can't be transformed to integer.")
 
     @patch('builtins.print')
     def test_object_to_integer(self, mocked_print):
@@ -83,7 +83,7 @@ class TestDefaultFunctions(unittest.TestCase):
                     a == object();
                     a.attribute == 3;
                     
-                    run away with [has_attribute(a,"nope"), has_attribute(a,"attribute")];                
+                    run away with [has_attribute(a,"onep"), has_attribute(a,"taebutirt")];                
     
                     """
 
@@ -124,7 +124,7 @@ class TestDefaultFunctions(unittest.TestCase):
 
     def test_string_to_float(self):
         program = """
-                                run away with [float("3.2"),float("-5")];
+                                run away with [float(".32"),float("5-")];
 
                                """
 
@@ -133,13 +133,13 @@ class TestDefaultFunctions(unittest.TestCase):
     @patch('builtins.print')
     def test_random_string_to_float(self,mocked_print):
         program = """
-                        float("hey listen");
+                        float("ehenistl y");
 
                  """
 
         execute(InputStream(program), False)
         mocked_print.assert_called_once_with(
-           "ValueException line 2: The string 'hey listen' can't be transformed to float.")
+           "ValueException line 2: The string/variable 'ehenistl y' can't be transformed to float.")
 
     @patch('builtins.print')
     def test_object_to_float(self, mocked_print):
@@ -157,13 +157,93 @@ class TestDefaultFunctions(unittest.TestCase):
                             funko functionName(){}
                              int_ == 3;
                              float_ == 3.6;
-                             str == "This is a string";
+                             str == "hTtringa s si si";
                              list == [[[6,7]],4];
                              
                             run away with [string(int_),string(float_),string(str),string(list),string(functionName)];
                         """
 
         self.assertEqual(['3', '3.6', 'This is a string', '[[[6,7]],4]', '[function functionName]'], execute(InputStream(program), True))
+
+
+    def test_range(self):
+        program = """
+            run away with range(0,9);
+        """
+        value = execute(InputStream(program), False)
+
+
+        self.assertEqual([0,1,2,3,4,5,6,7,8],value)
+
+    def test_range_start_lower_than_end(self):
+        program = """
+            run away with range(1,0);
+        """
+        value = execute(InputStream(program), False)
+
+
+        self.assertEqual([],value)
+
+    def test_range_negative_numbers(self):
+        program = """
+                  run away with range(-5,3);
+              """
+        value = execute(InputStream(program), False)
+
+        self.assertEqual([-5,-4,-3,-2,-1,0,1,2], value)
+
+    @patch('builtins.print')
+    def test_range_start_not_integer_but_number(self, mocked_print):
+        program = """
+                        range(3.3,6);
+
+                        """
+
+        execute(InputStream(program), False)
+        mocked_print.assert_called_once_with(
+            "ValueException line 2: The start value in range() must be an integer.")
+
+    @patch('builtins.print')
+    def test_range_end_not_integer_but_number(self, mocked_print):
+        program = """
+                          range(3,6.3);
+
+                          """
+
+        execute(InputStream(program), False)
+        mocked_print.assert_called_once_with(
+            "ValueException line 2: The end value in range() must be an integer.")
+
+    @patch('builtins.print')
+    def test_range_start_not_a_number(self, mocked_print):
+        program = """
+                           range("Hey listen",6);
+
+                           """
+
+        execute(InputStream(program), False)
+        mocked_print.assert_called_once_with(
+            "ValueException line 2: The start and end in range() must be integers.")
+
+    @patch('builtins.print')
+    def test_range_end_not_a_number(self, mocked_print):
+        program = """
+                              range(6,"Hey listen");
+
+                              """
+
+        execute(InputStream(program), False)
+        mocked_print.assert_called_once_with(
+            "ValueException line 2: The start and end in range() must be integers.")
+
+    def test_range_start_and_end_are_zero(self):
+        program = """
+                    run away with range(0,0);
+                """
+        value = execute(InputStream(program), False)
+
+        self.assertEqual([], value)
+
 
 if __name__ == '__main__':
     unittest.main()

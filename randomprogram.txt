@@ -1,4 +1,1 @@
-
-
-print evalX(yTrue);
-print evalY(xTrue);
+print range(0,9);

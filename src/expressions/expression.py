@@ -1,9 +1,17 @@
 
 from src.type import ValueType
-from .confprol_object import ConfprolObject
+from src.expressions.objects.confprol_object import ConfprolObject
 
 class Expression:
-
+    """
+    Expressions are encapsulations of ConfprolObjects. They are used in order to:
+        - Allow multiple alias for the same object.
+        - Interpret the object's value depending on its type.
+            -  For example, the value of a ConfprolObject can be a String, boolean, integer, float, etc. But the
+            expression defines how to print it (__str__)
+        - In some expressions, like QuanticExpression, the expression hides the object from the outside, so
+        when you try to evaluate a quantic boolean without using evalX or evalY, an exception is raised.
+    """
 
 
     def __init__(self, value:ConfprolObject, name,type_:ValueType):
@@ -52,3 +60,12 @@ class Expression:
 
     def to_boolean(self):
         return bool(self.value)
+
+
+    def get_exit_value(self):
+        """
+        Value that is returned by the python program when you return outside a function.
+            - Required to avoid conflicts with objects that don't have a Python equivalent, like QuanticBoolean
+        :return:
+        """
+        return self.get_deep_value()

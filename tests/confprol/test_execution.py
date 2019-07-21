@@ -310,5 +310,13 @@ class TestExecution(unittest.TestCase):
         self.assertEqual(9, execute(InputStream(program), True))
 
 
+    def test_load_string(self):
+        program = """
+            run away with ["esto_es_una_cadena","a","ab","aba"]; 
+            """
+
+
+        value=  execute(InputStream(program), True)
+        self.assertEqual(["seanedac_unato_es_","a","ba","baa"],value)
 if __name__ == '__main__':
     unittest.main()

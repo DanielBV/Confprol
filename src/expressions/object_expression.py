@@ -1,4 +1,4 @@
-from src.expressions.confprol_object import ConfprolObject
+from src.expressions.objects.confprol_object import ConfprolObject
 from src.type import ValueType
 from .expression import Expression
 

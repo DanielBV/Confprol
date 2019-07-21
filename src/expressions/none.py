@@ -1,7 +1,7 @@
 
 from .basic_expression import BasicExpression
 from src.type import ValueType
-from .confprol_object import ConfprolObject
+from src.expressions.objects.confprol_object import ConfprolObject
 
 
 
