@@ -167,7 +167,7 @@ class TestQuanticBooleans(unittest.TestCase):
         result = execute(InputStream(program), False)
 
         mocked_random.assert_called_once()
-        self.assertEqual(True, result)
+        self.assertTrue(result)
 
     @patch('random.randint')
     def test_evaluate_x_different_axis_false(self, mocked_random):
@@ -179,7 +179,7 @@ class TestQuanticBooleans(unittest.TestCase):
         result = execute(InputStream(program), False)
 
         mocked_random.assert_called_once()
-        self.assertEqual(False, result)
+        self.assertFalse(result)
 
     @patch('random.randint')
     def test_evaluate_y_different_axis_true(self, mocked_random):
@@ -203,7 +203,7 @@ class TestQuanticBooleans(unittest.TestCase):
         result = execute(InputStream(program), False)
 
         mocked_random.assert_called_once()
-        self.assertEqual(False, result)
+        self.assertFalse(result)
 
 
     def test_evaluate_in_other_axis_changes_the_axis_x_axis(self):
@@ -232,3 +232,35 @@ class TestQuanticBooleans(unittest.TestCase):
 
         self.assertIsNotNone(result)
         self.assertTrue(result.value)
+
+
+
+    def test_quantic_boolean_attributes_x_axis(self):
+        program = """
+                     a == xTrue;
+                     a.a == 3;
+                     b == xTrue;
+                     c == xFalse;
+                     c.c == 6;
+                     d == xFalse;
+                     run away with [a.a,has_attribute(b,"a"),c.c,has_attribute(d,"c")];
+                  """
+
+        result = execute(InputStream(program), False)
+
+        self.assertEqual([3, False,6,False], result)
+
+    def test_quantic_boolean_attributes_y_axis(self):
+        program = """
+                        a == yTrue;
+                        a.a == 3;
+                        b == yTrue;
+                        c == yFalse;
+                        c.c == 6;
+                        d == yFalse;
+                        run away with [a.a,has_attribute(b,"a"),c.c,has_attribute(d,"c")];
+                     """
+
+        result = execute(InputStream(program), False)
+
+        self.assertEqual([3, False, 6, False], result)

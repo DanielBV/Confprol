@@ -56,7 +56,8 @@ functionCall :  ID'(' arguments?')';
 arguments   : expr',' arguments | expr;
 
 boolean : 'True' #booleanTrue | 'False' #booleanFalse | 'xTrue' #booleanXTrue
-| 'xFalse' #booleanXFalse | 'yTrue' #booleanYTrue | 'yFalse' #booleanYFalse | 'TrueExceptFridays' #booleanTrueFridays;
+| 'xFalse' #booleanXFalse | 'yTrue' #booleanYTrue | 'yFalse' #booleanYFalse | 'TrueExceptFridays' #booleanTrueFridays
+| 'MillionToOneChance' #booleanMillionToOne;
 //INLINE_COMMENT  : '//' ~[\r\n]*  -> skip;
 //COMMENT: '/*' .*? '*/'  -> skip;
 COMMENT: '@useless_comment' [ ]* '(' .*? ')' ->skip;

@@ -14,6 +14,8 @@ from generated_antlr4.confprolParser import confprolParser
 class MyVisitor(confprolVisitor):
 
 
+    def visitBooleanMillionToOne(self, ctx:confprolParser.BooleanMillionToOneContext):
+        return self.handler.load_boolean_million_to_one()
 
     def visitBooleanTrueFridays(self, ctx:confprolParser.BooleanTrueFridaysContext):
         return self.handler.load_boolean_true_except_fridays()

@@ -86,5 +86,54 @@ class TestBooleans(unittest.TestCase):
 
         self.assertTrue(value)
 
+    def test_true_except_fridays_attributes(self):
+        program = """
+                     a == TrueExceptFridays;
+                     a.a == 3;
+                     b == TrueExceptFridays;
+                     run away with [a.a,has_attribute(b,"a")];
+                  """
+
+        result = execute(InputStream(program), False)
+
+        self.assertEqual([3, False], result)
+
+    @patch('random.randint')
+    def test_evaluate_million_to_one_chance_false(self, mocked_random):
+        mocked_random.return_value = 0
+        program = """
+                      run away with MillionToOneChance;
+                      """
+
+        result = execute(InputStream(program), False)
+
+        mocked_random.assert_called_once()
+        self.assertFalse(result)
+
+    @patch('random.randint')
+    def test_evaluate_million_to_one_chance_true(self, mocked_random):
+        mocked_random.return_value = 1
+        program = """
+                         run away with MillionToOneChance;
+                         """
+
+        result = execute(InputStream(program), False)
+
+        mocked_random.assert_called_once()
+        self.assertTrue(result)
+
+
+    def test_million_to_one_chance_attributes(self):
+        program = """
+                   a == MillionToOneChance;
+                   a.a == 3;
+                   b == MillionToOneChance;
+                   run away with [a.a,has_attribute(b,"a")];
+                """
+
+        result = execute(InputStream(program), False)
+
+        self.assertEqual([3,False],result)
+
 if __name__ == '__main__':
     unittest.main()

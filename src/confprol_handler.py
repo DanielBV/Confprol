@@ -20,6 +20,7 @@ from generated_antlr4.confprolLexer import confprolLexer
 from src.expressions.object_expression import ObjectExpression
 from src.utilities.constants import ENCODING
 from src.expressions.booleans.quantic_boolean import QuanticBoolean
+from src.expressions.booleans.million_to_one import MillionToOneChance
 
 class ConfprolHandler:
 
@@ -168,5 +169,8 @@ class ConfprolHandler:
 
     def load_boolean_true_except_fridays(self):
         return TrueExceptFridays()
+
+    def load_boolean_million_to_one(self):
+        return MillionToOneChance()
 
 
