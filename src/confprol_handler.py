@@ -21,6 +21,7 @@ from src.expressions.object_expression import ObjectExpression
 from src.utilities.constants import ENCODING
 from src.expressions.booleans.quantic_boolean import QuanticBoolean
 from src.expressions.booleans.million_to_one import MillionToOneChance
+from src.utilities.string_algorithm import string_algorithm
 
 class ConfprolHandler:
 
@@ -31,21 +32,11 @@ class ConfprolHandler:
 
         text = text[1:len(text) - 1]
 
-        value = self.left_shift_string(text, 2)
-        half = len(value) // 2
+        string = string_algorithm(text)
 
-        value = value[0:half] + "".join(reversed(value[half:]))
-
-        value = value[half:] + self.right_shift_string(value[:half], 3)
+        return StringExpression(ConfprolObject(string) , text )
 
 
-        return StringExpression(ConfprolObject(value),text )
-
-    def left_shift_string(self,string, positions):
-        return string[positions:] + string[0:positions]
-
-    def right_shift_string(self, string, positions):
-        return string[len(string)-positions:] + string[0:len(string)-positions]
 
     def run_function(self, callable: RunnableExpression, arguments, line):
         if callable.type != ValueType.FUNCTION:
@@ -173,4 +164,9 @@ class ConfprolHandler:
     def load_boolean_million_to_one(self):
         return MillionToOneChance()
 
+    def negated_expr(self, expr,line):
+        try:
+            return self.load_boolean(not expr.to_boolean())
+        except ConfprolException as e:
+            raise RuntimeException(line,e)
 

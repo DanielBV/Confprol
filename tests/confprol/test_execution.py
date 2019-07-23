@@ -269,7 +269,7 @@ class TestExecution(unittest.TestCase):
     def test_insum(self):
         program = """
                  a == 4;
-                 a+=5;
+                 a=+=5;
                  run away with a;
              """
 
@@ -278,7 +278,7 @@ class TestExecution(unittest.TestCase):
     def test_inmult(self):
         program = """
                  a == 4;
-                 a*=5;
+                 a=*=5;
                  run away with a;
              """
 
@@ -287,7 +287,7 @@ class TestExecution(unittest.TestCase):
     def test_indivision(self):
         program = """
                     a == 4;
-                    a/=5;
+                    a=/=5;
                     run away with a;
                 """
 
@@ -296,7 +296,7 @@ class TestExecution(unittest.TestCase):
     def test_inminus(self):
         program = """
                        a == 4;
-                       a-=5;
+                       a=-=5;
                        run away with a;
                    """
 
@@ -318,5 +318,23 @@ class TestExecution(unittest.TestCase):
 
         value=  execute(InputStream(program), True)
         self.assertEqual(["seanedac_unato_es_","a","ba","baa"],value)
+
+    def test_negation_preference(self):
+        program = """
+        run away with !-1+1;
+        """
+        value = execute(InputStream(program), True)
+
+        self.assertTrue(value)
+
+    def test_multiple_negation(self):
+        program = """
+               run away with !!!!True;
+               """
+
+        value = execute(InputStream(program), True)
+
+        self.assertTrue(value)
+
 if __name__ == '__main__':
     unittest.main()

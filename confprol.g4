@@ -3,11 +3,11 @@ program   :  statement* EOF;
 
 
 
-statement : (assign |in_operations| print_  | expr | return_value | attribute_assign|import_)';' | ( condition | function_declaration) ;
+statement : (assign |in_operations| print_  | expr | return_value | attribute_assign|import_|)';' | ( condition | function_declaration |while_not_loop) ;
 
 import_: 'import' STRING 'as' ID;
 
-
+while_not_loop: 'while' 'not' expr '{' statement* '}';
 
 assign    : ID '==' expr ;
 attribute_assign    :  expr '.' (subattributes '.')? ID '==' expr;
@@ -17,10 +17,10 @@ elsecondition: 'else' '{' statement* '}';
 return_value: 'run' 'away' 'with' expr;
 
 
-in_operations: (ID|attributes) '+=' expr #inOperationsSum |  (ID|attributes) '-=' expr #inOperationsMinus|
-                (ID|attributes) '*=' expr #inOperationsMult | (ID|attributes) '/=' expr #inOperationsDivision ;
+in_operations: (ID|attributes) '=+=' expr #inOperationsSum |  (ID|attributes) '=-=' expr #inOperationsMinus|
+                (ID|attributes) '=*=' expr #inOperationsMult | (ID|attributes) '=/=' expr #inOperationsDivision ;
 
-expr      : expr2 ':=' expr2 #exprEqual | expr2 #exprNE;
+expr      : '!' expr #negatedExpr| expr ':=' expr #exprEqual  | expr2 #exprNE ;
 
 
 expr2: expr2 '+' term #exprSUM

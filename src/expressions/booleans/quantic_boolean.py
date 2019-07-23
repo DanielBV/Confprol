@@ -20,7 +20,9 @@ class QuanticBoolean(BasicExpression):
         raise EvaluateQuanticBooleanError()
 
     def copy(self):
-        return QuanticBoolean(self.object.axis, self.object.value)
+        copy =  QuanticBoolean(self.object.axis, self.object.value)
+        copy.object = self.object
+        return copy
 
     def __str__(self):
         return f"[Quantic Boolean {id(self.object)}]"

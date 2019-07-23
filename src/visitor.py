@@ -14,6 +14,29 @@ from generated_antlr4.confprolParser import confprolParser
 class MyVisitor(confprolVisitor):
 
 
+    def visitNegatedExpr(self, ctx: confprolParser.NegatedExprContext):
+        expr = self.visit(ctx.expr())
+
+        return self.handler.negated_expr(expr,ctx.start.line)
+
+    def visitWhile_not_loop(self, ctx: confprolParser.While_not_loopContext):
+        try:
+            value = super().visit(ctx.expr()).to_boolean()
+        except ConfprolException as e:
+            raise RuntimeException(ctx.start.line, e)
+
+        while not value:
+            statements = ctx.statement()
+            for s in statements:
+                super().visit(s)
+
+            try:
+                value = super().visit(ctx.expr()).to_boolean()
+            except ConfprolException as e:
+                raise RuntimeException(ctx.start.line, e)
+
+
+
     def visitBooleanMillionToOne(self, ctx:confprolParser.BooleanMillionToOneContext):
         return self.handler.load_boolean_million_to_one()
 
@@ -193,8 +216,8 @@ class MyVisitor(confprolVisitor):
         raise ReturnException(value)
 
     def visitExprEqual(self, ctx: confprolParser.ExprEqualContext):
-        value1 = self.visit(ctx.expr2(0))
-        value2 = self.visit(ctx.expr2(1))
+        value1 = self.visit(ctx.expr(0))
+        value2 = self.visit(ctx.expr(1))
         try:
             return self.handler.equal(value1,value2)
         except ConfprolException as e:

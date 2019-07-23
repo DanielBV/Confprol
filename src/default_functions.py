@@ -9,6 +9,13 @@ from .multimethods.multimethod import typemultimethod, multimethod
 from src.expressions.booleans.quantic_axis import QuanticAxis
 from src.expressions.booleans.quantic_boolean import QuanticBoolean
 from src.expressions.confprol_list import ListExpression
+from src.utilities.string_algorithm import string_algorithm
+from src.expressions.none import confprol_none
+from src.expressions.booleans.million_to_one import MillionToOneChance
+from src.expressions.booleans.true_except_fridays import TrueExceptFridays
+import  string
+
+import random
 
 def new_object(args):
     return ObjectExpression("object")
@@ -68,7 +75,8 @@ def to_string(expression):
 
 def get_input(message):
     value = input(message)
-    return StringExpression(ConfprolObject(value),value)
+    input_ = string_algorithm(value)
+    return StringExpression(ConfprolObject(input_),input_)
 
 
 @multimethod(QuanticBoolean)
@@ -108,6 +116,44 @@ def confprol_range(start_expr,end_expr):
 def confprol_range(start,end):
     raise ConfprolValueError(f"The start and end in range() must be integers.")
 
+def confprol_random():
+    element = random.randint(0,21)
+
+    if element in [0,1]:
+        return BasicExpression(ConfprolObject(bool(element)),"random()",ValueType.BOOLEAN)
+    elif element in range(2,6):
+        value = random.randint(-10000000000000,10000000000000)
+        return BasicExpression(ConfprolObject(value),"random()",ValueType.NUMBER)
+    elif element in range(6,10):
+        value = random.uniform(-10000000000000, 10000000000000)
+        return BasicExpression(ConfprolObject(value), "random()", ValueType.NUMBER)
+    elif element == 10:
+        return confprol_none
+    elif element == 1:
+        return TrueExceptFridays()
+    elif element == 12:
+        return MillionToOneChance()
+    elif element in range(13,17):
+        axis = random.randint(0,1)
+        value = random.randint(0,1)
+
+        return QuanticBoolean(QuanticAxis(axis),bool(value))
+    elif element in range(17,19):
+        list_ = ListExpression(ConfprolObject([]),"random()")
+        element = random.randint(0, 4)
+        while element !=0:
+            list_.append(confprol_random())
+            element = random.randint(0, 4)
+        return list_
+
+    else:
+        length = random.randint(0, 100)
+        value = ''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase,k=length))
+        return StringExpression(ConfprolObject(value),"random()")
+
+
+
+
 object_constructor = RunnableExpression(PythonCallabe([],new_object),"object")
 function_has_attribute = RunnableExpression(PythonCallabe(["object","attribute"],has_attribute),"has_attribute")
 function_to_integer = RunnableExpression(PythonCallabe(["element"],lambda args: to_integer(args[0]) ),"int")
@@ -117,8 +163,9 @@ function_input = RunnableExpression(PythonCallabe(["prompt"],lambda args: get_in
 function_evaluate_x = RunnableExpression(PythonCallabe(["quantic_boolean"],lambda args: evaluate_quantic_x(args[0])),"evalX")
 function_evaluate_y = RunnableExpression(PythonCallabe(["quantic_boolean"],lambda args: evaluate_quantic_y(args[0])),"evalY")
 function_range = RunnableExpression(PythonCallabe(["start","end"],lambda args: confprol_range(args[0],args[1])),"range")
+function_random = RunnableExpression(PythonCallabe([],lambda args: confprol_random()),"random")
 
 default_functions = {"object":object_constructor, "has_attribute":function_has_attribute, "int":function_to_integer,
                      "float":function_to_float, "string":function_to_string, "ask_user_to_type_words_to_use_them_for_something":function_input,
-                     "evalX":function_evaluate_x,"evalY":function_evaluate_y, "range":function_range }
+                     "evalX":function_evaluate_x,"evalY":function_evaluate_y, "range":function_range ,"random":function_random}
 

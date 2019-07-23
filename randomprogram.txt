@@ -1,1 +1,4 @@
-print MillionToOneChance:=True;
+while not False{
+    print random();
+
+}
