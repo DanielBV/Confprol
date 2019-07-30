@@ -14,6 +14,8 @@ def string_algorithm(text: str):
 
     value = value[0:half] + "".join(reversed(value[half:]))
 
-    value = value[half:] + right_shift_string(value[:half], 3)
+    first_half = right_shift_string(value[:half], 3)
+
+    value = value[half:] + first_half
 
     return value

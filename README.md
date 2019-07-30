@@ -1,10 +1,7 @@
 # Confprol
 
-Confprol is a programming language interpreted with a python program. The language will be designed to be as confusing as possible by tweaking common
-programming keywords and changing expected behaviours.
-
-Right now the syntax isn't twisted to facilitate the development of the core language.  
-
+Confprol is a dynamically typed language that tweaks common programming concepts and behaviours to make them more confusing. 
+It is parsed and executed with a python interpreter.
 
 ### Prerequisites
 
@@ -42,3 +39,7 @@ python main.py programFile
 ```
 pytest .\tests\
 ```
+
+
+### Documentation
+[https://github.com/DanielBV/Confprol/wiki](https://github.com/DanielBV/Confprol/wiki)

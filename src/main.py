@@ -13,7 +13,7 @@ from src.utilities.constants import ENCODING
 from src.default_functions import default_functions
 
 
-def execute(input_stream,raise_exception=False):
+def execute(input_stream,raise_exception=False,base_path="."):
     lexer = confprolLexer(input_stream)
     stream = CommonTokenStream(lexer)
     parser = confprolParser(stream)
@@ -24,7 +24,7 @@ def execute(input_stream,raise_exception=False):
     try:
         tree = parser.program()
 
-        visitor = MyVisitor(ConfprolHandler())
+        visitor = MyVisitor(ConfprolHandler(),base_path)
         visitor.get_context().set_variables(default_functions) #TODO refactor
         visitor.visit(tree)
     except ReturnException as e:
@@ -37,8 +37,9 @@ def execute(input_stream,raise_exception=False):
 
 
 def execute_file(file_path:str,raise_exception=False):
+    base_path = os.path.dirname(os.path.realpath(file_path))
     input_stream = FileStream(file_path,ENCODING)
-    return execute(input_stream,raise_exception)
+    return execute(input_stream,raise_exception,base_path)
 
 
 

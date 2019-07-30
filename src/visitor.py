@@ -106,7 +106,7 @@ class MyVisitor(confprolVisitor):
 
         import_id = ctx.ID().getText()
 
-        self.handler.import_path(path,import_id,ctx.start.line)
+        self.handler.import_path(path,import_id,ctx.start.line,self.base_path)
 
     def visitFinalNone(self, ctx: confprolParser.FinalNoneContext):
         return self.handler.load_none()
@@ -224,8 +224,9 @@ class MyVisitor(confprolVisitor):
             raise RuntimeException(ctx.start.line, e)
 
 
-    def __init__(self,handler:ConfprolHandler):
+    def __init__(self,handler:ConfprolHandler,file_path):
         self.handler = handler
+        self.base_path = file_path
 
     def visitArguments(self, ctx: confprolParser.ArgumentsContext):
         args = ctx.arguments()

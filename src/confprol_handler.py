@@ -1,6 +1,4 @@
-
-
-
+import os
 
 from src.exceptions import  NotCallable, VariableNotDefined, RuntimeException, TooManyArguments, ArgumentsMissing, \
     DivisionByZero, FileNotFound, CannotOpenDirectory, ConfprolException
@@ -113,7 +111,10 @@ class ConfprolHandler:
     def load_none(self):
         return confprol_none
 
-    def import_path(self, path,import_id,line):
+    def import_path(self, path,import_id,line,base_path):
+        if not os.path.isabs(path):
+            path = os.path.join(base_path,path) # Makes the path relative to the confprol program executed.
+
         from src.visitor import MyVisitor
         try:
             lexer = confprolLexer(FileStream(path,ENCODING))
@@ -124,7 +125,8 @@ class ConfprolHandler:
 
 
             tree = parser.program()
-            visitor = MyVisitor(ConfprolHandler())
+            new_base_path = os.path.dirname(os.path.realpath(path))
+            visitor = MyVisitor(ConfprolHandler(),new_base_path)
             visitor.visit(tree)
 
             expr = ObjectExpression(import_id)
