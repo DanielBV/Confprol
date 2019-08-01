@@ -13,8 +13,10 @@ def get_position(arguments):
     list_ = arguments[0].value
     pos = arguments[1].value
 
-    return list_[pos]
-
+    if pos<len(list_):
+        return list_[pos]
+    else:
+        raise ConfprolValueError(f"Index {pos} out of range (length of list = {len(list_)}).")
 
 
 def append(arguments:List[BasicExpression]):

@@ -117,6 +117,16 @@ class TestLists(unittest.TestCase):
                                                  """
         self.assertTrue(execute(InputStream(program),True))
 
+    @patch('builtins.print')
+    def test_list_get_index_out_of_range(self, mocked_print):
+        program = """
+                      list == [3,4];
+                      list.get(9);
+                  """
+        execute(InputStream(program))
+
+        mocked_print.assert_called_once_with(
+            "ValueException line 3: Index 9 out of range (length of list = 2).")
 
 if __name__ == '__main__':
     unittest.main()
