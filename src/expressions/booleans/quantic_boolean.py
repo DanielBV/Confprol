@@ -1,10 +1,10 @@
-from src.expressions.basic_expression import BasicExpression
-from src.type import ValueType
+from expressions.basic_expression import BasicExpression
+from type import ValueType
 from .quantic_axis import QuanticAxis
-from src.expressions.objects.quantic_object import QuanticObject
-from src.exceptions  import EvaluateQuanticBooleanError
+from expressions.objects.quantic_object import QuanticObject
+from exceptions  import EvaluateQuanticBooleanError
 import random
-from src.expressions.objects.confprol_object import ConfprolObject
+from expressions.objects.confprol_object import ConfprolObject
 
 
 class QuanticBoolean(BasicExpression):

@@ -1,8 +1,8 @@
-from src.expressions.objects.confprol_object import ConfprolObject
-from ..type import ValueType
+from expressions.objects.confprol_object import ConfprolObject
+from type import ValueType
 from . import BasicExpression,StringExpression
-from src.exceptions import OperationNotSupported, DivisionByZero
-from src.multimethods.multimethod import  typemultimethod
+from exceptions import OperationNotSupported, DivisionByZero
+from multimethods.multimethod import  typemultimethod
 
 class TypeOperations:
 

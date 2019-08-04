@@ -1,13 +1,13 @@
 
 
 from generated_antlr4.confprolVisitor import confprolVisitor
-from src.exceptions import ReturnException,AttributeNotDefined,FunctionNotDefined,\
+from exceptions import ReturnException,AttributeNotDefined,FunctionNotDefined,\
      RuntimeException, ConfProlSyntaxError, ConfprolException
-from src.expressions.runnable_expression import RunnableExpression
-from src.expressions.callable.callable_function import CallableFunction
+from expressions.runnable_expression import RunnableExpression
+from expressions.callable.callable_function import CallableFunction
 
-from .confprol_handler import ConfprolHandler
-from src.expressions.booleans.quantic_axis import QuanticAxis
+from confprol_handler import ConfprolHandler
+from expressions.booleans.quantic_axis import QuanticAxis
 
 from generated_antlr4.confprolParser import confprolParser
 

@@ -1,5 +1,5 @@
 import unittest
-from src.multimethods.multimethod import multimethod
+from multimethods.multimethod import multimethod
 
 
 @multimethod((float,bool),(float,bool))

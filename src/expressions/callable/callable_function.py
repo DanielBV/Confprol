@@ -1,6 +1,6 @@
 from typing import  List
 
-from src.exceptions import ReturnException
+from exceptions.return_exception import ReturnException
 from ..none import confprol_none
 from .callable import Callable
 
@@ -13,7 +13,7 @@ class CallableFunction(Callable):
         self.visitor = visitor
 
         self.context = self.visitor.get_context()
-
+        
 
         super(CallableFunction, self).__init__(arguments)
 
@@ -23,8 +23,8 @@ class CallableFunction(Callable):
     def _run(self, values):
 
         args = dict(zip(self.__arguments, values))
-        old_state = self.context
-        new_state = old_state.create_subcontext()
+        old_state = self.visitor.get_context()
+        new_state = self.context.create_subcontext()
         new_state.set_variables(args)
         self.visitor.set_context(new_state)
 
@@ -32,8 +32,10 @@ class CallableFunction(Callable):
             for statement in self.__function_content:
                 self.visitor.visitStatement(statement)
         except ReturnException as e:
+
             self.visitor.set_context(old_state)
             return e.return_value
+
 
 
         self.visitor.set_context(old_state)

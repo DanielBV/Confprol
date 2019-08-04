@@ -1,10 +1,10 @@
 
 import unittest
-from src.main import execute
+from main import execute
 from antlr4 import InputStream
 from unittest.mock import patch,Mock
 import datetime
-from src.expressions.booleans.true_except_fridays import TrueExceptFridays
+from expressions.booleans.true_except_fridays import TrueExceptFridays
 
 
 class TestBooleans(unittest.TestCase):

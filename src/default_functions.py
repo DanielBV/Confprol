@@ -1,18 +1,18 @@
-from .expressions.object_expression import ObjectExpression
-from .expressions import RunnableExpression
-from .expressions.callable import  PythonCallabe
-from src.exceptions.confprol_value_error import ConfprolValueError
-from .expressions import BasicExpression, StringExpression
-from .type import ValueType
-from src.expressions.objects.confprol_object import ConfprolObject
-from .multimethods.multimethod import typemultimethod, multimethod
-from src.expressions.booleans.quantic_axis import QuanticAxis
-from src.expressions.booleans.quantic_boolean import QuanticBoolean
-from src.expressions.confprol_list import ListExpression
-from src.utilities.string_algorithm import string_algorithm
-from src.expressions.none import confprol_none
-from src.expressions.booleans.million_to_one import MillionToOneChance
-from src.expressions.booleans.true_except_fridays import TrueExceptFridays
+from expressions.object_expression import ObjectExpression
+from expressions import RunnableExpression
+from expressions.callable import  PythonCallabe
+from exceptions.confprol_value_error import ConfprolValueError
+from expressions import BasicExpression, StringExpression
+from type import ValueType
+from expressions.objects.confprol_object import ConfprolObject
+from multimethods.multimethod import typemultimethod, multimethod
+from expressions.booleans.quantic_axis import QuanticAxis
+from expressions.booleans.quantic_boolean import QuanticBoolean
+from expressions.confprol_list import ListExpression
+from utilities.string_algorithm import string_algorithm
+from expressions.none import confprol_none
+from expressions.booleans.million_to_one import MillionToOneChance
+from expressions.booleans.true_except_fridays import TrueExceptFridays
 import  string
 
 import random

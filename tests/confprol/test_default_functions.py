@@ -1,6 +1,6 @@
 
 import unittest
-from src.main import execute
+from main import execute
 from antlr4 import InputStream
 from unittest.mock import patch
 

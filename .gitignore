@@ -1,5 +1,4 @@
 venv/
-generated_antlr4
 .idea/
 .vscode
 __pycache__

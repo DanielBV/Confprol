@@ -1,9 +1,9 @@
 import unittest
 
-from src.expressions.booleans.quantic_axis import QuanticAxis
-from src.main import execute
+from expressions.booleans.quantic_axis import QuanticAxis
+from main import execute
 from antlr4 import InputStream
-from src.expressions.booleans.quantic_boolean import QuanticBoolean
+from expressions.booleans.quantic_boolean import QuanticBoolean
 
 from unittest.mock import patch
 

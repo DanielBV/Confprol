@@ -1,1 +1,1 @@
- antlr4 -Dlanguage=Python3 confprol.g4 -o ./generated_antlr4/  -visitor -no-listener
+ antlr4 -Dlanguage=Python3 confprol.g4 -o ./src/generated_antlr4/  -visitor -no-listener

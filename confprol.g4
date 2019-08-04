@@ -61,6 +61,7 @@ boolean : 'True' #booleanTrue | 'False' #booleanFalse | 'xTrue' #booleanXTrue
 //INLINE_COMMENT  : '//' ~[\r\n]*  -> skip;
 //COMMENT: '/*' .*? '*/'  -> skip;
 COMMENT: '@useless_comment' [ ]* '(' .*? ')' ->skip;
+OTHER_COMMENT: '@useless_comment' [ ]* '/*' .*? '*/' ->skip;
 function_declaration:  'funko' ID '(' parameters? ')''{' statement* '}';
 
 parameters   : ID',' parameters | ID;

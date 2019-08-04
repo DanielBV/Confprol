@@ -1,8 +1,8 @@
 
 
-from src.expressions.basic_expression import BasicExpression
-from src.type import ValueType
-from src.expressions.objects.confprol_object import ConfprolObject
+from expressions.basic_expression import BasicExpression
+from type import ValueType
+from expressions.objects.confprol_object import ConfprolObject
 import random
 
 class MillionToOneChance(BasicExpression):

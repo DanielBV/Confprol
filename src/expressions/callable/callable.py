@@ -1,7 +1,7 @@
 from typing import  List
-from src.exceptions import ArgumentsMissing, TooManyArguments
+from exceptions import ArgumentsMissing, TooManyArguments
 from ..none import confprol_none
-from src.expressions.objects.confprol_object import ConfprolObject
+from expressions.objects.confprol_object import ConfprolObject
 
 class Callable(ConfprolObject):
 
@@ -34,5 +34,3 @@ class Callable(ConfprolObject):
 
     def _run(self, values):
         raise NotImplementedError("Callable 'run' not implemented")
-
-

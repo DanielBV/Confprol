@@ -1,6 +1,6 @@
 
-from src.type import ValueType
-from src.expressions.objects.confprol_object import ConfprolObject
+from type import ValueType
+from expressions.objects.confprol_object import ConfprolObject
 
 class Expression:
     """

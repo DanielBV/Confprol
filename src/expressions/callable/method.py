@@ -1,5 +1,5 @@
 from .callable import Callable
-from src.expressions.basic_expression import Expression
+from expressions.basic_expression import Expression
 
 class PythonMethod(Callable):
 

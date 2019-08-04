@@ -1,10 +1,10 @@
-from src.type import ValueType
+from type import ValueType
 from .basic_expression import BasicExpression
 from .expression import Expression
 from typing import  List
 from .callable import  PythonMethod
-from src.exceptions import ElementNotContained, ConfprolValueError
-from src.expressions.objects.confprol_object import ConfprolObject
+from exceptions import ElementNotContained, ConfprolValueError
+from expressions.objects.confprol_object import ConfprolObject
 from  .runnable_expression import RunnableExpression
 from .common_methods import length_function
 

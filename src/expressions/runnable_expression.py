@@ -1,6 +1,6 @@
-from src.type import ValueType
+from type import ValueType
 from .expression import Expression
-from src.exceptions import  TooManyArguments, ArgumentsMissing
+from exceptions import  TooManyArguments, ArgumentsMissing
 
 
 class RunnableExpression(Expression):
@@ -25,3 +25,6 @@ class RunnableExpression(Expression):
 
     def __str__(self):
         return f"[function {self.name}]"
+
+    def get_deep_value(self):
+        return self

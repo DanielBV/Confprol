@@ -1,8 +1,8 @@
 import unittest
-from src.main import execute_file,execute
+from main import execute_file,execute
 from antlr4 import InputStream
 import os
-from src.exceptions.syntax_error import ConfProlSyntaxError
+from exceptions.syntax_error import ConfProlSyntaxError
 
 from unittest.mock import patch
 
@@ -251,7 +251,7 @@ class TestExecution(unittest.TestCase):
 
         execute(InputStream(program), False)
         mocked_print.assert_called_with(
-            "FileNotFoundException line 2: File ./thisfileshouldntexist/nope/pizza not found.")
+            "FileNotFoundException line 2: File .\\./thisfileshouldntexist/nope/pizza not found.")
 
     @patch('builtins.print')
     def test_import_directory(self, mocked_print):

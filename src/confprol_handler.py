@@ -1,25 +1,25 @@
 import os
 
-from src.exceptions import  NotCallable, VariableNotDefined, RuntimeException, TooManyArguments, ArgumentsMissing, \
+from exceptions import  NotCallable, VariableNotDefined, RuntimeException, TooManyArguments, ArgumentsMissing, \
     DivisionByZero, FileNotFound, CannotOpenDirectory, ConfprolException
-from src.expressions import BasicExpression,StringExpression, ListExpression,RunnableExpression
-from src.expressions.booleans.true_except_fridays import TrueExceptFridays
-from src.expressions.operations import TypeOperations
-from src.type import ValueType
-from src.context import Context
-from src.expressions.objects.confprol_object import ConfprolObject
-from src.expressions.none import confprol_none
+from expressions import BasicExpression,StringExpression, ListExpression,RunnableExpression
+from expressions.booleans.true_except_fridays import TrueExceptFridays
+from expressions.operations import TypeOperations
+from type import ValueType
+from context import Context
+from expressions.objects.confprol_object import ConfprolObject
+from expressions.none import confprol_none
 from antlr4 import *
 from antlr4.error.ErrorListener import ConsoleErrorListener
 from generated_antlr4.confprolParser import confprolParser
 
-from src.error_listener import  MyErrorListener
+from error_listener import  MyErrorListener
 from generated_antlr4.confprolLexer import confprolLexer
-from src.expressions.object_expression import ObjectExpression
-from src.utilities.constants import ENCODING
-from src.expressions.booleans.quantic_boolean import QuanticBoolean
-from src.expressions.booleans.million_to_one import MillionToOneChance
-from src.utilities.string_algorithm import string_algorithm
+from expressions.object_expression import ObjectExpression
+from utilities.constants import ENCODING
+from expressions.booleans.quantic_boolean import QuanticBoolean
+from expressions.booleans.million_to_one import MillionToOneChance
+from utilities.string_algorithm import string_algorithm
 
 class ConfprolHandler:
 
@@ -115,7 +115,7 @@ class ConfprolHandler:
         if not os.path.isabs(path):
             path = os.path.join(base_path,path) # Makes the path relative to the confprol program executed.
 
-        from src.visitor import MyVisitor
+        from visitor import MyVisitor
         try:
             lexer = confprolLexer(FileStream(path,ENCODING))
             stream = CommonTokenStream(lexer)

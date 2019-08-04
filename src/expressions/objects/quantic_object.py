@@ -1,5 +1,5 @@
 
-from src.expressions.objects.confprol_object import ConfprolObject
+from expressions.objects.confprol_object import ConfprolObject
 
 
 class QuanticObject(ConfprolObject):

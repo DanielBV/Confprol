@@ -1,5 +1,5 @@
 from antlr4.error.ErrorListener import ErrorListener
-from .exceptions import  ConfProlSyntaxError
+from exceptions import  ConfProlSyntaxError
 class MyErrorListener( ErrorListener ):
 
 

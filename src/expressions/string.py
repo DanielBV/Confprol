@@ -1,8 +1,8 @@
 
 from .basic_expression import BasicExpression
-from src.type import ValueType
-from src.expressions.callable import  PythonMethod
-from src.expressions.runnable_expression import RunnableExpression
+from type import ValueType
+from expressions.callable import  PythonMethod
+from expressions.runnable_expression import RunnableExpression
 from .common_methods import length_function
 
 

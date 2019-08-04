@@ -3,14 +3,14 @@ from antlr4.error.ErrorListener import ConsoleErrorListener
 
 from generated_antlr4.confprolLexer import confprolLexer
 from generated_antlr4.confprolParser import confprolParser
-from src.visitor import MyVisitor
-from src.exceptions import *
-from src.error_listener import  MyErrorListener
+from visitor import MyVisitor
+from exceptions import *
+from error_listener import  MyErrorListener
 import sys
 import os
-from src.confprol_handler import ConfprolHandler
-from src.utilities.constants import ENCODING
-from src.default_functions import default_functions
+from confprol_handler import ConfprolHandler
+from utilities.constants import ENCODING
+from default_functions import default_functions
 
 
 def execute(input_stream,raise_exception=False,base_path="."):

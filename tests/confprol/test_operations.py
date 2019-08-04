@@ -1,10 +1,10 @@
 import unittest
 
-from src.expressions.objects.confprol_object import ConfprolObject
-from src.expressions.operations import TypeOperations
-from src.expressions.basic_expression import BasicExpression
-from src.type import ValueType
-from src.exceptions import OperationNotSupported, DivisionByZero
+from expressions.objects.confprol_object import ConfprolObject
+from expressions.operations import TypeOperations
+from expressions.basic_expression import BasicExpression
+from type import ValueType
+from exceptions import OperationNotSupported, DivisionByZero
 
 class TestOperations(unittest.TestCase):
 
