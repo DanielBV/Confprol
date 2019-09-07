@@ -74,5 +74,5 @@ NUMBER : [0-9]+ ;
 WS     : [ \t\r\n] -> skip;
 NUMBERED_ID  : [a-zA-Z0-9]+;
 
-STRING: '"' (~["\\\r\n] | [\\][\\]* .)* '"';
+STRING: '"' (~["\\\r\n] | [\\] .)* '"';
 OTHERCHARACTER : . ; /* To avoid token recognition errors with characters like "`" */

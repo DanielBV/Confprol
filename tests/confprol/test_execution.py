@@ -319,6 +319,21 @@ class TestExecution(unittest.TestCase):
         value=  execute(InputStream(program), True)
         self.assertEqual(["seanedac_unato_es_","a","ba","baa"],value)
 
+    def test_string_new_line(self):
+        program = r"""
+              run away with ["Just one \n line","nOher linenotAn\ enil e"]; 
+              """
+
+        value = execute(InputStream(program), True)
+        self.assertEqual(["uJenil ne \st on","One line \nAnother line"], value)
+
+    def test_escape_character_double_quote(self):
+        program = r"""
+            run away with "eTcharacter: \"pe acse etouq ts";
+        """
+        value = execute(InputStream(program), True)
+        self.assertEqual("Test quote escape character: \"", value)
+
     def test_negation_preference(self):
         program = """
         run away with !-1+1;
@@ -335,6 +350,20 @@ class TestExecution(unittest.TestCase):
         value = execute(InputStream(program), True)
 
         self.assertTrue(value)
+
+    def test_multiple_backward_slashes(self):
+        program = r"""
+            string == "\\\\";
+            other_string == "\a\""
+            this_fails == "\\"";
+        
+        """
+
+        with self.assertRaises(ConfProlSyntaxError) as e:
+            value = execute(InputStream(program), True)
+
+        self.assertIn("SyntaxException in line 4:12 missing ';' at 'this_fails'", e.exception.get_message())
+
 
 if __name__ == '__main__':
     unittest.main()

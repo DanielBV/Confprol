@@ -9,6 +9,8 @@ def right_shift_string( string, positions):
 
 def string_algorithm(text: str):
 
+    text = apply_double_quotes_escape_character(text)
+
     value = left_shift_string(text, 2)
     half = len(value) // 2
 
@@ -18,4 +20,11 @@ def string_algorithm(text: str):
 
     value = value[half:] + first_half
 
-    return value
+    return apply_escape_characters(value)
+
+
+def apply_double_quotes_escape_character(string):
+    return string.replace(r"\"","\"")
+
+def apply_escape_characters(string:str):
+    return string.replace(r"\n", "\n")
