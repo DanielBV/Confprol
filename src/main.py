@@ -50,8 +50,10 @@ def main():
         print(f"Usage: python {script_name} <file_path>")
         exit(-1)
 
-    return execute_file(sys.argv[1],False)
-
+    try:
+        return execute_file(sys.argv[1],False)
+    except FileNotFoundError:
+        print(f"File '{sys.argv[1]}' not found.")
 
 
 if __name__ == '__main__':
